@@ -43,13 +43,15 @@
         .song-header h2 { font-size: 28px; margin-bottom: 4px; }
         .song-header p { color: var(--text-secondary); margin-bottom: 16px; }
         
-        .cifra-section { margin-bottom: 20px; }
-        .cifra-section h4 { color: var(--text-primary); margin-bottom: 6px; font-size: 16px; font-weight: 600; }
+        .cifra-section { margin-bottom: 24px; }
+        .cifra-section h4 { color: var(--text-primary); margin-bottom: 8px; font-size: 16px; font-weight: 600; }
         .cifra-section h4 span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
-        .cifra-chords { font-family: monospace; font-size: 17px; line-height: 1.6; letter-spacing: 1px; color: var(--accent); font-weight: 600; }
         
-        .badge { display: inline-block; background-color: #2c2c2e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
-        .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); }
+        /* Ajuste fino na fonte para acomodar as barras | e (2x) perfeitamente */
+        .cifra-chords { font-family: "Courier New", Courier, monospace; font-size: 17px; line-height: 1.8; letter-spacing: 1px; color: var(--accent); font-weight: 700; white-space: pre-wrap; }
+        
+        .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
+        .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content;}
         
         /* Navigation Bar Bottom */
         nav { position: fixed; bottom: 0; width: 100%; background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 20px 0; }
@@ -76,8 +78,8 @@
     <main id="view-add" class="container hidden">
         <div class="section-title">Adicionar Nova Cifra</div>
         <div class="card">
-            <input type="text" id="input-rhythm" placeholder="Ritmo (ex: 66 bpm, 4/4...)" value="4/4">
-            <textarea id="input-cifra" placeholder="Cole aqui o texto completo do Cifra Club..."></textarea>
+            <!-- Removido o campo de ritmo manual -->
+            <textarea id="input-cifra" placeholder="Cole aqui o texto completo da cifra..."></textarea>
             <button id="btn-salvar" onclick="saveCifra()">Processar com IA e Salvar</button>
         </div>
     </main>
@@ -92,7 +94,7 @@
             </div>
         </div>
 
-        <div class="section-title">Sugestões de Capotraste</div>
+        <div class="section-title">Sugestões de Tons e Capotraste (IA)</div>
         <div class="card" id="sv-capo-suggestions"></div>
 
         <div class="section-title">Cifra Numérica (Roadmap)</div>
@@ -111,12 +113,10 @@
     </nav>
 
     <script>
-        // === COLOQUE O LINK DO SEU NOVO SCRIPT AQUI APÓS O DEPLOY ===
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
+        // === COLOQUE O SEU NOVO LINK DO DEPLOY AQUI ===
+        const API_URL = 'COLOQUE_SEU_LINK_AQUI';
 
         let songsDatabase = [];
-        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-        const flatToSharp = { 'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#' };
 
         window.onload = () => { fetchSongs(); };
 
@@ -158,12 +158,8 @@
             }
         }
 
-        // ==========================================
-        // NOVO SALVAMENTO (Envia bruto para o Backend IA)
-        // ==========================================
         async function saveCifra() {
             const rawText = document.getElementById('input-cifra').value;
-            const rhythm = document.getElementById('input-rhythm').value;
             
             if(!rawText) return alert('Cole a cifra primeiro!');
             
@@ -172,8 +168,8 @@
             btn.disabled = true;
 
             try {
-                // Mandamos apenas o texto bruto. O backend (Apps Script) aciona a Groq API
-                const payload = { raw: rawText, rhythm: rhythm };
+                // Agora enviamos apenas o texto bruto. Ritmo etc é inferido pela IA.
+                const payload = { raw: rawText };
 
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -186,7 +182,7 @@
                 if(result.success) {
                     alert('Música convertida e salva com sucesso!');
                     document.getElementById('input-cifra').value = '';
-                    await fetchSongs();
+                    await fetchSongs(); // Recarrega a biblioteca com a música nova
                     switchView('list');
                 } else {
                     alert('Erro na conversão: ' + result.error);
@@ -232,49 +228,41 @@
             document.getElementById('sv-title').innerText = `• ${song.Title}`;
             document.getElementById('sv-artist').innerText = song.Artist;
             document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm}`;
+            
+            // O Ritmo agora é populado com a resposta que a IA inferiu
+            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || 'Não detectado'}`;
 
             const body = document.getElementById('sv-cifra-body');
             body.innerHTML = '';
             
-            song.SectionsJSON.forEach(section => {
-                const div = document.createElement('div');
-                div.className = 'cifra-section';
-                
-                let titleHtml = section.name;
-                if (section.lyric && section.lyric.trim() !== '') {
-                    titleHtml += ` <span>(${section.lyric})</span>`;
-                }
+            if(song.SectionsJSON) {
+                song.SectionsJSON.forEach(section => {
+                    const div = document.createElement('div');
+                    div.className = 'cifra-section';
+                    
+                    let titleHtml = section.name;
+                    if (section.lyric && section.lyric.trim() !== '') {
+                        titleHtml += ` <span>(${section.lyric})</span>`;
+                    }
 
-                div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${section.chords.join('<br>')}</div>`;
-                body.appendChild(div);
-            });
+                    div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${section.chords.join('<br>')}</div>`;
+                    body.appendChild(div);
+                });
+            }
 
-            generateCapoSuggestions(song.Key);
+            // Exibe sugestões de Capo enviadas pela IA
+            const capoContainer = document.getElementById('sv-capo-suggestions');
+            capoContainer.innerHTML = '';
+            
+            if (song.CapoJSON && song.CapoJSON.length > 0) {
+                song.CapoJSON.forEach(sugestao => {
+                    capoContainer.innerHTML += `<span class="badge capo">${sugestao}</span>`;
+                });
+            } else {
+                capoContainer.innerHTML = '<p style="font-size:14px; color:gray;">A IA não identificou sugestões de capotraste para esta música.</p>';
+            }
+
             switchView('song');
-        }
-
-        // Sugestões de Capo mantidas localmente pois é matemática simples
-        function generateCapoSuggestions(originalKey) {
-            const container = document.getElementById('sv-capo-suggestions');
-            container.innerHTML = '';
-            
-            let baseKey = originalKey.replace('m', '');
-            baseKey = flatToSharp[baseKey] || baseKey;
-            let targetKeyIndex = notes.indexOf(baseKey);
-            
-            if(targetKeyIndex === -1) return;
-
-            const shapes = ['C', 'D', 'G', 'A'];
-            shapes.forEach(shape => {
-                let shapeIdx = notes.indexOf(shape);
-                let diff = targetKeyIndex - shapeIdx;
-                if(diff < 0) diff += 12;
-                if(diff > 0 && diff <= 7) { 
-                    container.innerHTML += `<span class="badge capo">Tocar em ${shape} (Capo ${diff})</span>`;
-                }
-            });
-            if(container.innerHTML === '') container.innerHTML = '<p style="font-size:14px; color:gray;">Capotraste não recomendado para este tom.</p>';
         }
     </script>
 </body>
