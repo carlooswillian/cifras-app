@@ -14,17 +14,18 @@
             --accent: #0a84ff;
             --accent-hover: #007aff;
             --border: #38383a;
-            
-            /* Cores para o visual da cifra */
-            --bar-color: #545458; /* Cinza para as barras | e os hífens - */
-            --rep-color: #ff9f0a; /* Laranja para o (2x), (4x) */
+            --bar-color: #545458;
+            --rep-color: #ff9f0a;
+            --danger: #ff453a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
         body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 80px; }
         
         header { background-color: rgba(28, 28, 30, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+        header .header-left, header .header-right { flex: 1; display: flex; align-items: center; }
+        header .header-right { justify-content: flex-end; }
+        header h1 { flex: 2; text-align: center; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
         
         .container { padding: 20px; max-width: 800px; margin: 0 auto; }
         .card { background-color: var(--card-bg); border-radius: 14px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -34,16 +35,19 @@
         .song-list-item h3 { font-size: 17px; margin-bottom: 4px; font-weight: 500; }
         .song-list-item p { font-size: 14px; color: var(--text-secondary); }
         
-        input, textarea, select { width: 100%; background-color: #2c2c2e; border: none; border-radius: 10px; padding: 12px 16px; color: var(--text-primary); font-size: 16px; margin-bottom: 16px; outline: none; }
+        label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 12px; }
+        label:first-child { margin-top: 0; }
+        
+        input, textarea, select { width: 100%; background-color: #2c2c2e; border: none; border-radius: 10px; padding: 12px 16px; color: var(--text-primary); font-size: 16px; margin-bottom: 8px; outline: none; }
         textarea { resize: vertical; min-height: 200px; font-family: monospace; }
         
-        button { background-color: var(--accent); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; transition: 0.2s; }
-        button:disabled { opacity: 0.5; background-color: #0a84ff80; cursor: not-allowed; }
+        button { background-color: var(--accent); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; transition: 0.2s; margin-top: 8px;}
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         button:active { transform: scale(0.98); }
+        button.btn-danger { background-color: var(--danger); margin-top: 16px; }
         
         .section-title { font-size: 13px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px; margin-top: 20px; letter-spacing: 0.5px; }
         
-        /* Song View Styles */
         .song-header h2 { font-size: 28px; margin-bottom: 4px; }
         .song-header p { color: var(--text-secondary); margin-bottom: 16px; }
         
@@ -51,17 +55,14 @@
         .cifra-section h4 { color: var(--text-primary); margin-bottom: 8px; font-size: 16px; font-weight: 600; }
         .cifra-section h4 span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
         
-        /* Ajuste fino na fonte da cifra */
         .cifra-chords { font-family: "Courier New", Courier, monospace; font-size: 18px; line-height: 1.8; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; white-space: pre-wrap; }
         
-        /* Classes geradas dinamicamente via Javascript para as cores */
         .cifra-bar { color: var(--bar-color); font-weight: 400; margin: 0 2px; }
         .cifra-rep { color: var(--rep-color); font-weight: 600; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0; margin-left: 6px;}
         
         .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
         .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content; margin-bottom: 10px;}
         
-        /* Navigation Bar Bottom */
         nav { position: fixed; bottom: 0; width: 100%; background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 20px 0; }
         nav div { color: var(--text-secondary); font-size: 12px; text-align: center; cursor: pointer; width: 50%; }
         nav div.active { color: var(--accent); }
@@ -74,15 +75,22 @@
 <body>
 
     <header>
+        <div class="header-left">
+            <div id="btn-back" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;">Voltar</div>
+        </div>
         <h1 id="header-title">Minhas Cifras</h1>
-        <div id="btn-back" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;">Voltar</div>
+        <div class="header-right">
+            <div id="btn-edit" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;" onclick="openEditView()">Editar</div>
+        </div>
     </header>
 
+    <!-- TELA 1: LISTA -->
     <main id="view-list" class="container">
         <div id="loading-list" class="loading">Carregando músicas...</div>
         <div class="card hidden" id="song-list-container"></div>
     </main>
 
+    <!-- TELA 2: ADICIONAR -->
     <main id="view-add" class="container hidden">
         <div class="section-title">Adicionar Nova Cifra</div>
         <div class="card">
@@ -91,6 +99,7 @@
         </div>
     </main>
 
+    <!-- TELA 3: VER MÚSICA -->
     <main id="view-song" class="container hidden">
         <div class="song-header">
             <h2 id="sv-title">• Título</h2>
@@ -108,6 +117,27 @@
         <div class="card" id="sv-cifra-body"></div>
     </main>
 
+    <!-- TELA 4: EDITAR MÚSICA -->
+    <main id="view-edit" class="container hidden">
+        <div class="section-title">Informações da Cifra</div>
+        <div class="card">
+            <label>Título da Música</label>
+            <input type="text" id="edit-title">
+            
+            <label>Artista</label>
+            <input type="text" id="edit-artist">
+            
+            <label>Tom Original</label>
+            <input type="text" id="edit-key">
+            
+            <label>Fórmula de Compasso (Ritmo)</label>
+            <input type="text" id="edit-rhythm" placeholder="Ex: 4/4">
+
+            <button id="btn-salvar-edicao" onclick="saveEdits()">Salvar Alterações</button>
+            <button id="btn-excluir" class="btn-danger" onclick="deleteSong()">Excluir Esta Música</button>
+        </div>
+    </main>
+
     <nav>
         <div id="nav-list" class="active" onclick="switchView('list')">
             <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
@@ -120,10 +150,11 @@
     </nav>
 
     <script>
-        // === COLOQUE O SEU NOVO LINK DO DEPLOY AQUI ===
+        // === ATUALIZE PARA SUA NOVA URL DE DEPLOY DO GOOGLE APPS SCRIPT AQUI ===
         const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
 
         let songsDatabase = [];
+        let currentSong = null;
 
         window.onload = () => { fetchSongs(); };
 
@@ -131,7 +162,10 @@
             document.getElementById('view-list').classList.add('hidden');
             document.getElementById('view-add').classList.add('hidden');
             document.getElementById('view-song').classList.add('hidden');
+            document.getElementById('view-edit').classList.add('hidden');
+            
             document.getElementById('btn-back').classList.add('hidden');
+            document.getElementById('btn-edit').classList.add('hidden');
             
             document.getElementById('nav-list').classList.remove('active');
             document.getElementById('nav-add').classList.remove('active');
@@ -148,11 +182,16 @@
             } else if(view === 'song') {
                 document.getElementById('view-song').classList.remove('hidden');
                 document.getElementById('btn-back').classList.remove('hidden');
+                document.getElementById('btn-edit').classList.remove('hidden');
                 document.getElementById('header-title').innerText = 'Cifra';
+                document.getElementById('btn-back').onclick = () => switchView('list');
+            } else if(view === 'edit') {
+                document.getElementById('view-edit').classList.remove('hidden');
+                document.getElementById('btn-back').classList.remove('hidden');
+                document.getElementById('header-title').innerText = 'Editar Cifra';
+                document.getElementById('btn-back').onclick = () => switchView('song');
             }
         }
-
-        document.getElementById('btn-back').onclick = () => switchView('list');
 
         async function fetchSongs() {
             try {
@@ -167,7 +206,6 @@
 
         async function saveCifra() {
             const rawText = document.getElementById('input-cifra').value;
-            
             if(!rawText) return alert('Cole a cifra primeiro!');
             
             const btn = document.getElementById('btn-salvar');
@@ -175,14 +213,12 @@
             btn.disabled = true;
 
             try {
-                const payload = { raw: rawText };
-
+                const payload = { action: 'add', raw: rawText };
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
-                
                 const result = await response.json();
                 
                 if(result.success) {
@@ -195,7 +231,6 @@
                 }
             } catch (e) {
                 alert('Erro ao se conectar com o servidor.');
-                console.error(e);
             } finally {
                 btn.innerText = 'Processar com IA e Salvar';
                 btn.disabled = false;
@@ -232,27 +267,18 @@
 
         function formatChordsVisuals(chordsArray) {
             let htmlText = chordsArray.join('<br>');
-            
-            // 1. Encontra o caractere "|" e coloca ele dentro de um <span> cinza
             htmlText = htmlText.replace(/\|/g, '<span class="cifra-bar">|</span>');
-            
-            // 2. Encontra o hífen "-" usado para dividir compasso e coloca na cor cinza também
             htmlText = htmlText.replace(/ - /g, ' <span class="cifra-bar">-</span> ');
-
-            // 3. Encontra repetições tipo "(2x)", "(4x)" e coloca dentro de um <span> laranja
             htmlText = htmlText.replace(/\(\d+x\)/gi, '<span class="cifra-rep">$&</span>');
-            
             return htmlText;
         }
 
         function openSong(song) {
+            currentSong = song;
             document.getElementById('sv-title').innerText = `• ${song.Title}`;
             document.getElementById('sv-artist').innerText = song.Artist;
             document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            
-            // Corrige exibição caso o ritmo venha vazio
-            let ritmoFormatado = song.Rhythm || 'Não detectado';
-            document.getElementById('sv-rhythm').innerText = `Ritmo: ${ritmoFormatado}`;
+            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || 'Não detectado'}`;
 
             const body = document.getElementById('sv-cifra-body');
             body.innerHTML = '';
@@ -261,15 +287,11 @@
                 song.SectionsJSON.forEach(section => {
                     const div = document.createElement('div');
                     div.className = 'cifra-section';
-                    
                     let titleHtml = section.name;
                     if (section.lyric && section.lyric.trim() !== '') {
                         titleHtml += ` <span>(${section.lyric})</span>`;
                     }
-
-                    // Formatação visual da cifra (Cores nas barras, hífens e multiplicadores)
                     const coloredChords = formatChordsVisuals(section.chords);
-
                     div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${coloredChords}</div>`;
                     body.appendChild(div);
                 });
@@ -277,7 +299,6 @@
 
             const capoContainer = document.getElementById('sv-capo-suggestions');
             capoContainer.innerHTML = '';
-            
             if (song.CapoJSON && song.CapoJSON.length > 0) {
                 song.CapoJSON.forEach(sugestao => {
                     capoContainer.innerHTML += `<span class="badge capo">${sugestao}</span>`;
@@ -287,6 +308,87 @@
             }
 
             switchView('song');
+        }
+
+        function openEditView() {
+            document.getElementById('edit-title').value = currentSong.Title;
+            document.getElementById('edit-artist').value = currentSong.Artist;
+            document.getElementById('edit-key').value = currentSong.Key;
+            document.getElementById('edit-rhythm').value = currentSong.Rhythm || '';
+            switchView('edit');
+        }
+
+        async function saveEdits() {
+            const btn = document.getElementById('btn-salvar-edicao');
+            btn.innerText = 'Salvando...';
+            btn.disabled = true;
+
+            const updatedData = {
+                action: 'edit',
+                id: currentSong.ID || currentSong.id, 
+                song: {
+                    title: document.getElementById('edit-title').value,
+                    artist: document.getElementById('edit-artist').value,
+                    key: document.getElementById('edit-key').value,
+                    rhythm: document.getElementById('edit-rhythm').value
+                }
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(updatedData)
+                });
+                const result = await response.json();
+                if(result.success) {
+                    currentSong.Title = updatedData.song.title;
+                    currentSong.Artist = updatedData.song.artist;
+                    currentSong.Key = updatedData.song.key;
+                    currentSong.Rhythm = updatedData.song.rhythm;
+
+                    const index = songsDatabase.findIndex(s => s.ID === currentSong.ID || s.id === currentSong.id);
+                    if(index !== -1) songsDatabase[index] = currentSong;
+
+                    renderList();
+                    openSong(currentSong); 
+                } else {
+                    alert('Erro ao salvar edições: ' + result.error);
+                }
+            } catch(e) {
+                alert('Erro na conexão com o servidor.');
+            } finally {
+                btn.innerText = 'Salvar Alterações';
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteSong() {
+            if(!confirm('Tem certeza que deseja excluir esta cifra? Esta ação é irreversível.')) return;
+
+            const btn = document.getElementById('btn-excluir');
+            btn.innerText = 'Excluindo...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'delete', id: currentSong.ID || currentSong.id })
+                });
+                const result = await response.json();
+                if(result.success) {
+                    await fetchSongs(); 
+                    switchView('list');
+                } else {
+                    alert('Erro ao excluir: ' + result.error);
+                }
+            } catch(e) {
+                alert('Erro na conexão com o servidor.');
+            } finally {
+                btn.innerText = 'Excluir Esta Música';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
