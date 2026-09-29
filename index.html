@@ -14,6 +14,10 @@
             --accent: #0a84ff;
             --accent-hover: #007aff;
             --border: #38383a;
+            
+            /* Novas cores para o visual da cifra */
+            --bar-color: #545458; /* Cinza para as barras | */
+            --rep-color: #ff9f0a; /* Laranja para o (2x), (4x) */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -47,8 +51,12 @@
         .cifra-section h4 { color: var(--text-primary); margin-bottom: 8px; font-size: 16px; font-weight: 600; }
         .cifra-section h4 span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
         
-        /* Ajuste fino na fonte para acomodar as barras | e (2x) perfeitamente */
-        .cifra-chords { font-family: "Courier New", Courier, monospace; font-size: 17px; line-height: 1.8; letter-spacing: 1px; color: var(--accent); font-weight: 700; white-space: pre-wrap; }
+        /* Ajuste fino na fonte da cifra */
+        .cifra-chords { font-family: "Courier New", Courier, monospace; font-size: 18px; line-height: 1.8; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; white-space: pre-wrap; }
+        
+        /* Classes geradas dinamicamente via Javascript para as cores */
+        .cifra-bar { color: var(--bar-color); font-weight: 400; margin: 0 2px; }
+        .cifra-rep { color: var(--rep-color); font-weight: 600; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0; margin-left: 6px;}
         
         .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
         .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content;}
@@ -78,7 +86,6 @@
     <main id="view-add" class="container hidden">
         <div class="section-title">Adicionar Nova Cifra</div>
         <div class="card">
-            <!-- Removido o campo de ritmo manual -->
             <textarea id="input-cifra" placeholder="Cole aqui o texto completo da cifra..."></textarea>
             <button id="btn-salvar" onclick="saveCifra()">Processar com IA e Salvar</button>
         </div>
@@ -168,7 +175,6 @@
             btn.disabled = true;
 
             try {
-                // Agora enviamos apenas o texto bruto. Ritmo etc é inferido pela IA.
                 const payload = { raw: rawText };
 
                 const response = await fetch(API_URL, {
@@ -182,7 +188,7 @@
                 if(result.success) {
                     alert('Música convertida e salva com sucesso!');
                     document.getElementById('input-cifra').value = '';
-                    await fetchSongs(); // Recarrega a biblioteca com a música nova
+                    await fetchSongs();
                     switchView('list');
                 } else {
                     alert('Erro na conversão: ' + result.error);
@@ -224,12 +230,22 @@
             });
         }
 
+        function formatChordsVisuals(chordsArray) {
+            let htmlText = chordsArray.join('<br>');
+            
+            // 1. Encontra o caractere "|" e coloca ele dentro de um <span> cinza
+            htmlText = htmlText.replace(/\|/g, '<span class="cifra-bar">|</span>');
+            
+            // 2. Encontra repetições tipo "(2x)", "(4x)" e coloca dentro de um <span> laranja
+            htmlText = htmlText.replace(/\(\d+x\)/gi, '<span class="cifra-rep">$&</span>');
+            
+            return htmlText;
+        }
+
         function openSong(song) {
             document.getElementById('sv-title').innerText = `• ${song.Title}`;
             document.getElementById('sv-artist').innerText = song.Artist;
             document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            
-            // O Ritmo agora é populado com a resposta que a IA inferiu
             document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || 'Não detectado'}`;
 
             const body = document.getElementById('sv-cifra-body');
@@ -245,12 +261,14 @@
                         titleHtml += ` <span>(${section.lyric})</span>`;
                     }
 
-                    div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${section.chords.join('<br>')}</div>`;
+                    // Chama a nova função que colore as barras e o multiplicador
+                    const coloredChords = formatChordsVisuals(section.chords);
+
+                    div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${coloredChords}</div>`;
                     body.appendChild(div);
                 });
             }
 
-            // Exibe sugestões de Capo enviadas pela IA
             const capoContainer = document.getElementById('sv-capo-suggestions');
             capoContainer.innerHTML = '';
             
