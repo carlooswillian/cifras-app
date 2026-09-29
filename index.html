@@ -14,18 +14,16 @@
             --accent: #0a84ff;
             --accent-hover: #007aff;
             --border: #38383a;
-            --bar-color: #545458;
+            --bar-color: #545458; 
             --rep-color: #ff9f0a;
-            --danger: #ff453a;
+            --danger: #ff3b30;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
         body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 80px; }
         
         header { background-color: rgba(28, 28, 30, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        header .header-left, header .header-right { flex: 1; display: flex; align-items: center; }
-        header .header-right { justify-content: flex-end; }
-        header h1 { flex: 2; text-align: center; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+        header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
         
         .container { padding: 20px; max-width: 800px; margin: 0 auto; }
         .card { background-color: var(--card-bg); border-radius: 14px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -35,21 +33,25 @@
         .song-list-item h3 { font-size: 17px; margin-bottom: 4px; font-weight: 500; }
         .song-list-item p { font-size: 14px; color: var(--text-secondary); }
         
-        label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 12px; }
-        label:first-child { margin-top: 0; }
-        
-        input, textarea, select { width: 100%; background-color: #2c2c2e; border: none; border-radius: 10px; padding: 12px 16px; color: var(--text-primary); font-size: 16px; margin-bottom: 8px; outline: none; }
+        input, textarea, select { width: 100%; background-color: #2c2c2e; border: none; border-radius: 10px; padding: 12px 16px; color: var(--text-primary); font-size: 16px; margin-bottom: 16px; outline: none; }
         textarea { resize: vertical; min-height: 200px; font-family: monospace; }
         
-        button { background-color: var(--accent); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; transition: 0.2s; margin-top: 8px;}
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button { background-color: var(--accent); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; transition: 0.2s; }
+        button:disabled { opacity: 0.5; background-color: #0a84ff80; cursor: not-allowed; }
         button:active { transform: scale(0.98); }
-        button.btn-danger { background-color: var(--danger); margin-top: 16px; }
+        
+        .btn-small { padding: 8px 12px; font-size: 13px; border-radius: 8px; width: auto; display: inline-block; }
+        .btn-edit { background-color: #333; }
+        .btn-delete { background-color: var(--danger); }
         
         .section-title { font-size: 13px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px; margin-top: 20px; letter-spacing: 0.5px; }
+        .input-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; margin-top: 8px; text-transform: uppercase; font-weight: 600; }
         
+        /* Song View Styles */
+        .song-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .song-header h2 { font-size: 28px; margin-bottom: 4px; }
         .song-header p { color: var(--text-secondary); margin-bottom: 16px; }
+        .song-actions { display: flex; gap: 8px; flex-direction: column; }
         
         .cifra-section { margin-bottom: 24px; }
         .cifra-section h4 { color: var(--text-primary); margin-bottom: 8px; font-size: 16px; font-weight: 600; }
@@ -63,6 +65,7 @@
         .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
         .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content; margin-bottom: 10px;}
         
+        /* Navigation Bar Bottom */
         nav { position: fixed; bottom: 0; width: 100%; background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 20px 0; }
         nav div { color: var(--text-secondary); font-size: 12px; text-align: center; cursor: pointer; width: 50%; }
         nav div.active { color: var(--accent); }
@@ -75,22 +78,15 @@
 <body>
 
     <header>
-        <div class="header-left">
-            <div id="btn-back" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;">Voltar</div>
-        </div>
         <h1 id="header-title">Minhas Cifras</h1>
-        <div class="header-right">
-            <div id="btn-edit" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;" onclick="openEditView()">Editar</div>
-        </div>
+        <div id="btn-back" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;">Voltar</div>
     </header>
 
-    <!-- TELA 1: LISTA -->
     <main id="view-list" class="container">
         <div id="loading-list" class="loading">Carregando músicas...</div>
         <div class="card hidden" id="song-list-container"></div>
     </main>
 
-    <!-- TELA 2: ADICIONAR -->
     <main id="view-add" class="container hidden">
         <div class="section-title">Adicionar Nova Cifra</div>
         <div class="card">
@@ -99,15 +95,47 @@
         </div>
     </main>
 
-    <!-- TELA 3: VER MÚSICA -->
+    <!-- NOVA TELA DE EDIÇÃO -->
+    <main id="view-edit" class="container hidden">
+        <div class="section-title">Editar Informações e Cifra (JSON)</div>
+        <div class="card">
+            <label class="input-label">Título</label>
+            <input type="text" id="edit-title">
+            
+            <label class="input-label">Artista</label>
+            <input type="text" id="edit-artist">
+            
+            <label class="input-label">Tom</label>
+            <input type="text" id="edit-key">
+            
+            <label class="input-label">Ritmo</label>
+            <input type="text" id="edit-rhythm">
+            
+            <label class="input-label">Sugestões de Capo (Formato Array JSON)</label>
+            <input type="text" id="edit-capo">
+            
+            <label class="input-label">Estrutura da Cifra (Formato JSON)</label>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom:10px;">Aqui você pode ajustar as notas, tempos e seções exatamente como foram geradas pela IA.</p>
+            <textarea id="edit-sections" style="min-height: 350px; font-size: 14px;"></textarea>
+            
+            <button id="btn-salvar-edicao" onclick="saveEdit()">Salvar Alterações</button>
+        </div>
+    </main>
+
     <main id="view-song" class="container hidden">
         <div class="song-header">
-            <h2 id="sv-title">• Título</h2>
-            <p id="sv-artist">Artista</p>
             <div>
-                <span class="badge" id="sv-key">Tom: E</span>
-                <span class="badge" id="sv-rhythm">Ritmo: 4/4</span>
+                <h2 id="sv-title">• Título</h2>
+                <p id="sv-artist">Artista</p>
             </div>
+            <div class="song-actions">
+                <button class="btn-small btn-edit" onclick="openEditView()">Editar</button>
+                <button class="btn-small btn-delete" onclick="deleteCurrentSong()">Excluir</button>
+            </div>
+        </div>
+        <div style="margin-bottom: 24px;">
+            <span class="badge" id="sv-key">Tom: E</span>
+            <span class="badge" id="sv-rhythm">Ritmo: 4/4</span>
         </div>
 
         <div class="section-title">Sugestões de Tons e Capotraste (IA)</div>
@@ -115,27 +143,6 @@
 
         <div class="section-title">Cifra Numérica (Roadmap)</div>
         <div class="card" id="sv-cifra-body"></div>
-    </main>
-
-    <!-- TELA 4: EDITAR MÚSICA -->
-    <main id="view-edit" class="container hidden">
-        <div class="section-title">Informações da Cifra</div>
-        <div class="card">
-            <label>Título da Música</label>
-            <input type="text" id="edit-title">
-            
-            <label>Artista</label>
-            <input type="text" id="edit-artist">
-            
-            <label>Tom Original</label>
-            <input type="text" id="edit-key">
-            
-            <label>Fórmula de Compasso (Ritmo)</label>
-            <input type="text" id="edit-rhythm" placeholder="Ex: 4/4">
-
-            <button id="btn-salvar-edicao" onclick="saveEdits()">Salvar Alterações</button>
-            <button id="btn-excluir" class="btn-danger" onclick="deleteSong()">Excluir Esta Música</button>
-        </div>
     </main>
 
     <nav>
@@ -150,11 +157,11 @@
     </nav>
 
     <script>
-        // === ATUALIZE PARA SUA NOVA URL DE DEPLOY DO GOOGLE APPS SCRIPT AQUI ===
+        // === ATUALIZE PARA O SEU NOVO LINK DE DEPLOY ABAIXO ===
         const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
 
         let songsDatabase = [];
-        let currentSong = null;
+        let currentSongData = null; // Guarda os dados da música que está aberta no momento
 
         window.onload = () => { fetchSongs(); };
 
@@ -163,9 +170,7 @@
             document.getElementById('view-add').classList.add('hidden');
             document.getElementById('view-song').classList.add('hidden');
             document.getElementById('view-edit').classList.add('hidden');
-            
             document.getElementById('btn-back').classList.add('hidden');
-            document.getElementById('btn-edit').classList.add('hidden');
             
             document.getElementById('nav-list').classList.remove('active');
             document.getElementById('nav-add').classList.remove('active');
@@ -182,14 +187,13 @@
             } else if(view === 'song') {
                 document.getElementById('view-song').classList.remove('hidden');
                 document.getElementById('btn-back').classList.remove('hidden');
-                document.getElementById('btn-edit').classList.remove('hidden');
-                document.getElementById('header-title').innerText = 'Cifra';
                 document.getElementById('btn-back').onclick = () => switchView('list');
+                document.getElementById('header-title').innerText = 'Cifra';
             } else if(view === 'edit') {
                 document.getElementById('view-edit').classList.remove('hidden');
                 document.getElementById('btn-back').classList.remove('hidden');
+                document.getElementById('btn-back').onclick = () => openSong(currentSongData); // Voltar pra cifra sem salvar
                 document.getElementById('header-title').innerText = 'Editar Cifra';
-                document.getElementById('btn-back').onclick = () => switchView('song');
             }
         }
 
@@ -200,7 +204,7 @@
                 renderList();
             } catch (error) {
                 console.error("Erro ao carregar", error);
-                document.getElementById('loading-list').innerText = "Erro ao carregar dados.";
+                document.getElementById('loading-list').innerText = "Erro ao carregar dados. Verifique a URL do App Script.";
             }
         }
 
@@ -213,12 +217,12 @@
             btn.disabled = true;
 
             try {
-                const payload = { action: 'add', raw: rawText };
+                const payload = { action: 'create', raw: rawText };
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
+                
                 const result = await response.json();
                 
                 if(result.success) {
@@ -274,11 +278,14 @@
         }
 
         function openSong(song) {
-            currentSong = song;
+            currentSongData = song;
+
             document.getElementById('sv-title').innerText = `• ${song.Title}`;
             document.getElementById('sv-artist').innerText = song.Artist;
             document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || 'Não detectado'}`;
+            
+            let ritmoFormatado = song.Rhythm || 'Não detectado';
+            document.getElementById('sv-rhythm').innerText = `Ritmo: ${ritmoFormatado}`;
 
             const body = document.getElementById('sv-cifra-body');
             body.innerHTML = '';
@@ -287,10 +294,12 @@
                 song.SectionsJSON.forEach(section => {
                     const div = document.createElement('div');
                     div.className = 'cifra-section';
+                    
                     let titleHtml = section.name;
                     if (section.lyric && section.lyric.trim() !== '') {
                         titleHtml += ` <span>(${section.lyric})</span>`;
                     }
+
                     const coloredChords = formatChordsVisuals(section.chords);
                     div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${coloredChords}</div>`;
                     body.appendChild(div);
@@ -299,6 +308,7 @@
 
             const capoContainer = document.getElementById('sv-capo-suggestions');
             capoContainer.innerHTML = '';
+            
             if (song.CapoJSON && song.CapoJSON.length > 0) {
                 song.CapoJSON.forEach(sugestao => {
                     capoContainer.innerHTML += `<span class="badge capo">${sugestao}</span>`;
@@ -310,84 +320,101 @@
             switchView('song');
         }
 
+        // ================= FUNÇÕES DE EDIÇÃO E EXCLUSÃO =================
+
         function openEditView() {
-            document.getElementById('edit-title').value = currentSong.Title;
-            document.getElementById('edit-artist').value = currentSong.Artist;
-            document.getElementById('edit-key').value = currentSong.Key;
-            document.getElementById('edit-rhythm').value = currentSong.Rhythm || '';
+            document.getElementById('edit-title').value = currentSongData.Title || '';
+            document.getElementById('edit-artist').value = currentSongData.Artist || '';
+            document.getElementById('edit-key').value = currentSongData.Key || '';
+            document.getElementById('edit-rhythm').value = currentSongData.Rhythm || '';
+            document.getElementById('edit-capo').value = JSON.stringify(currentSongData.CapoJSON || []);
+            
+            // Renderiza o array de sessões em JSON formatado de forma limpa para edição
+            document.getElementById('edit-sections').value = JSON.stringify(currentSongData.SectionsJSON || [], null, 2);
+            
             switchView('edit');
         }
 
-        async function saveEdits() {
+        async function saveEdit() {
             const btn = document.getElementById('btn-salvar-edicao');
             btn.innerText = 'Salvando...';
             btn.disabled = true;
 
-            const updatedData = {
-                action: 'edit',
-                id: currentSong.ID || currentSong.id, 
-                song: {
+            try {
+                // Tenta fazer o parse do JSON modificado pelo usuário
+                const editedCapo = JSON.parse(document.getElementById('edit-capo').value || '[]');
+                const editedSections = JSON.parse(document.getElementById('edit-sections').value || '[]');
+                
+                const updatedSong = {
                     title: document.getElementById('edit-title').value,
                     artist: document.getElementById('edit-artist').value,
                     key: document.getElementById('edit-key').value,
-                    rhythm: document.getElementById('edit-rhythm').value
-                }
-            };
+                    rhythm: document.getElementById('edit-rhythm').value,
+                    capo_suggestions: editedCapo,
+                    sections: editedSections
+                };
 
-            try {
+                const payload = {
+                    action: 'update',
+                    id: currentSongData.id,
+                    song: updatedSong
+                };
+
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(updatedData)
+                    body: JSON.stringify(payload)
                 });
+                
                 const result = await response.json();
+                
                 if(result.success) {
-                    currentSong.Title = updatedData.song.title;
-                    currentSong.Artist = updatedData.song.artist;
-                    currentSong.Key = updatedData.song.key;
-                    currentSong.Rhythm = updatedData.song.rhythm;
-
-                    const index = songsDatabase.findIndex(s => s.ID === currentSong.ID || s.id === currentSong.id);
-                    if(index !== -1) songsDatabase[index] = currentSong;
-
-                    renderList();
-                    openSong(currentSong); 
+                    alert('Alterações salvas com sucesso!');
+                    await fetchSongs(); // Atualiza base de dados
+                    
+                    // Encontra a música atualizada e reabre ela
+                    const updatedFromDb = songsDatabase.find(s => s.id === currentSongData.id);
+                    if(updatedFromDb) {
+                        openSong(updatedFromDb);
+                    } else {
+                        switchView('list');
+                    }
                 } else {
-                    alert('Erro ao salvar edições: ' + result.error);
+                    alert('Erro ao salvar: ' + result.error);
                 }
             } catch(e) {
-                alert('Erro na conexão com o servidor.');
+                alert('Erro de validação! Verifique se a estrutura das Sugestões ou da Cifra está em um formato JSON válido. Dica: Não esqueça das aspas e vírgulas!');
+                console.error(e);
             } finally {
                 btn.innerText = 'Salvar Alterações';
                 btn.disabled = false;
             }
         }
 
-        async function deleteSong() {
-            if(!confirm('Tem certeza que deseja excluir esta cifra? Esta ação é irreversível.')) return;
-
-            const btn = document.getElementById('btn-excluir');
-            btn.innerText = 'Excluindo...';
-            btn.disabled = true;
-
+        async function deleteCurrentSong() {
+            if(!confirm('Tem certeza absoluta que deseja excluir esta cifra? Esta ação não pode ser desfeita.')) return;
+            
+            const btnDelete = document.querySelector('.btn-delete');
+            btnDelete.innerText = "Excluindo...";
+            
+            const payload = { action: 'delete', id: currentSongData.id };
+            
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'delete', id: currentSong.ID || currentSong.id })
+                    body: JSON.stringify(payload)
                 });
+                
                 const result = await response.json();
                 if(result.success) {
-                    await fetchSongs(); 
+                    await fetchSongs();
                     switchView('list');
                 } else {
                     alert('Erro ao excluir: ' + result.error);
+                    btnDelete.innerText = "Excluir";
                 }
             } catch(e) {
-                alert('Erro na conexão com o servidor.');
-            } finally {
-                btn.innerText = 'Excluir Esta Música';
-                btn.disabled = false;
+                alert('Erro de conexão ao tentar excluir.');
+                btnDelete.innerText = "Excluir";
             }
         }
     </script>
