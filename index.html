@@ -15,8 +15,8 @@
             --accent-hover: #007aff;
             --border: #38383a;
             
-            /* Novas cores para o visual da cifra */
-            --bar-color: #545458; /* Cinza para as barras | */
+            /* Cores para o visual da cifra */
+            --bar-color: #545458; /* Cinza para as barras | e os hífens - */
             --rep-color: #ff9f0a; /* Laranja para o (2x), (4x) */
         }
 
@@ -59,7 +59,7 @@
         .cifra-rep { color: var(--rep-color); font-weight: 600; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: 0; margin-left: 6px;}
         
         .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-right: 8px; margin-bottom: 8px; }
-        .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content;}
+        .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content; margin-bottom: 10px;}
         
         /* Navigation Bar Bottom */
         nav { position: fixed; bottom: 0; width: 100%; background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 20px 0; }
@@ -236,7 +236,10 @@
             // 1. Encontra o caractere "|" e coloca ele dentro de um <span> cinza
             htmlText = htmlText.replace(/\|/g, '<span class="cifra-bar">|</span>');
             
-            // 2. Encontra repetições tipo "(2x)", "(4x)" e coloca dentro de um <span> laranja
+            // 2. Encontra o hífen "-" usado para dividir compasso e coloca na cor cinza também
+            htmlText = htmlText.replace(/ - /g, ' <span class="cifra-bar">-</span> ');
+
+            // 3. Encontra repetições tipo "(2x)", "(4x)" e coloca dentro de um <span> laranja
             htmlText = htmlText.replace(/\(\d+x\)/gi, '<span class="cifra-rep">$&</span>');
             
             return htmlText;
@@ -246,7 +249,10 @@
             document.getElementById('sv-title').innerText = `• ${song.Title}`;
             document.getElementById('sv-artist').innerText = song.Artist;
             document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || 'Não detectado'}`;
+            
+            // Corrige exibição caso o ritmo venha vazio
+            let ritmoFormatado = song.Rhythm || 'Não detectado';
+            document.getElementById('sv-rhythm').innerText = `Ritmo: ${ritmoFormatado}`;
 
             const body = document.getElementById('sv-cifra-body');
             body.innerHTML = '';
@@ -261,7 +267,7 @@
                         titleHtml += ` <span>(${section.lyric})</span>`;
                     }
 
-                    // Chama a nova função que colore as barras e o multiplicador
+                    // Formatação visual da cifra (Cores nas barras, hífens e multiplicadores)
                     const coloredChords = formatChordsVisuals(section.chords);
 
                     div.innerHTML = `<h4>${titleHtml}</h4><div class="cifra-chords">${coloredChords}</div>`;
