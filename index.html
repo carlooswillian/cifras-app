@@ -58,7 +58,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
  * CONFIGURE API_URL com a URL /exec do Web App do Apps Script.
  * Se deixar vazio, o frontend mostra a estrutura mas não salva/carrega dados.
  */
-const API_URL = 'COLE_AQUI_A_URL_DO_WEB_APP_APPS_SCRIPT';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
 let songs = [], currentSong = null, beatTimer = null, beat = 0;
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
