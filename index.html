@@ -1,326 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cifras Numbers - AI</title>
-    <style>
-        :root {
-            --bg-color: #000000; --card-bg: #1c1c1e; --text-primary: #ffffff;
-            --text-secondary: #ebebf599; --accent: #0a84ff; --border: #38383a;
-            --bar-color: #545458; --rep-color: #ff9f0a; --danger: #ff3b30;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
-        body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 80px; }
-        
-        header { background-color: rgba(28, 28, 30, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
-        
-        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-        .card { background-color: var(--card-bg); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
-        
-        .song-list-item { border-bottom: 1px solid var(--border); padding: 12px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .song-list-item h3 { font-size: 17px; margin-bottom: 4px; font-weight: 500; }
-        .song-list-item p { font-size: 14px; color: var(--text-secondary); }
-        
-        input, textarea { width: 100%; background-color: #2c2c2e; border: none; border-radius: 10px; padding: 12px 16px; color: var(--text-primary); font-size: 16px; margin-bottom: 16px; outline: none; }
-        textarea { resize: vertical; min-height: 100px; }
-        
-        button { background-color: var(--accent); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; margin-bottom: 10px;}
-        button:disabled { opacity: 0.5; }
-        
-        .btn-small { padding: 8px 12px; font-size: 13px; border-radius: 8px; width: auto; display: inline-block; margin-bottom:0;}
-        .btn-edit { background-color: #333; }
-        .btn-delete { background-color: var(--danger); }
-        .btn-add-section { background-color: transparent; border: 1px solid var(--accent); color: var(--accent); }
-        
-        .section-title { font-size: 13px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px; margin-top: 20px; letter-spacing: 0.5px; }
-        .input-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; font-weight: 600; }
-        
-        /* Edit Section Block */
-        .edit-section-block { background-color: #242426; border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-bottom: 16px; }
-        
-        .song-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .song-header h2 { font-size: 28px; margin-bottom: 4px; }
-        .song-header p { color: var(--text-secondary); margin-bottom: 16px; }
-        .song-actions { display: flex; gap: 8px; flex-direction: column; }
-        
-        .cifra-section { margin-bottom: 24px; }
-        .cifra-section h4 { color: var(--text-primary); margin-bottom: 8px; font-size: 16px; font-weight: 600; }
-        .cifra-chords { font-family: "Courier New", Courier, monospace; font-size: 18px; line-height: 1.8; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; white-space: pre-wrap; }
-        
-        .cifra-bar { color: var(--bar-color); font-weight: 400; margin: 0 2px; }
-        .cifra-rep { color: var(--rep-color); font-weight: 600; font-size: 15px; margin-left: 6px;}
-        .badge { display: inline-block; background-color: #2c2c2e; padding: 6px 12px; border-radius: 12px; font-size: 13px; margin-right: 8px; margin-bottom: 8px; }
-        .badge.capo { background-color: rgba(10, 132, 255, 0.2); color: var(--accent); display: block; width: fit-content;}
-        
-        nav { position: fixed; bottom: 0; width: 100%; background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 12px 0 20px 0; }
-        nav div { color: var(--text-secondary); font-size: 12px; text-align: center; width: 50%; cursor: pointer; }
-        nav div.active { color: var(--accent); }
-        nav div svg { display: block; margin: 0 auto 4px auto; width: 24px; height: 24px; fill: currentColor; }
-        .hidden { display: none !important; }
-        .loading { text-align: center; color: var(--text-secondary); padding: 40px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<title>Cifra Inteligente</title>
+<style>
+:root{color-scheme:dark;--bg:#08090d;--panel:#12141b;--panel2:#191c25;--line:#292d39;--text:#f5f6fb;--muted:#9ba2b3;--blue:#78a7ff;--purple:#b6a0ff;--green:#80dfb0;--danger:#ff8e9a;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.lyric-line{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;margin:0 0 13px}.chords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-height:20px}.lyric{white-space:pre-wrap;overflow-wrap:anywhere;font-size:17px;line-height:1.7}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.meter{font-variant-numeric:tabular-nums;font-size:26px;font-weight:800}.beat-dots{display:flex;gap:7px;margin:12px 0}.beat{width:33px;height:33px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted)}.beat.on{background:var(--blue);color:#08101e;border-color:var(--blue)}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.score{color:var(--green);font-weight:800}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.song-list{max-height:240px}.top{align-items:flex-start}.top-actions button{padding:9px 11px}.app{padding:16px 12px 60px}.hero h2{font-size:22px}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
+</style>
 </head>
 <body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="logo">♪</div><div><div class="eyebrow">Seu songbook</div><h1>Cifra Inteligente</h1><p>Organize. Entenda. Toque.</p></div></div>
+    <div class="top-actions"><button class="secondary" id="refreshBtn">↻ Atualizar</button><button id="newBtn">＋ Nova cifra</button></div>
+  </header>
 
-    <header>
-        <h1 id="header-title">Minhas Cifras</h1>
-        <div id="btn-back" class="hidden" style="color: var(--accent); cursor: pointer; font-size: 16px;">Voltar</div>
-    </header>
+  <div class="layout">
+    <aside class="panel">
+      <h2>Biblioteca <span class="muted" id="songCount"></span></h2>
+      <input class="search" id="search" placeholder="Buscar música, artista ou tom…">
+      <div class="song-list" id="songList"><div class="empty">Conecte o backend para carregar suas músicas.</div></div>
+      <div class="notice">Dica: mantenha a cifra original salva. A leitura automática precisa de revisão, principalmente nas batidas.</div>
+    </aside>
 
-    <main id="view-list" class="container">
-        <div id="loading-list" class="loading">Carregando músicas...</div>
-        <div class="card hidden" id="song-list-container"></div>
+    <main class="maincol">
+      <section class="panel" id="viewer">
+        <div class="empty"><div style="font-size:34px">♫</div><strong>Seu próximo louvor começa aqui.</strong><p>Selecione uma música ou importe uma cifra.</p><button id="emptyNewBtn">Importar cifra</button></div>
+      </section>
+
+      <section class="panel hidden" id="editor">
+        <div class="hero"><div><div class="eyebrow">Adicionar ao songbook</div><h2>Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
+        <div class="form-grid">
+          <div class="field"><label for="title">Título (opcional: detectar)</label><input id="title" placeholder="Ex.: Toda Terra"></div>
+          <div class="field"><label for="artist">Artista (opcional: detectar)</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
+          <div class="field"><label for="key">Tom original</label><input id="key" placeholder="Ex.: E, D, C#m"></div>
+          <div class="field"><label for="bpm">BPM (batidas por minuto)</label><input id="bpm" type="number" min="30" max="300" placeholder="Ex.: 65"></div>
+          <div class="field"><label for="meter">Compasso</label><select id="meter"><option>4/4</option><option>3/4</option><option>6/8</option><option>2/4</option><option>12/8</option><option>Outro / não sei</option></select></div>
+          <div class="field"><label for="capo">Capotraste sugerido (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="0 a 12"></div>
+          <div class="field span2"><label for="raw">Cifra completa</label><textarea id="raw" placeholder="Cole aqui a cifra com títulos das seções, acordes e letra…"></textarea></div>
+          <div class="field span2"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: versão ao vivo, entrada do vocal no segundo compasso…"></div>
+        </div>
+        <div class="notice">A importação reconhece cabeçalhos como [Intro], [Refrão], [Solo] e acordes aparentes. Ela não consegue confirmar automaticamente o BPM, o compasso nem a batida exata a partir do texto sozinho.</div>
+        <div class="row" style="margin-top:14px"><button id="saveBtn">Salvar música</button><button class="secondary" id="previewBtn">Pré-visualizar</button></div>
+        <div class="status" id="editorStatus"></div>
+        <pre id="preview" class="hidden" style="white-space:pre-wrap;color:var(--muted)"></pre>
+      </section>
     </main>
+  </div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.1 · Dark stage mode</div>
+</div>
+<script>
+/*
+ * CONFIGURE API_URL com a URL /exec do Web App do Apps Script.
+ * Se deixar vazio, o frontend mostra a estrutura mas não salva/carrega dados.
+ */
+const API_URL = 'COLE_AQUI_A_URL_DO_WEB_APP_APPS_SCRIPT';
+let songs = [], currentSong = null, beatTimer = null, beat = 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const configured = () => API_URL.startsWith('https://script.google.com/') && !API_URL.includes('COLE_AQUI');
 
-    <main id="view-add" class="container hidden">
-        <div class="section-title">Nova Cifra</div>
-        <div class="card">
-            <textarea id="input-cifra" placeholder="Cole aqui o texto da cifra..."></textarea>
-            <button id="btn-salvar" onclick="saveCifra()">Processar com IA</button>
-        </div>
-    </main>
-
-    <!-- TELA DE EDIÇÃO VISUAL -->
-    <main id="view-edit" class="container hidden">
-        <div class="section-title">Informações Básicas</div>
-        <div class="card">
-            <label class="input-label">Título</label>
-            <input type="text" id="edit-title">
-            <label class="input-label">Artista</label>
-            <input type="text" id="edit-artist">
-            <div style="display:flex; gap:10px;">
-                <div style="flex:1;">
-                    <label class="input-label">Tom</label>
-                    <input type="text" id="edit-key">
-                </div>
-                <div style="flex:1;">
-                    <label class="input-label">Ritmo</label>
-                    <input type="text" id="edit-rhythm">
-                </div>
-            </div>
-            <label class="input-label">Sugestões de Capo (Uma por linha)</label>
-            <textarea id="edit-capo" placeholder="Ex: Tocar em G (Capo na 2)"></textarea>
-        </div>
-
-        <div class="section-title">Estrutura da Cifra</div>
-        <div id="edit-sections-wrapper"></div>
-        <button class="btn-add-section" onclick="addEmptySection()">+ Adicionar Nova Seção</button>
-
-        <div style="margin-top: 30px;">
-            <button id="btn-salvar-edicao" onclick="saveEdit()">Salvar Alterações</button>
-        </div>
-    </main>
-
-    <main id="view-song" class="container hidden">
-        <div class="song-header">
-            <div>
-                <h2 id="sv-title">Título</h2>
-                <p id="sv-artist">Artista</p>
-            </div>
-            <div class="song-actions">
-                <button class="btn-small btn-edit" onclick="openEditView()">Editar</button>
-                <button class="btn-small btn-delete" id="btn-excluir-tela" onclick="deleteCurrentSong()">Excluir</button>
-            </div>
-        </div>
-        <div style="margin-bottom: 24px;">
-            <span class="badge" id="sv-key">Tom: E</span>
-            <span class="badge" id="sv-rhythm">Ritmo: 4/4</span>
-        </div>
-        <div class="section-title">Tons e Capotraste</div>
-        <div class="card" id="sv-capo-suggestions"></div>
-        <div class="section-title">Roadmap Numérico</div>
-        <div class="card" id="sv-cifra-body"></div>
-    </main>
-
-    <nav>
-        <div id="nav-list" class="active" onclick="switchView('list')"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> Biblioteca</div>
-        <div id="nav-add" onclick="switchView('add')"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Adicionar</div>
-    </nav>
-
-    <script>
-        // === ATUALIZE PARA O SEU NOVO LINK DE DEPLOY AQUI ===
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
-
-        let songsDatabase = [];
-        let currentSongData = null;
-
-        window.onload = fetchSongs;
-
-        function switchView(view) {
-            ['list', 'add', 'song', 'edit'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
-            document.getElementById('btn-back').classList.add('hidden');
-            document.getElementById('nav-list').classList.remove('active');
-            document.getElementById('nav-add').classList.remove('active');
-
-            if(view === 'list') {
-                document.getElementById('view-list').classList.remove('hidden');
-                document.getElementById('nav-list').classList.add('active');
-                document.getElementById('header-title').innerText = 'Minhas Cifras';
-                if(songsDatabase.length === 0) fetchSongs();
-            } else if(view === 'add') {
-                document.getElementById('view-add').classList.remove('hidden');
-                document.getElementById('nav-add').classList.add('active');
-                document.getElementById('header-title').innerText = 'Nova Cifra';
-            } else if(view === 'song') {
-                document.getElementById('view-song').classList.remove('hidden');
-                document.getElementById('btn-back').classList.remove('hidden');
-                document.getElementById('btn-back').onclick = () => switchView('list');
-                document.getElementById('header-title').innerText = 'Cifra';
-            } else if(view === 'edit') {
-                document.getElementById('view-edit').classList.remove('hidden');
-                document.getElementById('btn-back').classList.remove('hidden');
-                document.getElementById('btn-back').onclick = () => openSong(currentSongData); 
-                document.getElementById('header-title').innerText = 'Editar Cifra';
-            }
-        }
-
-        async function fetchSongs() {
-            try {
-                const res = await fetch(API_URL);
-                songsDatabase = await res.json();
-                renderList();
-            } catch (error) {
-                document.getElementById('loading-list').innerText = "Erro ao carregar dados.";
-            }
-        }
-
-        // FETCH POSTS AGORA POSSUEM HEADER 'Content-Type' PARA NÃO CONGELAR!
-        async function sendPostRequest(payload) {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
-            return await res.json();
-        }
-
-        async function saveCifra() {
-            const rawText = document.getElementById('input-cifra').value;
-            if(!rawText) return;
-            const btn = document.getElementById('btn-salvar');
-            btn.innerText = 'Processando...'; btn.disabled = true;
-
-            try {
-                const result = await sendPostRequest({ action: 'create', raw: rawText });
-                if(result.success) {
-                    document.getElementById('input-cifra').value = '';
-                    await fetchSongs(); switchView('list');
-                } else alert(result.error);
-            } finally { btn.innerText = 'Processar com IA'; btn.disabled = false; }
-        }
-
-        function renderList() {
-            const container = document.getElementById('song-list-container');
-            document.getElementById('loading-list').classList.add('hidden');
-            container.classList.remove('hidden');
-            container.innerHTML = songsDatabase.length ? '' : '<p style="text-align:center; color:gray;">Nenhuma música.</p>';
-
-            [...songsDatabase].reverse().forEach(song => {
-                const div = document.createElement('div');
-                div.className = 'song-list-item';
-                div.innerHTML = `<div><h3>${song.Title}</h3><p>${song.Artist}</p></div><div style="color: var(--accent); font-weight: bold;">${song.Key}</div>`;
-                div.onclick = () => openSong(song);
-                container.appendChild(div);
-            });
-        }
-
-        function openSong(song) {
-            currentSongData = song;
-            document.getElementById('sv-title').innerText = `• ${song.Title}`;
-            document.getElementById('sv-artist').innerText = song.Artist;
-            document.getElementById('sv-key').innerText = `Tom: ${song.Key}`;
-            document.getElementById('sv-rhythm').innerText = `Ritmo: ${song.Rhythm || '4/4'}`;
-
-            const body = document.getElementById('sv-cifra-body');
-            body.innerHTML = '';
-            (song.SectionsJSON || []).forEach(sec => {
-                let htmlChords = sec.chords.join('<br>').replace(/\|/g, '<span class="cifra-bar">|</span>').replace(/ - /g, ' <span class="cifra-bar">-</span> ').replace(/\(\d+x\)/gi, '<span class="cifra-rep">$&</span>');
-                body.innerHTML += `<div class="cifra-section"><h4>${sec.name} ${sec.lyric ? `<span style="color:gray;font-size:14px;">(${sec.lyric})</span>` : ''}</h4><div class="cifra-chords">${htmlChords}</div></div>`;
-            });
-
-            const capoCont = document.getElementById('sv-capo-suggestions');
-            capoCont.innerHTML = (song.CapoJSON && song.CapoJSON.length) 
-                ? song.CapoJSON.map(c => `<span class="badge capo">${c}</span>`).join('') 
-                : '<p style="font-size:14px; color:gray;">Nenhuma sugestão registrada.</p>';
-            switchView('song');
-        }
-
-        // === LÓGICA DE EDIÇÃO VISUAL ===
-        
-        function openEditView() {
-            document.getElementById('edit-title').value = currentSongData.Title || '';
-            document.getElementById('edit-artist').value = currentSongData.Artist || '';
-            document.getElementById('edit-key').value = currentSongData.Key || '';
-            document.getElementById('edit-rhythm').value = currentSongData.Rhythm || '';
-            document.getElementById('edit-capo').value = (currentSongData.CapoJSON || []).join('\n');
-            
-            const wrapper = document.getElementById('edit-sections-wrapper');
-            wrapper.innerHTML = '';
-            (currentSongData.SectionsJSON || []).forEach((sec, idx) => appendSectionUI(sec.name, sec.lyric, sec.chords));
-            switchView('edit');
-        }
-
-        function appendSectionUI(name = '', lyric = '', chords = []) {
-            const wrapper = document.getElementById('edit-sections-wrapper');
-            const div = document.createElement('div');
-            div.className = 'edit-section-block';
-            div.innerHTML = `
-                <input type="text" class="inp-sec-name" placeholder="Nome (Ex: Refrão)" value="${name}">
-                <input type="text" class="inp-sec-lyric" placeholder="Dica de Letra (Opcional)" value="${lyric}">
-                <textarea class="inp-sec-chords" placeholder="Acordes (Um compasso por linha)">${chords.join('\n')}</textarea>
-                <button class="btn-small btn-delete" onclick="this.parentElement.remove()">Remover Seção</button>
-            `;
-            wrapper.appendChild(div);
-        }
-
-        function addEmptySection() { appendSectionUI(); }
-
-        async function saveEdit() {
-            const btn = document.getElementById('btn-salvar-edicao');
-            btn.innerText = 'Salvando...'; btn.disabled = true;
-
-            const capoArray = document.getElementById('edit-capo').value.split('\n').filter(c => c.trim());
-            const sectionsArray = [];
-            document.querySelectorAll('.edit-section-block').forEach(block => {
-                sectionsArray.push({
-                    name: block.querySelector('.inp-sec-name').value,
-                    lyric: block.querySelector('.inp-sec-lyric').value,
-                    chords: block.querySelector('.inp-sec-chords').value.split('\n').filter(c => c.trim())
-                });
-            });
-
-            try {
-                const payload = {
-                    action: 'update', id: currentSongData.id,
-                    song: {
-                        title: document.getElementById('edit-title').value, artist: document.getElementById('edit-artist').value,
-                        key: document.getElementById('edit-key').value, rhythm: document.getElementById('edit-rhythm').value,
-                        capo_suggestions: capoArray, sections: sectionsArray
-                    }
-                };
-                
-                const res = await sendPostRequest(payload);
-                if(res.success) {
-                    await fetchSongs();
-                    const updated = songsDatabase.find(s => s.id === currentSongData.id);
-                    openSong(updated);
-                } else alert('Erro: ' + res.error);
-            } finally { btn.innerText = 'Salvar Alterações'; btn.disabled = false; }
-        }
-
-        async function deleteCurrentSong() {
-            if(!confirm('Deseja mesmo excluir esta cifra?')) return;
-            const btn = document.getElementById('btn-excluir-tela');
-            btn.innerText = "Excluindo...";
-            try {
-                const res = await sendPostRequest({ action: 'delete', id: currentSongData.id });
-                if(res.success) { await fetchSongs(); switchView('list'); } 
-                else { alert('Erro: ' + res.error); btn.innerText = "Excluir"; }
-            } catch(e) { alert('Erro de conexão.'); btn.innerText = "Excluir"; }
-        }
-    </script>
+async function api(action, data={}) {
+  if (!configured()) throw new Error('Configure API_URL no index.html com a URL /exec do Apps Script.');
+  // Apps Script Web Apps frequentemente redirecionam para googleusercontent.com.
+  // O modo no-cors não permite ler a resposta; portanto usamos POST normal.
+  const response = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action,...data}) });
+  const json = await response.json();
+  if (!json.ok) throw new Error(json.error || 'Erro na API');
+  return json.data;
+}
+function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error?'var(--danger)':'var(--green)'; }
+function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden'); $('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
+function closeEditor() { $('editor').classList.add('hidden'); $('viewer').classList.remove('hidden'); }
+function resetEditor() { ['title','artist','key','bpm','capo','raw','notes'].forEach(id=>$(id).value=''); $('meter').value='4/4'; $('preview').classList.add('hidden'); }
+function chordLine(line) {
+  const trimmed=line.trim();
+  // Reconhece linhas compostas principalmente por símbolos de acordes.
+  const tokens=trimmed.split(/\s+/);
+  const chordRe=/^[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?$/;
+  if (tokens.length && tokens.every(t=>chordRe.test(t) || /^[()[\]-]+$/.test(t))) return true;
+  return false;
+}
+function localParse(raw) {
+  const lines=raw.replace(/\r/g,'').split('\n');
+  const out=[]; let section={name:'Geral',lines:[]};
+  function flush(){if(section.lines.length)out.push(section);}
+  lines.forEach(line=>{
+    const m=line.trim().match(/^\[(.+)\]$/);
+    if(m){flush();section={name:m[1],lines:[]};return;}
+    if(!line.trim())return;
+    section.lines.push({chords:chordLine(line)?line.trim():'',lyric:chordLine(line)?'':line});
+  });flush();return out;
+}
+function renderSong(song) {
+  currentSong=song;
+  const sections=localParse(song.cifraOriginal||'');
+  $('viewer').innerHTML=`
+    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div><div class="chips"><span class="chip">Tom ${esc(song.tomOriginal||'—')}</span><span class="chip">${song.bpm?esc(song.bpm)+' BPM':'BPM pendente'}</span><span class="chip">${esc(song.compasso||'4/4')}</span><span class="chip">${song.capotrasteSugerido!==''?'Capo '+esc(song.capotrasteSugerido):'Capo não definido'}</span></div></div><div class="toolbar"><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
+    <div class="notice">A cifra abaixo é uma visualização preliminar do texto original. Para obter batidas por compasso, edite/valide a marcação rítmica na próxima etapa.</div>
+    <div class="tabs" style="margin-top:16px"><button class="tab active" data-view="lyrics">Letra + acordes</button><button class="tab" data-view="degrees">Graus (Nashville)</button><button class="tab" data-view="rhythm">Ritmo</button></div>
+    <div id="songContent">${renderSections(sections,'lyrics')}</div>
+    <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>
+    <div id="rawPanel" class="hidden"><h3>Cifra original</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted)">${esc(song.cifraOriginal||'')}</pre></div>`;
+  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{ $('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });
+  $('medleyBtn').onclick=loadMedleys;
+  $('editRawBtn').onclick=()=>$('rawPanel').classList.toggle('hidden');
+}
+function renderSections(sections,mode) {
+  if(mode==='rhythm') return `<div class="section"><h3>Guia rítmico</h3><p class="muted">O texto importado não informa em qual batida cada acorde começa. Preencha BPM, compasso e batidas confirmadas para habilitar um guia confiável.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'— BPM'}</div><div class="beat-dots">${[1,2,3,4].map(n=>`<div class="beat">${n}</div>`).join('')}</div><p class="small muted">Demonstração visual em 4/4; não é uma transcrição do ritmo da gravação.</p></div>`;
+  if(mode==='degrees') return `<div class="section"><h3>Graus harmônicos</h3><p class="muted">O tom informado é ${esc(currentSong.tomOriginal||'desconhecido')}. Os graus podem ser calculados quando a cifra for normalizada e revisada. A importação inicial não presume que toda ocorrência de uma letra A, B ou C seja um acorde.</p></div>`;
+  if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
+  return sections.map(sec=>`<div class="section"><h3>${esc(sec.name)}</h3>${sec.lines.map(l=>`<div class="lyric-line">${l.chords?`<div class="chords">${esc(l.chords)}</div>`:''}${l.lyric?`<div class="lyric">${esc(l.lyric)}</div>`:''}</div>`).join('')}</div>`).join('');
+}
+async function loadSongs() {
+  if(!configured()) { $('songList').innerHTML='<div class="empty">Configure a URL do backend no index.html para ativar a biblioteca.</div>';return; }
+  try { songs=await api('listSongs',{query:$('search').value}); renderList(); }
+  catch(e){$('songList').innerHTML=`<div class="empty">${esc(e.message)}</div>`;}
+}
+function renderList() {
+  $('songCount').textContent=`(${songs.length})`;
+  $('songList').innerHTML=songs.length?songs.map(s=>`<button class="song-item ${currentSong&&currentSong.id===s.id?'active':''}" data-id="${esc(s.id)}"><strong>${esc(s.titulo)}</strong><small>${esc(s.artista||'Artista não informado')} · ${esc(s.tomOriginal||'Tom —')}</small></button>`).join(''):'<div class="empty">Nenhuma música salva ainda.</div>';
+  $('songList').querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{try{renderSong(await api('getSong',{id:b.dataset.id}));renderList();}catch(e){alert(e.message)}});
+}
+async function loadMedleys() {
+  $('medleyPanel').classList.remove('hidden'); $('medleyResults').textContent='Calculando…';
+  try {const results=await api('suggestMedleys',{id:currentSong.id});$('medleyResults').innerHTML=results.length?results.map(m=>`<div class="medley"><div><strong>${esc(m.titulo)}</strong><div class="small muted">${esc(m.artista||'')} · Tom ${esc(m.tomOriginal||'—')} · ${m.bpm?esc(m.bpm)+' BPM':'BPM —'}</div><div class="small muted">${esc(m.motivo)}</div></div><div class="score">${m.score}%</div></div>`).join(''):'Cadastre mais músicas para receber sugestões.';}
+  catch(e){$('medleyResults').textContent=e.message;}
+}
+$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};
+$('closeEditor').onclick=closeEditor;
+$('refreshBtn').onclick=loadSongs;
+$('search').oninput=()=>loadSongs();
+$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
+$('saveBtn').onclick=async()=>{
+  const status=$('editorStatus');
+  const song={titulo:$('title').value,artista:$('artist').value,tomOriginal:$('key').value,bpm:$('bpm').value,compasso:$('meter').value,capotrasteSugerido:$('capo').value,cifraOriginal:$('raw').value,observacoes:$('notes').value};
+  try {notify(status,'Salvando…');const result=await api('importSong',{song});notify(status,`Salvo: ${result.titulo}. Revise seções, acordes e ritmo.`);await loadSongs();renderSong(await api('getSong',{id:result.id}));closeEditor();}
+  catch(e){notify(status,e.message,true);}
+};
+loadSongs();
+</script>
 </body>
 </html>
