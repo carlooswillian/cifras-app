@@ -113,9 +113,10 @@ function chordDegree(chord,key){
 }
 function sectionProgression(sec){return chordTokens(sec);}
 
-// --- LÓGICA NOVA DE OTIMIZAÇÃO/COMPACTAÇÃO DE ACORDES ---
+// --- LÓGICA DE OTIMIZAÇÃO/COMPACTAÇÃO DE ACORDES ATUALIZADA ---
 function findSubPattern(arr) {
   const n = arr.length;
+  if(n === 0) return { pattern: arr, count: 1 };
   for(let len=1; len<=n/2; len++) {
     if(n%len === 0) {
       let match = true;
@@ -128,18 +129,34 @@ function findSubPattern(arr) {
   return { pattern: arr, count: 1 };
 }
 function compactProgression(sec, key) {
-  let seqs = [];
+  let allChords = [];
   sec.lines.forEach(l => {
     if(l.chords) {
       let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>/^[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?$/.test(c));
-      if(ch.length) {
-        let deg = ch.map(c => chordDegree(c, key));
-        let sub = findSubPattern(deg);
-        if(sub.count > 1) seqs.push({ orig: ch.slice(0, sub.pattern.length), deg: sub.pattern, count: sub.count });
-        else seqs.push({ orig: ch, deg: deg, count: 1 });
-      }
+      if(ch.length) allChords.push(ch);
     }
   });
+  
+  if(!allChords.length) return [];
+  
+  // Tenta comprimir a seção inteira se for um loop simétrico
+  let flatOrig = allChords.flat();
+  let flatDeg = flatOrig.map(c => chordDegree(c, key));
+  let globalSub = findSubPattern(flatDeg);
+  
+  if(globalSub.count > 1) {
+    return [{ orig: flatOrig.slice(0, globalSub.pattern.length), deg: globalSub.pattern, count: globalSub.count }];
+  }
+  
+  // Se não for um loop perfeito completo, tenta comprimir blocos internos sucessivos
+  let seqs = [];
+  allChords.forEach(ch => {
+    let deg = ch.map(c => chordDegree(c, key));
+    let sub = findSubPattern(deg);
+    if(sub.count > 1) seqs.push({ orig: ch.slice(0, sub.pattern.length), deg: sub.pattern, count: sub.count });
+    else seqs.push({ orig: ch, deg: deg, count: 1 });
+  });
+  
   let out = [];
   for(let s of seqs) {
     if(out.length) {
@@ -190,7 +207,17 @@ function renderSections(sections,mode) {
   
   if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3>${esc(sec.name)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
   
-  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>`<div class="section-summary"><h3>${esc(sec.name)}</h3>${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>{
+    const firstLyric = sec.lines.find(l => l.lyric && l.lyric.trim() && !l.lyric.match(/^\\[.*\\]$/))?.lyric.trim();
+    let snippetStr = '';
+    if (firstLyric) {
+      const words = firstLyric.split(/\\s+/);
+      const snippet = words.slice(0, 4).join(' ');
+      const ellipsis = words.length > 4 ? '...' : '';
+      snippetStr = \` <span style="text-transform:none; color:var(--muted); font-weight:normal; letter-spacing:normal; font-size:13px">(\${esc(snippet)}\${ellipsis})</span>\`;
+    }
+    return \`<div class="section-summary"><h3 style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px">\${esc(sec.name)}\${snippetStr}</h3>\${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>\`;
+  }).join('')}</div>`;
   
   return sections.map(sec=>{
     const progHtml = renderOptimizedProgression(sec, key, 'chord');
