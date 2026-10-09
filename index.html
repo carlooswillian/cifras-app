@@ -8,7 +8,13 @@
 <style>
 :root{color-scheme:dark;--bg:#08090d;--panel:#12141b;--panel2:#191c25;--line:#292d39;--text:#f5f6fb;--muted:#9ba2b3;--blue:#78a7ff;--purple:#b6a0ff;--green:#80dfb0;--danger:#ff8e9a;--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
-button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.lyric-line{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;margin:0 0 13px}.chords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-height:20px}.lyric{white-space:pre-wrap;overflow-wrap:anywhere;font-size:17px;line-height:1.7}.progression{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}.degree-card{min-width:64px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:12px;padding:9px 10px;text-align:center}.degree-card b{display:block;color:var(--blue);font-size:20px}.degree-card small{color:var(--muted);font-size:11px}.bar-label{font-size:11px;color:var(--muted);margin:10px 0 5px}.beat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:8px 0 14px}.beat-cell{background:#191c25;border:1px solid #30384d;border-radius:12px;padding:10px 5px;text-align:center;min-height:68px}.beat-cell .count{font-size:11px;color:var(--muted);display:block}.beat-cell strong{display:block;color:var(--blue);font-size:19px;overflow-wrap:anywhere}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.meter{font-variant-numeric:tabular-nums;font-size:26px;font-weight:800}.beat-dots{display:flex;gap:7px;margin:12px 0}.beat{width:33px;height:33px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted)}.beat.on{background:var(--blue);color:#08101e;border-color:var(--blue)}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.score{color:var(--green);font-weight:800}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.lyric-line{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;margin:0 0 13px}.chords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-height:20px}.lyric{white-space:pre-wrap;overflow-wrap:anywhere;font-size:17px;line-height:1.7}
+.progression-row{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px}
+.degree-card{min-width:64px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:12px;padding:9px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.degree-card b{display:block;color:var(--blue);font-size:20px}
+.degree-card small{color:var(--muted);font-size:11px}
+.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 12px;border-radius:12px;font-weight:800;font-size:14px}
+.bar-label{font-size:11px;color:var(--muted);margin:10px 0 5px}.beat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:8px 0 14px}.beat-cell{background:#191c25;border:1px solid #30384d;border-radius:12px;padding:10px 5px;text-align:center;min-height:68px}.beat-cell .count{font-size:11px;color:var(--muted);display:block}.beat-cell strong{display:block;color:var(--blue);font-size:19px;overflow-wrap:anywhere}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.meter{font-variant-numeric:tabular-nums;font-size:26px;font-weight:800}.beat-dots{display:flex;gap:7px;margin:12px 0}.beat{width:33px;height:33px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted)}.beat.on{background:var(--blue);color:#08101e;border-color:var(--blue)}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.score{color:var(--green);font-weight:800}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.song-list{max-height:240px}.top{align-items:flex-start}.top-actions button{padding:9px 11px}.app{padding:16px 12px 60px}.hero h2{font-size:22px}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
 </style>
 </head>
@@ -56,7 +62,6 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
 <script>
 /*
  * CONFIGURE API_URL com a URL /exec do Web App do Apps Script.
- * Se deixar vazio, o frontend mostra a estrutura mas não salva/carrega dados.
  */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
 let songs = [], currentSong = null, beatTimer = null, beat = 0;
@@ -66,20 +71,17 @@ const configured = () => API_URL.startsWith('https://script.google.com/') && !AP
 
 async function api(action, data={}) {
   if (!configured()) throw new Error('Configure API_URL no index.html com a URL /exec do Apps Script.');
-  // Apps Script Web Apps frequentemente redirecionam para googleusercontent.com.
-  // O modo no-cors não permite ler a resposta; portanto usamos POST normal.
   const response = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action,...data}) });
   const json = await response.json();
   if (!json.ok) throw new Error(json.error || 'Erro na API');
   return json.data;
 }
 function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error?'var(--danger)':'var(--green)'; }
-function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden'); $('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
-function closeEditor() { $('editor').classList.add('hidden'); $('viewer').classList.remove('hidden'); }
-function resetEditor() { ['title','artist','key','bpm','capo','raw','notes'].forEach(id=>$(id).value=''); $('meter').value='4/4'; $('preview').classList.add('hidden'); }
+function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden');$('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
+function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
+function resetEditor() { ['title','artist','key','bpm','capo','raw','notes'].forEach(id=>$(id).value=''); $('meter').value='4/4';$('preview').classList.add('hidden'); }
 function chordLine(line) {
   const trimmed=line.trim();
-  // Reconhece linhas compostas principalmente por símbolos de acordes.
   const tokens=trimmed.split(/\s+/);
   const chordRe=/^[A-G](?:#|b)?(?:(?:m(?!aj)|maj|min|dim|aug|sus|add)?\d*(?:M|maj)?)(?:\/[A-G](?:#|b)?)?$/;
   if (tokens.length && tokens.every(t=>chordRe.test(t) || /^[()[\]-]+$/.test(t))) return true;
@@ -110,28 +112,92 @@ function chordDegree(chord,key){
   return map[sem]+(/^m(?!aj)/.test(m[2])?'m':'');
 }
 function sectionProgression(sec){return chordTokens(sec);}
-function renderProgression(chords,key){if(!chords.length)return '<p class="muted">Nenhum acorde isolado foi identificado nesta seção. Confira o original.</p>';return `<div class="progression">${chords.map((c,i)=>`<div class="degree-card"><small>${i+1}</small><b>${esc(c)}</b><small>${esc(chordDegree(c,key))}</small></div>`).join('')}</div>`;}
+
+// --- LÓGICA NOVA DE OTIMIZAÇÃO/COMPACTAÇÃO DE ACORDES ---
+function findSubPattern(arr) {
+  const n = arr.length;
+  for(let len=1; len<=n/2; len++) {
+    if(n%len === 0) {
+      let match = true;
+      for(let i=len; i<n; i++) {
+        if(arr[i] !== arr[i%len]) { match = false; break; }
+      }
+      if(match) return { pattern: arr.slice(0, len), count: n/len };
+    }
+  }
+  return { pattern: arr, count: 1 };
+}
+function compactProgression(sec, key) {
+  let seqs = [];
+  sec.lines.forEach(l => {
+    if(l.chords) {
+      let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>/^[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?$/.test(c));
+      if(ch.length) {
+        let deg = ch.map(c => chordDegree(c, key));
+        let sub = findSubPattern(deg);
+        if(sub.count > 1) seqs.push({ orig: ch.slice(0, sub.pattern.length), deg: sub.pattern, count: sub.count });
+        else seqs.push({ orig: ch, deg: deg, count: 1 });
+      }
+    }
+  });
+  let out = [];
+  for(let s of seqs) {
+    if(out.length) {
+      let last = out[out.length-1];
+      if(last.deg.join(' ') === s.deg.join(' ')) {
+        last.count += s.count;
+        continue;
+      }
+    }
+    out.push(s);
+  }
+  return out;
+}
+function renderOptimizedProgression(sec, key, emp) {
+  const comp = compactProgression(sec, key);
+  if(!comp.length) return '';
+  return comp.map(s => `
+    <div class="progression-row">
+      ${s.deg.map((d, i) => {
+        const main = emp === 'degree' ? d : s.orig[i];
+        const sub = emp === 'degree' ? s.orig[i] : d;
+        const lbl = emp === 'degree' ? 'Acorde ' : 'Grau ';
+        return `<div class="degree-card" style="flex:0 1 auto;min-width:68px"><small>${lbl}${esc(sub)}</small><b style="font-size:22px">${esc(main)}</b></div>`;
+      }).join('')}
+      ${s.count > 1 ? `<div class="repeat-badge">${s.count}x</div>` : ''}
+    </div>
+  `).join('');
+}
+// ---------------------------------------------------------
+
 function renderSong(song) {
   currentSong=song;
   const sections=localParse(song.cifraOriginal||'');
   $('viewer').innerHTML=`
     <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div><div class="chips"><span class="chip">Tom ${esc(song.tomOriginal||'—')}</span><span class="chip">${song.bpm?esc(song.bpm)+' BPM':'BPM pendente'}</span><span class="chip">${esc(song.compasso||'4/4')}</span><span class="chip">${song.capotrasteSugerido!==''?'Capo '+esc(song.capotrasteSugerido):'Capo não definido'}</span></div></div><div class="toolbar"><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
     <div class="notice">Cifra simplificada: os acordes são agrupados por seção e convertidos em graus Nashville a partir do tom informado. A divisão por batidas é uma sugestão inicial, não uma transcrição automática confirmada; valide ouvindo a música.</div>
-    <div class="tabs" style="margin-top:16px"><button class="tab active" data-view="lyrics">Letra + acordes</button><button class="tab" data-view="degrees">Graus (Nashville)</button><button class="tab" data-view="rhythm">Ritmo</button></div>
+    <div class="tabs" style="margin-top:16px"><button class="tab active" data-view="lyrics">Letra + acordes</button><button class="tab" data-view="degrees">Graus (Otimizado)</button><button class="tab" data-view="rhythm">Ritmo</button></div>
     <div id="songContent">${renderSections(sections,'lyrics')}</div>
     <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>
     <div id="rawPanel" class="hidden"><h3>Cifra original</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted)">${esc(song.cifraOriginal||'')}</pre></div>`;
-  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{ $('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });
-  $('medleyBtn').onclick=loadMedleys;
+  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });$('medleyBtn').onclick=loadMedleys;
   $('editRawBtn').onclick=()=>$('rawPanel').classList.toggle('hidden');
 }
+
 function renderSections(sections,mode) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const key=currentSong.tomOriginal||'';
-  if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">O texto do Cifra Club não registra a posição exata dos acordes no compasso. Para ajudar no estudo, os acordes detectados são distribuídos em sequência pelas batidas; ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3>${esc(sec.name)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Para acordes que duram meio tempo ou entram antes da batida, será necessário marcar subdivisões como 1&, 2&, 1/2 ou 1/4. Não inferimos isso apenas pela letra.</p></div>`;
-  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Cada cartão mostra o acorde detectado e seu grau aproximado. Confira acordes menores, inversões e acordes com extensões.</p>${sections.map(sec=>`<div class="section-summary"><h3>${esc(sec.name)}</h3>${renderProgression(sectionProgression(sec),key)}</div>`).join('')}</div>`;
-  return sections.map(sec=>{const chords=sectionProgression(sec);return `<div class="section"><h3>${esc(sec.name)}</h3>${chords.length?`<div class="progression">${chords.map((c,i)=>`<div class="degree-card"><small>Sequência ${i+1}</small><b>${esc(c)}</b><small>Grau ${esc(chordDegree(c,key))}</small></div>`).join('')}</div>`:''}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!chords.length&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;}).join('');
+  
+  if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3>${esc(sec.name)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
+  
+  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>`<div class="section-summary"><h3>${esc(sec.name)}</h3>${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+  
+  return sections.map(sec=>{
+    const progHtml = renderOptimizedProgression(sec, key, 'chord');
+    return `<div class="section"><h3>${esc(sec.name)}</h3>${progHtml}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!progHtml&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
+  }).join('');
 }
+
 async function loadSongs() {
   if(!configured()) { $('songList').innerHTML='<div class="empty">Configure a URL do backend no index.html para ativar a biblioteca.</div>';return; }
   try { songs=await api('listSongs',{query:$('search').value}); renderList(); }
@@ -143,16 +209,13 @@ function renderList() {
   $('songList').querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{try{renderSong(await api('getSong',{id:b.dataset.id}));renderList();}catch(e){alert(e.message)}});
 }
 async function loadMedleys() {
-  $('medleyPanel').classList.remove('hidden'); $('medleyResults').textContent='Calculando…';
+  $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
   try {const results=await api('suggestMedleys',{id:currentSong.id});$('medleyResults').innerHTML=results.length?results.map(m=>`<div class="medley"><div><strong>${esc(m.titulo)}</strong><div class="small muted">${esc(m.artista||'')} · Tom ${esc(m.tomOriginal||'—')} · ${m.bpm?esc(m.bpm)+' BPM':'BPM —'}</div><div class="small muted">${esc(m.motivo)}</div></div><div class="score">${m.score}%</div></div>`).join(''):'Cadastre mais músicas para receber sugestões.';}
   catch(e){$('medleyResults').textContent=e.message;}
 }
-$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};
-$('closeEditor').onclick=closeEditor;
+$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};$('closeEditor').onclick=closeEditor;
 $('refreshBtn').onclick=loadSongs;
-$('search').oninput=()=>loadSongs();
-$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
-$('saveBtn').onclick=async()=>{
+$('search').oninput=()=>loadSongs();$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};$('saveBtn').onclick=async()=>{
   const status=$('editorStatus');
   const song={titulo:$('title').value,artista:$('artist').value,tomOriginal:$('key').value,bpm:$('bpm').value,compasso:$('meter').value,capotrasteSugerido:$('capo').value,cifraOriginal:$('raw').value,observacoes:$('notes').value};
   try {notify(status,'Salvando…');const result=await api('importSong',{song});notify(status,`Salvo: ${result.titulo}. Revise seções, acordes e ritmo.`);await loadSongs();renderSong(await api('getSong',{id:result.id}));closeEditor();}
