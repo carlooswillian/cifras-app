@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.8 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.9 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -208,25 +208,40 @@ function chordLine(line) {
   return false;
 }
 
+// ATUALIZADO 0.3.9: Identificação aprimorada de seções com preservação de sufixos de medley
 function normalizeSection(name){
   const n=name.toLowerCase();
-  if(n.includes('intro'))return 'Introdução';
-  if(n.includes('pré')||n.includes('pre'))return 'Pré-Refrão'; 
-  if(n.includes('refr')||n.includes('coro'))return 'Refrão';
-  if(n.includes('primeira parte')||n.includes('vers'))return 'Primeira Parte';
-  if(n.includes('segunda parte'))return 'Segunda Parte';
-  if(n.includes('ponte')||n.includes('terceira parte'))return 'Ponte';
-  if(n.includes('solo'))return 'Solo';
-  if(n.includes('final'))return 'Final';
-  return name;
+  let base = name;
+  if(n.includes('intro')) base = 'Introdução';
+  else if(n.includes('interl')) base = 'Interlúdio'; 
+  else if(n.includes('pré')||n.includes('pre')) base = 'Pré-Refrão'; 
+  else if(n.includes('refr')||n.includes('coro')) base = 'Refrão';
+  else if(n.includes('primeira parte')||n.includes('vers')) base = 'Primeira Parte';
+  else if(n.includes('segunda parte')) base = 'Segunda Parte';
+  else if(n.includes('ponte')||n.includes('terceira parte')) base = 'Ponte';
+  else if(n.includes('solo')) base = 'Solo';
+  else if(n.includes('final')) base = 'Final';
+  
+  // Se possuir complemento (ex: Refrão - Águas Purificadoras), preserva o sufixo!
+  if (name.includes('-')) {
+    const parts = name.split('-');
+    if (parts.length > 1) {
+       return base + ' - ' + parts.slice(1).join('-').trim();
+    }
+  }
+  return base;
 }
 
+// ATUALIZADO 0.3.9: Separação automática de Interlúdios (acordes entre parênteses)
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
   function flush(){if(section.lines.length)out.push(section);}
+  
   lines.forEach(line=>{
     const t=line.trim();
+    
+    // Verifica marcação explícita de seção: [Refrão]
     const m=t.match(/^\[(.*?)\](.*)$/);
     if(m){
       flush();
@@ -238,11 +253,26 @@ function localParse(raw) {
       }
       return;
     }
+    
+    // Ignora cabeçalhos sujos
     if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
     if(!t) return;
+    
+    // Verifica Interlúdio implícito (Linha inteira entre parênteses e contendo acordes)
+    if (t.startsWith('(') && t.endsWith(')')) {
+       let inner = t.slice(1, -1).trim();
+       if (chordLine(inner)) {
+           flush(); // Salva a seção atual (ex: Refrão)
+           section = { name: 'Interlúdio', lines: [] };
+           section.lines.push({ chords: t, lyric: '' });
+           return; // Pula para a próxima linha
+       }
+    }
+    
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?t:'',lyric:isChord?'':line.trim()});
-  });flush();
+  });
+  flush();
   return out;
 }
 
@@ -408,7 +438,7 @@ function renderList() {
   });
 }
 
-// ATUALIZADO: Renderização limpa dos medleys (sem porcentagem e apenas resultados garantidos)
+// ATUALIZADO 0.3.9: Renderização limpa dos medleys compatíveis
 async function loadMedleys() {
   $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
   try {
@@ -421,7 +451,7 @@ async function loadMedleys() {
           <div class="small" style="color:var(--green); margin-top:3px; font-weight: 500;">✓ ${esc(m.motivo)}</div>
         </div>
       </div>
-    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música estritamente compatível pelo Tom foi encontrada na sua biblioteca.</div>';
+    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade estrita (mesmo capo) encontrada na biblioteca.</div>';
   } catch(e) { $('medleyResults').textContent=e.message; }
 }
 
