@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.5 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.6 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -85,31 +85,45 @@ function openEditor() { $('editor').classList.remove('hidden'); $('viewer').clas
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
 function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value='');$('preview').classList.add('hidden'); }
 
-// ATUALIZADO: Extração Automática de Título e Artista
+// ATUALIZADO: Heurística ninja para separar Título grudado com Artista
 $('raw').addEventListener('input', function() {
   const val = this.value;
   
-  // Extrai Tom
   const tomM = val.match(/Tom:\s*([A-G](?:#|b)?m?)/i);
   if (tomM && !$('key').value)$('key').value = tomM[1];
   
-  // Extrai Capo
   const capoM = val.match(/Capotraste:\s*(\d+)/i) || val.match(/Capo:\s*(\d+)/i);
   if (capoM && !$('capo').value)$('capo').value = capoM[1];
 
-  // Extrai Título e Artista pelas primeiras linhas (heurística)
   const lines = val.split('\n').map(l => l.trim()).filter(l => l !== '');
-  if (lines.length > 0 && !$('title').value) {
-    let possibleTitle = lines[0].split(/Composição de:/i)[0].trim();
-    if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i)) {
-      $('title').value = possibleTitle;
+  if (lines.length > 0) {
+    // Remove "Composição de:..." caso venha colado no final
+    let headerText = lines[0].split(/Composição de:/i)[0].trim();
+    
+    // Procura o momento exato em que uma letra minúscula (ou acento) bate numa Maiúscula
+    // Isso resolve o problema de textos como "Tudo é TeuDrops INA"
+    let splitMatch = headerText.match(/([a-z0-9áéíóúâêôãõç!?"'\)])([A-Z])/);
+    
+    let possibleTitle = headerText;
+    let possibleArtist = "";
+    
+    if (splitMatch) {
+        // Corta exatamente entre a minúscula e a maiúscula
+        let splitIdx = splitMatch.index + 1;
+        possibleTitle = headerText.substring(0, splitIdx).trim();
+        possibleArtist = headerText.substring(splitIdx).trim();
+    } else if (lines.length > 1) {
+        // Se houver quebra de linha real, o artista está na linha 2
+        let nextLine = lines[1].split(/Composição de:/i)[0].trim();
+        if (!nextLine.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(nextLine)) {
+            possibleArtist = nextLine;
+        }
     }
-  }
-  if (lines.length > 1 && !$('artist').value) {
-    let possibleArtist = lines[1].split(/Composição de:/i)[0].trim();
-    // Verifica se não é uma linha de metadados ou de acordes soltos
-    if (!possibleArtist.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(possibleArtist)) {
-      $('artist').value = possibleArtist;
+    
+    // Aplica nos campos
+    if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i) && !$('title').value) {$('title').value = possibleTitle;
+    }
+    if (possibleArtist && !$('artist').value) {$('artist').value = possibleArtist;
     }
   }
 });
@@ -135,7 +149,6 @@ function getWrittenKey(origKey, capoVal) {
   return written + (isMinor ? 'm' : '');
 }
 
-// ATUALIZADO: Limite Capotraste <= 5
 function renderCapoVariations(originalKey) {
   if(!originalKey) return '';
   let cleanKey = originalKey.replace(/m/i, '').trim();
@@ -148,7 +161,6 @@ function renderCapoVariations(originalKey) {
 
   let gIdx = notesArr.indexOf('G');
 
-  // Graus
   let capoI = (idx - gIdx + 12) % 12;
   let kI = notesArr[idx];
   
