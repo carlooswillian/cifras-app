@@ -76,7 +76,7 @@ async function api(action, data={}) {
 }
 function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error?'var(--danger)':'var(--green)'; }
 function openEditor(isEdit=false) { 
-  $('editor').classList.remove('hidden');$('viewer').classList.add('hidden');$('editorStatus').textContent='';$('editorEyebrow').textContent = isEdit ? 'Edição' : 'Adicionar ao songbook';
+  $('editor').classList.remove('hidden');$('viewer').classList.add('hidden'); $('editorStatus').textContent='';$('editorEyebrow').textContent = isEdit ? 'Edição' : 'Adicionar ao songbook';
   $('editorTitle').textContent = isEdit ? 'Editar cifra' : 'Importar cifra';
   window.scrollTo({top:0,behavior:'smooth'}); 
 }
@@ -91,9 +91,7 @@ function getWrittenKey(origKey, capoVal) {
   const c = parseInt(capoVal);
   if(isNaN(c) || c === 0 || !origKey) return origKey;
   
-  // Substitui qualquer 'b' minúsculo por 'B' maiúsculo e remove M de Maior para padronizar (ex: Bb -> BB)
   let root = origKey.replace(/b/g, 'B').toUpperCase().replace(/M$/, '');
-  
   let idxVal = NOTE_INDEX[root];
   if(idxVal === undefined) return origKey;
   
@@ -271,7 +269,6 @@ function renderSong(song) {
   $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });$('medleyBtn').onclick=loadMedleys;
   $('editRawBtn').onclick=()=>$('rawPanel').classList.toggle('hidden');
   
-  // Ação do Botão Editar (Carrega os dados atuais na tela de Edição)
   $('editSongBtn').onclick=()=>{$('title').value = currentSong.titulo || '';
     $('artist').value = currentSong.artista \vert{}\vert{} '';$('key').value = currentSong.tomOriginal || '';
     $('capo').value = currentSong.capotrasteSugerido \vert{}\vert{} '';$('raw').value = currentSong.cifraOriginal || '';
@@ -283,7 +280,7 @@ function renderSong(song) {
 function renderSections(sections,mode) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const origKey = currentSong.tomOriginal || '';
-  const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido); // Tom calculado (forma)
+  const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido);
   
   if(mode==='rhythm' || mode==='degrees') {
     const seen = new Set();
@@ -329,7 +326,6 @@ $('refreshBtn').onclick=loadSongs;
 $('search').oninput=()=>loadSongs();
 $('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
 
-// Atualiza ou importa dependendo de estarmos editando (dataset.editId) ou criando nova
 $('saveBtn').onclick=async()=>{
   const status=$('editorStatus');
   const editId = $('editor').dataset.editId;
