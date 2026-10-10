@@ -81,7 +81,7 @@ function openEditor() { $('editor').classList.remove('hidden'); $('viewer').clas
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
 function resetEditor() { ['title','artist','key','bpm','capo','raw','notes'].forEach(id=>$(id).value=''); $('meter').value='4/4';$('preview').classList.add('hidden'); }
 
-// Regex atualizada para pegar E7M, A7M, etc...
+// Regex atualizada para ler E7M, A7M, etc... e permitir o split corretamente
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
 
 function chordLine(line) {
@@ -97,8 +97,18 @@ function localParse(raw) {
   function flush(){if(section.lines.length)out.push(section);}
   lines.forEach(line=>{
     const t=line.trim();
-    const m=t.match(/^\[(.+?)\]$/);
-    if(m){flush();section={name:normalizeSection(m[1]),lines:[]};return;}
+    // Separa a tag [Intro] do que vier depois na mesma linha (ex: [Intro] E)
+    const m=t.match(/^\[(.*?)\](.*)$/);
+    if(m){
+      flush();
+      section={name:normalizeSection(m[1]),lines:[]};
+      let rem = m[2].trim();
+      if(rem) {
+        const isChord = chordLine(rem);
+        section.lines.push({chords:isChord?rem:'',lyric:isChord?'':rem});
+      }
+      return;
+    }
     if(!t || /^(Tom:|Afinação:|Composição de:)/i.test(t))return;
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?t:'',lyric:isChord?'':line.trim()});
@@ -115,12 +125,13 @@ function chordDegree(chord,key){
   const root=m[1].replace('b','B').toUpperCase(), k=key.replace('b','B').toUpperCase();
   if(NOTE_INDEX[root]===undefined||NOTE_INDEX[k]===undefined)return '?';
   const sem=(NOTE_INDEX[root]-NOTE_INDEX[k]+12)%12;const map={0:'1',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
-  return map[sem]+(/^m(?!aj|aj7)/i.test(m[2])?'m':'');
+  // Simplificação: ignora M/maj e foca só em se é menor (ex: E7M -> E -> 1)
+  const isMinor = m[2].startsWith('m') && !m[2].startsWith('maj') && !m[2].startsWith('m(maj');
+  return map[sem]+(isMinor?'m':'');
 }
 
 function sectionProgression(sec){return chordTokens(sec);}
 
-// Função para extrair um pedaço da letra para o subtítulo
 function getSectionSnippet(sec) {
   const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
   if (line) {
@@ -133,12 +144,11 @@ function getSectionSnippet(sec) {
   return '';
 }
 
-// Lógica OTIMIZADA de progressões e repetições
+// Lógica OTIMIZADA: Busca a *menor* repetição atômica (ex: 4 acordes repetidos 4x, ao invés de 8 acordes 2x)
 function compactProgression(sec, key) {
   let allOrig = [];
   let allDeg = [];
   
-  // Extrai linearmente todos os acordes de todas as linhas daquela seção
   sec.lines.forEach(l => {
     if(l.chords) {
       let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>CHORD_REGEX.test(c));
@@ -155,13 +165,13 @@ function compactProgression(sec, key) {
   let i = 0;
   let n = allDeg.length;
 
-  // Abordagem gulosa para detectar a maior repetição em bloco contíguo
   while (i < n) {
     let bestLen = 1;
     let maxCount = 1;
-    let maxPossibleLen = Math.floor((n - i) / 2);
+    let maxCoverage = 1;
     
-    for (let len = maxPossibleLen; len >= 1; len--) {
+    // Testa do menor comprimento possível para o maior
+    for (let len = 1; len <= Math.floor((n - i) / 2); len++) {
       let count = 1;
       while (i + count * len + len <= n) {
         let chunk1 = allDeg.slice(i, i + len).join(' ');
@@ -169,9 +179,18 @@ function compactProgression(sec, key) {
         if (chunk1 === chunk2) count++;
         else break;
       }
-      if (count > 1 && count * len > maxCount * bestLen) {
-        bestLen = len;
+      
+      let coverage = count * len;
+      if (coverage > maxCoverage) {
+        maxCoverage = coverage;
         maxCount = count;
+        bestLen = len;
+      } else if (coverage === maxCoverage && maxCoverage > 1) {
+        // Desempate: prioriza o bloco menor (ex: prefere bloco de 4 repetido 2x do que bloco de 8 repetido 1x)
+        if (len < bestLen) {
+          bestLen = len;
+          maxCount = count;
+        }
       }
     }
 
@@ -184,7 +203,7 @@ function compactProgression(sec, key) {
     }
   }
 
-  // Agrupa blocos sequenciais sem repetição numa única linha para melhor layout visual
+  // Agrupa blocos solitários
   let finalSeqs = [];
   for (let s of seqs) {
     if (s.count === 1) {
@@ -208,10 +227,12 @@ function renderOptimizedProgression(sec, key, emp) {
   return comp.map(s => `
     <div class="progression-row">
       ${s.deg.map((d, i) => {
-        const main = emp === 'degree' ? d : s.orig[i];
-        const sub = emp === 'degree' ? s.orig[i] : d;
-        const lbl = emp === 'degree' ? 'Acorde ' : 'Grau ';
-        return `<div class="degree-card" style="flex:0 1 auto;min-width:68px"><small>${lbl}${esc(sub)}</small><b style="font-size:22px">${esc(main)}</b></div>`;
+        // Se for modo 'degree' (graus), esconde o nome original do acorde do card e centraliza o número
+        if (emp === 'degree') {
+          return `<div class="degree-card" style="flex:0 1 auto;min-width:64px;padding:16px 10px"><b style="font-size:26px">${esc(d)}</b></div>`;
+        } else {
+          return `<div class="degree-card" style="flex:0 1 auto;min-width:64px"><small>Grau ${esc(d)}</small><b style="font-size:22px">${esc(s.orig[i])}</b></div>`;
+        }
       }).join('')}
       ${s.count > 1 ? `<div class="repeat-badge">${s.count}x</div>` : ''}
     </div>
@@ -236,10 +257,26 @@ function renderSections(sections,mode) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const key=currentSong.tomOriginal||'';
   
-  if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3 style="display:flex;align-items:center">${esc(sec.name)}${getSectionSnippet(sec)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
+  // Para Ritmo e Graus (modos estruturais), aplicamos o filtro para remover seções repetidas visualmente
+  if(mode==='rhythm' || mode==='degrees') {
+    const seen = new Set();
+    const uniqueSections = sections.filter(sec => {
+      const n = sec.name.toLowerCase();
+      if(seen.has(n)) return false;
+      seen.add(n);
+      return true;
+    });
+
+    if(mode==='rhythm') {
+      return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${uniqueSections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3 style="display:flex;align-items:center">${esc(sec.name)}${getSectionSnippet(sec)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
+    }
+
+    if(mode==='degrees') {
+      return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Blocos repetidos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+    }
+  }
   
-  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
-  
+  // Modo Letras (mantém a estrutura sequencial completa da música sem remover os duplicados)
   return sections.map(sec=>{
     const progHtml = renderOptimizedProgression(sec, key, 'chord');
     return `<div class="section"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${progHtml}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!progHtml&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
