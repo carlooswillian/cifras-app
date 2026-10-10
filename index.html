@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.0 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.9 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -208,6 +208,7 @@ function chordLine(line) {
   return false;
 }
 
+// ATUALIZADO 0.3.9: Identificação aprimorada de seções com preservação de sufixos de medley
 function normalizeSection(name){
   const n=name.toLowerCase();
   let base = name;
@@ -221,6 +222,7 @@ function normalizeSection(name){
   else if(n.includes('solo')) base = 'Solo';
   else if(n.includes('final')) base = 'Final';
   
+  // Se possuir complemento (ex: Refrão - Águas Purificadoras), preserva o sufixo!
   if (name.includes('-')) {
     const parts = name.split('-');
     if (parts.length > 1) {
@@ -230,68 +232,52 @@ function normalizeSection(name){
   return base;
 }
 
-// ATUALIZADO 0.4.0: Parseamento com pareamento Acorde -> Letra mantendo o espaçamento exato
+// ATUALIZADO 0.3.9: Separação automática de Interlúdios (acordes entre parênteses)
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
   function flush(){if(section.lines.length)out.push(section);}
   
-  let pendingChord = null;
-
   lines.forEach(line=>{
     const t=line.trim();
     
-    // Header de Seção
+    // Verifica marcação explícita de seção: [Refrão]
     const m=t.match(/^\[(.*?)\](.*)$/);
     if(m){
-      if(pendingChord) { section.lines.push({chords: pendingChord, lyric: ''}); pendingChord = null; }
       flush();
       section={name:normalizeSection(m[1]),lines:[]};
-      let rem = m[2];
-      if(rem.trim()) {
-        if(chordLine(rem.trim())) pendingChord = rem;
-        else section.lines.push({chords:'', lyric: rem.trim()});
+      let rem = m[2].trim();
+      if(rem) {
+        const isChord = chordLine(rem);
+        section.lines.push({chords:isChord?rem:'',lyric:isChord?'':rem});
       }
       return;
     }
     
+    // Ignora cabeçalhos sujos
     if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
+    if(!t) return;
     
-    // Linha vazia
-    if(!t) {
-        if(pendingChord) { section.lines.push({chords: pendingChord, lyric: ''}); pendingChord = null; }
-        return;
-    }
-    
-    // Interlúdio (Acordes entre parênteses)
+    // Verifica Interlúdio implícito (Linha inteira entre parênteses e contendo acordes)
     if (t.startsWith('(') && t.endsWith(')')) {
        let inner = t.slice(1, -1).trim();
        if (chordLine(inner)) {
-           if(pendingChord) { section.lines.push({chords: pendingChord, lyric: ''}); pendingChord = null; }
-           flush();
+           flush(); // Salva a seção atual (ex: Refrão)
            section = { name: 'Interlúdio', lines: [] };
-           section.lines.push({ chords: line, lyric: '' });
-           return;
+           section.lines.push({ chords: t, lyric: '' });
+           return; // Pula para a próxima linha
        }
     }
     
-    // É uma linha de acordes? Guarda ela pura para preservar o espaçamento.
-    if (chordLine(t)) {
-        if(pendingChord) { section.lines.push({chords: pendingChord, lyric: ''}); }
-        pendingChord = line.replace(/\r/g, ''); 
-    } else {
-        // É letra! Junta com o acorde pendente, se houver.
-        section.lines.push({chords: pendingChord || '', lyric: t});
-        pendingChord = null;
-    }
+    const isChord=chordLine(t);
+    section.lines.push({chords:isChord?t:'',lyric:isChord?'':line.trim()});
   });
-  
-  if(pendingChord) { section.lines.push({chords: pendingChord, lyric: ''}); }
   flush();
   return out;
 }
 
 function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>CHORD_REGEX.test(c));}
+function sectionProgression(sec){return chordTokens(sec);}
 
 function getSectionSnippet(sec) {
   const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
@@ -428,19 +414,9 @@ function renderSections(sections,mode) {
     return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
   }
   
-  // ATUALIZADO 0.4.0: Modo Letra + Acordes rende os acordes perfeitamente alinhados à letra (Removido os cards do topo)
   return sections.map(sec=>{
-    return `
-      <div class="section">
-        <h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>
-        ${sec.lines.map(l=>`
-          <div class="lyric-line">
-            ${l.chords ? `<div class="chords">${esc(l.chords)}</div>` : ''}
-            ${l.lyric ? `<div class="lyric">${esc(l.lyric)}</div>` : ''}
-          </div>
-        `).join('')}
-        ${!sec.lines.length ? '<p class="muted">Seção sem conteúdo reconhecido.</p>' : ''}
-      </div>`;
+    const progHtml = renderOptimizedProgression(sec, tk, 'chord');
+    return `<div class="section"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${progHtml}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!progHtml&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
   }).join('');
 }
 
@@ -462,6 +438,7 @@ function renderList() {
   });
 }
 
+// ATUALIZADO 0.3.9: Renderização limpa dos medleys compatíveis
 async function loadMedleys() {
   $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
   try {
