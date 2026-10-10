@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.4 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.5 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -85,13 +85,33 @@ function openEditor() { $('editor').classList.remove('hidden'); $('viewer').clas
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
 function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value='');$('preview').classList.add('hidden'); }
 
+// ATUALIZADO: Extração Automática de Título e Artista
 $('raw').addEventListener('input', function() {
   const val = this.value;
+  
+  // Extrai Tom
   const tomM = val.match(/Tom:\s*([A-G](?:#|b)?m?)/i);
   if (tomM && !$('key').value)$('key').value = tomM[1];
   
+  // Extrai Capo
   const capoM = val.match(/Capotraste:\s*(\d+)/i) || val.match(/Capo:\s*(\d+)/i);
   if (capoM && !$('capo').value)$('capo').value = capoM[1];
+
+  // Extrai Título e Artista pelas primeiras linhas (heurística)
+  const lines = val.split('\n').map(l => l.trim()).filter(l => l !== '');
+  if (lines.length > 0 && !$('title').value) {
+    let possibleTitle = lines[0].split(/Composição de:/i)[0].trim();
+    if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i)) {
+      $('title').value = possibleTitle;
+    }
+  }
+  if (lines.length > 1 && !$('artist').value) {
+    let possibleArtist = lines[1].split(/Composição de:/i)[0].trim();
+    // Verifica se não é uma linha de metadados ou de acordes soltos
+    if (!possibleArtist.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(possibleArtist)) {
+      $('artist').value = possibleArtist;
+    }
+  }
 });
 
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
@@ -115,12 +135,12 @@ function getWrittenKey(origKey, capoVal) {
   return written + (isMinor ? 'm' : '');
 }
 
-// NOVO: Calcula Capotraste necessário para tocar em G nos graus I, IV e V
+// ATUALIZADO: Limite Capotraste <= 5
 function renderCapoVariations(originalKey) {
   if(!originalKey) return '';
   let cleanKey = originalKey.replace(/m/i, '').trim();
   let isMinor = originalKey.toLowerCase().endsWith('m');
-  if (isMinor) return ''; // Foco em tons maiores para o shape de G no momento.
+  if (isMinor) return ''; 
 
   if (cleanKey.length > 1 && cleanKey[1] === 'b') cleanKey = flatToSharp[cleanKey.substring(0,2)] || cleanKey;
   let idx = notesArr.indexOf(cleanKey);
@@ -128,16 +148,14 @@ function renderCapoVariations(originalKey) {
 
   let gIdx = notesArr.indexOf('G');
 
-  // Tom Original (1º grau)
+  // Graus
   let capoI = (idx - gIdx + 12) % 12;
   let kI = notesArr[idx];
   
-  // 4º grau (Subdominante)
   let ivIdx = (idx + 5) % 12;
   let capoIV = (ivIdx - gIdx + 12) % 12;
   let kIV = notesArr[ivIdx];
 
-  // 5º grau (Dominante)
   let vIdx = (idx + 7) % 12;
   let capoV = (vIdx - gIdx + 12) % 12;
   let kV = notesArr[vIdx];
@@ -148,15 +166,20 @@ function renderCapoVariations(originalKey) {
      return n;
   };
 
+  let chipsHtml = [];
+  if (capoI <= 5) chipsHtml.push(`<span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kI)} (1º) → Capo na ${capoI}ª</span>`);
+  if (capoIV <= 5) chipsHtml.push(`<span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kIV)} (4º) → Capo na ${capoIV}ª</span>`);
+  if (capoV <= 5) chipsHtml.push(`<span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kV)} (5º) → Capo na ${capoV}ª</span>`);
+
+  if (chipsHtml.length === 0) return '';
+
   return `
     <div style="background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:12px;">
       <div style="font-size:11px; color:var(--blue); font-weight:800; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em;">💡 Sugestões de Capotraste (Tocar no Shape de G)</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kI)} (1º) → Capo na ${capoI}ª</span>
-        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kIV)} (4º) → Capo na ${capoIV}ª</span>
-        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kV)} (5º) → Capo na ${capoV}ª</span>
+        ${chipsHtml.join('')}
       </div>
-      <div class="muted" style="font-size:12px; margin-top:8px;">Variações ideais para medleys. O Shape de G possui transições mais abertas e harmônicas.</div>
+      <div class="muted" style="font-size:12px; margin-top:8px;">Variações ideais para medleys (Até 5ª casa). O Shape de G possui transições mais abertas e harmônicas.</div>
     </div>
   `;
 }
