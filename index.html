@@ -8,11 +8,7 @@
 <style>
 :root{color-scheme:dark;--bg:#08090d;--panel:#12141b;--panel2:#191c25;--line:#292d39;--text:#f5f6fb;--muted:#9ba2b3;--blue:#78a7ff;--purple:#b6a0ff;--green:#80dfb0;--danger:#ff8e9a;--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
-button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:opacity .2s;}
-button:hover{opacity:0.8;}
-button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-button.danger{background:#401b25;color:#ffdce0;border:1px solid #5c2432;}
-input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.lyric-line{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;margin:0 0 13px}.chords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-height:20px}.lyric{white-space:pre-wrap;overflow-wrap:anywhere;font-size:17px;line-height:1.7}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.lyric-line{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;margin:0 0 13px}.chords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-height:20px}.lyric{white-space:pre-wrap;overflow-wrap:anywhere;font-size:17px;line-height:1.7}
 .progression-row{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px}
 .degree-card{min-width:64px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:12px;padding:9px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center}
 .degree-card b{display:block;color:var(--blue);font-size:20px}
@@ -43,12 +39,12 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
 
       <section class="panel hidden" id="editor">
-        <div class="hero"><div><div class="eyebrow">Adicionar ao songbook</div><h2 id="editorTitle">Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
+        <div class="hero"><div><div class="eyebrow" id="editorEyebrow">Adicionar ao songbook</div><h2 id="editorTitle">Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
         <div class="form-grid">
-          <div class="field"><label for="title">Título (opcional: detectar)</label><input id="title" placeholder="Ex.: Toda Terra"></div>
-          <div class="field"><label for="artist">Artista (opcional: detectar)</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
-          <div class="field"><label for="key">Tom original</label><input id="key" placeholder="Ex.: Bb, E, C#m"></div>
-          <div class="field"><label for="capo">Capotraste sugerido (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
+          <div class="field"><label for="title">Título</label><input id="title" placeholder="Ex.: Toda Terra"></div>
+          <div class="field"><label for="artist">Artista</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
+          <div class="field"><label for="key">Tom original</label><input id="key" placeholder="Ex.: E, Bb, C#m"></div>
+          <div class="field"><label for="capo">Capotraste (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
           <div class="field span2"><label for="raw">Cifra completa</label><textarea id="raw" placeholder="Cole aqui a cifra com títulos das seções, acordes e letra…"></textarea></div>
           <div class="field span2"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: versão ao vivo, dedilhado no início..."></div>
         </div>
@@ -59,7 +55,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.1 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -79,13 +75,13 @@ async function api(action, data={}) {
   return json.data;
 }
 function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error?'var(--danger)':'var(--green)'; }
-function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden');$('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
-function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
-function resetEditor() { 
-  ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value='');$('preview').classList.add('hidden'); 
-  delete $('editor').dataset.editId;
-  $('editorTitle').textContent = 'Importar cifra';
+function openEditor(isEdit=false) { 
+  $('editor').classList.remove('hidden');$('viewer').classList.add('hidden');$('editorStatus').textContent='';$('editorEyebrow').textContent = isEdit ? 'Edição' : 'Adicionar ao songbook';
+  $('editorTitle').textContent = isEdit ? 'Editar cifra' : 'Importar cifra';
+  window.scrollTo({top:0,behavior:'smooth'}); 
 }
+function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
+function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value=''); delete $('editor').dataset.editId; $('preview').classList.add('hidden'); }
 
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
 const NOTE_INDEX={'C':0,'B#':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,'FB':4,'E#':5,'F':5,'F#':6,'GB':6,'G':7,'G#':8,'AB':8,'A':9,'A#':10,'BB':10,'B':11,'CB':11};
@@ -93,10 +89,10 @@ const NOTE_INDEX={'C':0,'B#':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,'FB':4,'E
 // Calcula automaticamente qual tom está sendo lido na cifra escrita, baseado no Tom Original e no Capo
 function getWrittenKey(origKey, capoVal) {
   const c = parseInt(capoVal);
-  if(!c || !origKey) return origKey;
+  if(isNaN(c) || c === 0 || !origKey) return origKey;
   
-  let root = origKey.toUpperCase().replace('B','b').replace('M','');
-  if(root === 'Bb') root = 'BB'; // Ajuste para o NOTE_INDEX
+  // Substitui qualquer 'b' minúsculo por 'B' maiúsculo e remove M de Maior para padronizar (ex: Bb -> BB)
+  let root = origKey.replace(/b/g, 'B').toUpperCase().replace(/M$/, '');
   
   let idxVal = NOTE_INDEX[root];
   if(idxVal === undefined) return origKey;
@@ -146,7 +142,7 @@ function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chor
 
 function chordDegree(chord,key){
   const m=chord.match(/^([A-G](?:#|b)?)(.*)$/);if(!m||!key)return '?';
-  const root=m[1].replace('b','B').toUpperCase(), k=key.replace('b','B').toUpperCase();
+  const root=m[1].replace(/b/g,'B').toUpperCase(), k=key.replace(/b/g,'B').toUpperCase();
   if(NOTE_INDEX[root]===undefined||NOTE_INDEX[k]===undefined)return '?';
   const sem=(NOTE_INDEX[root]-NOTE_INDEX[k]+12)%12;const map={0:'1',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
   const isMinor = m[2].startsWith('m') && !m[2].startsWith('maj') && !m[2].startsWith('m(maj');
@@ -262,46 +258,32 @@ function renderSong(song) {
   const sections=localParse(song.cifraOriginal||'');
   
   const writtenKey = getWrittenKey(song.tomOriginal, song.capotrasteSugerido);
-  const tomText = song.tomOriginal ? `Tom ${esc(song.tomOriginal)}${writtenKey && writtenKey !== song.tomOriginal ? ` (Escrito em ${writtenKey})` : ''}` : 'Tom —';
-  const capoText = song.capotrasteSugerido ? `Capo ${esc(song.capotrasteSugerido)}` : 'Capo não definido';
+  const tomText = song.tomOriginal ? `Tom ${esc(song.tomOriginal)}${writtenKey && writtenKey !== song.tomOriginal ? ` (Tocado em ${writtenKey})` : ''}` : 'Tom —';
+  const capoText = song.capotrasteSugerido ? `Capo ${esc(song.capotrasteSugerido)}` : '<span class="muted">Sem Capo</span>';
   
   $('viewer').innerHTML=`
-    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div><div class="chips"><span class="chip">${tomText}</span><span class="chip">${capoText}</span></div></div>
-    <div class="toolbar"><button class="secondary" id="editSongBtn">Editar</button><button class="danger" id="deleteSongBtn">Excluir</button><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
+    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div><div class="chips"><span class="chip">${tomText}</span><span class="chip">${capoText}</span></div></div><div class="toolbar"><button class="secondary" id="editSongBtn">✎ Editar</button><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
     <div class="notice">Cifra simplificada: os acordes são convertidos para o sistema Nashville automaticamente usando o Tom e Capotraste inseridos.</div>
     <div class="tabs" style="margin-top:16px"><button class="tab active" data-view="lyrics">Letra + acordes</button><button class="tab" data-view="degrees">Graus (Otimizado)</button><button class="tab" data-view="rhythm">Ritmo</button></div>
     <div id="songContent">${renderSections(sections,'lyrics')}</div>
     <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>
     <div id="rawPanel" class="hidden"><h3>Cifra original</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted)">${esc(song.cifraOriginal||'')}</pre></div>`;
-  
   $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });$('medleyBtn').onclick=loadMedleys;
   $('editRawBtn').onclick=()=>$('rawPanel').classList.toggle('hidden');
-
-  // Funcionalidades de Edição e Exclusão Adicionadas:
-  $('editSongBtn').onclick = () => {$('title').value = currentSong.titulo || '';
+  
+  // Ação do Botão Editar (Carrega os dados atuais na tela de Edição)
+  $('editSongBtn').onclick=()=>{$('title').value = currentSong.titulo || '';
     $('artist').value = currentSong.artista \vert{}\vert{} '';$('key').value = currentSong.tomOriginal || '';
     $('capo').value = currentSong.capotrasteSugerido \vert{}\vert{} '';$('raw').value = currentSong.cifraOriginal || '';
     $('notes').value = currentSong.observacoes \vert{}\vert{} '';$('editor').dataset.editId = currentSong.id;
-    $('editorTitle').textContent = 'Editar música';
-    openEditor();
-  };
-
-  $('deleteSongBtn').onclick = async () => {
-    if(!confirm('Tem certeza que deseja excluir esta música do banco de dados?')) return;
-    try {
-      $('songContent').innerHTML = '<div class="empty">Excluindo...</div>';
-      await api('deleteSong', {id: currentSong.id});
-      currentSong = null;
-      $('viewer').innerHTML = '<div class="empty"><div style="font-size:34px">✓</div><strong>Música excluída com sucesso.</strong></div>';
-      loadSongs();
-    } catch(e) { alert(e.message); }
+    openEditor(true);
   };
 }
 
 function renderSections(sections,mode) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const origKey = currentSong.tomOriginal || '';
-  const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido); // Tom calculado
+  const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido); // Tom calculado (forma)
   
   if(mode==='rhythm' || mode==='degrees') {
     const seen = new Set();
@@ -317,7 +299,7 @@ function renderSections(sections,mode) {
     }
 
     if(mode==='degrees') {
-      return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos repetidos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+      return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (base para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos repetidos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
     }
   }
   
@@ -342,12 +324,15 @@ async function loadMedleys() {
   try {const results=await api('suggestMedleys',{id:currentSong.id});$('medleyResults').innerHTML=results.length?results.map(m=>`<div class="medley"><div><strong>${esc(m.titulo)}</strong><div class="small muted">${esc(m.artista||'')} · Tom ${esc(m.tomOriginal||'—')}</div><div class="small muted">${esc(m.motivo)}</div></div><div class="score">${m.score}%</div></div>`).join(''):'Cadastre mais músicas para receber sugestões.';}
   catch(e){$('medleyResults').textContent=e.message;}
 }
-$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};$('closeEditor').onclick=closeEditor;
+$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor(); openEditor(false);};$('closeEditor').onclick=closeEditor;
 $('refreshBtn').onclick=loadSongs;
-$('search').oninput=()=>loadSongs();$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
+$('search').oninput=()=>loadSongs();
+$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
 
+// Atualiza ou importa dependendo de estarmos editando (dataset.editId) ou criando nova
 $('saveBtn').onclick=async()=>{
   const status=$('editorStatus');
+  const editId = $('editor').dataset.editId;
   const song={
     titulo:$('title').value,
     artista:$('artist').value,
@@ -359,15 +344,13 @@ $('saveBtn').onclick=async()=>{
     observacoes:$('notes').value
   };
   
-  // Se for uma edição, enviamos o ID junto
-  if ($('editor').dataset.editId) {
-    song.id = $('editor').dataset.editId;
-  }
+  if(editId) song.id = editId;
 
   try {
-    notify(status, song.id ? 'Atualizando música (pode levar alguns segundos)...' : 'Salvando música (pode levar alguns segundos)...');
-    const result=await api('importSong',{song});
-    notify(status,`Sucesso! Carregando ${result.titulo}...`);
+    notify(status, editId ? 'Atualizando música...' : 'Salvando música...');
+    const action = editId ? 'updateSong' : 'importSong';
+    const result=await api(action,{song});
+    notify(status,`Salvo: ${result.titulo}. Carregando...`);
     await loadSongs();
     renderSong(await api('getSong',{id:result.id}));
     closeEditor();
