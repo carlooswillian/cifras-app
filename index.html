@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.6 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.7 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -85,7 +85,6 @@ function openEditor() { $('editor').classList.remove('hidden'); $('viewer').clas
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
 function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value='');$('preview').classList.add('hidden'); }
 
-// ATUALIZADO: Heurística ninja para separar Título grudado com Artista
 $('raw').addEventListener('input', function() {
   const val = this.value;
   
@@ -97,34 +96,24 @@ $('raw').addEventListener('input', function() {
 
   const lines = val.split('\n').map(l => l.trim()).filter(l => l !== '');
   if (lines.length > 0) {
-    // Remove "Composição de:..." caso venha colado no final
     let headerText = lines[0].split(/Composição de:/i)[0].trim();
-    
-    // Procura o momento exato em que uma letra minúscula (ou acento) bate numa Maiúscula
-    // Isso resolve o problema de textos como "Tudo é TeuDrops INA"
     let splitMatch = headerText.match(/([a-z0-9áéíóúâêôãõç!?"'\)])([A-Z])/);
-    
     let possibleTitle = headerText;
     let possibleArtist = "";
     
     if (splitMatch) {
-        // Corta exatamente entre a minúscula e a maiúscula
         let splitIdx = splitMatch.index + 1;
         possibleTitle = headerText.substring(0, splitIdx).trim();
         possibleArtist = headerText.substring(splitIdx).trim();
     } else if (lines.length > 1) {
-        // Se houver quebra de linha real, o artista está na linha 2
         let nextLine = lines[1].split(/Composição de:/i)[0].trim();
         if (!nextLine.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(nextLine)) {
             possibleArtist = nextLine;
         }
     }
     
-    // Aplica nos campos
-    if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i) && !$('title').value) {$('title').value = possibleTitle;
-    }
-    if (possibleArtist && !$('artist').value) {$('artist').value = possibleArtist;
-    }
+    if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i) && !$('title').value) {$('title').value = possibleTitle;}
+    if (possibleArtist && !$('artist').value) {$('artist').value = possibleArtist;}
   }
 });
 
@@ -219,6 +208,21 @@ function chordLine(line) {
   return false;
 }
 
+// ATUALIZADO: Lógica de renomeação priorizando Pré-Refrão
+function normalizeSection(name){
+  const n=name.toLowerCase();
+  if(n.includes('intro'))return 'Introdução';
+  if(n.includes('pré')||n.includes('pre'))return 'Pré-Refrão'; // Vem antes do Refrão para não ser confundido!
+  if(n.includes('refr')||n.includes('coro'))return 'Refrão';
+  if(n.includes('primeira parte')||n.includes('vers'))return 'Primeira Parte';
+  if(n.includes('segunda parte'))return 'Segunda Parte';
+  if(n.includes('ponte')||n.includes('terceira parte'))return 'Ponte';
+  if(n.includes('solo'))return 'Solo';
+  if(n.includes('final'))return 'Final';
+  return name;
+}
+
+// ATUALIZADO: Filtro de lixo para evitar falsas "Introduções"
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -236,13 +240,14 @@ function localParse(raw) {
       }
       return;
     }
-    if(!t || /^(Tom:|Afinação:|Composição de:)/i.test(t))return;
+    // Melhorado: se conter qualquer metadata chave em qualquer lugar da linha, ignora!
+    if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
+    if(!t) return;
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?t:'',lyric:isChord?'':line.trim()});
   });flush();
   return out;
 }
-function normalizeSection(name){const n=name.toLowerCase();if(n.includes('intro'))return 'Introdução';if(n.includes('refr'))return 'Refrão';if(n.includes('primeira parte')||n.includes('vers'))return 'Primeira Parte';if(n.includes('segunda parte'))return 'Segunda Parte';if(n.includes('ponte')||n.includes('terceira parte'))return 'Ponte';if(n.includes('solo'))return 'Solo';if(n.includes('final'))return 'Final';return name;}
 
 function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>CHORD_REGEX.test(c));}
 function sectionProgression(sec){return chordTokens(sec);}
