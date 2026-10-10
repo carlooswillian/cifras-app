@@ -80,13 +80,17 @@ function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error
 function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden');$('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
 function resetEditor() { ['title','artist','key','bpm','capo','raw','notes'].forEach(id=>$(id).value=''); $('meter').value='4/4';$('preview').classList.add('hidden'); }
+
+// Regex atualizada para pegar E7M, A7M, etc...
+const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
+
 function chordLine(line) {
   const trimmed=line.trim();
   const tokens=trimmed.split(/\s+/);
-  const chordRe=/^[A-G](?:#|b)?(?:(?:m(?!aj)|maj|min|dim|aug|sus|add)?\d*(?:M|maj)?)(?:\/[A-G](?:#|b)?)?$/;
-  if (tokens.length && tokens.every(t=>chordRe.test(t) || /^[()[\]-]+$/.test(t))) return true;
+  if (tokens.length && tokens.every(t=>CHORD_REGEX.test(t) || /^[()[\]-]+$/.test(t))) return true;
   return false;
 }
+
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -103,73 +107,101 @@ function localParse(raw) {
 }
 function normalizeSection(name){const n=name.toLowerCase();if(n.includes('intro'))return 'Introdução';if(n.includes('refr'))return 'Refrão';if(n.includes('primeira parte')||n.includes('vers'))return 'Primeira Parte';if(n.includes('segunda parte'))return 'Segunda Parte';if(n.includes('ponte')||n.includes('terceira parte'))return 'Ponte';if(n.includes('solo'))return 'Solo';if(n.includes('final'))return 'Final';return name;}
 const NOTE_INDEX={'C':0,'B#':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,'FB':4,'E#':5,'F':5,'F#':6,'GB':6,'G':7,'G#':8,'AB':8,'A':9,'A#':10,'BB':10,'B':11,'CB':11};
-function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>/^[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?$/.test(c));}
+
+function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>CHORD_REGEX.test(c));}
+
 function chordDegree(chord,key){
   const m=chord.match(/^([A-G](?:#|b)?)(.*)$/);if(!m||!key)return '?';
   const root=m[1].replace('b','B').toUpperCase(), k=key.replace('b','B').toUpperCase();
   if(NOTE_INDEX[root]===undefined||NOTE_INDEX[k]===undefined)return '?';
   const sem=(NOTE_INDEX[root]-NOTE_INDEX[k]+12)%12;const map={0:'1',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
-  return map[sem]+(/^m(?!aj)/.test(m[2])?'m':'');
+  return map[sem]+(/^m(?!aj|aj7)/i.test(m[2])?'m':'');
 }
+
 function sectionProgression(sec){return chordTokens(sec);}
 
-// --- LÓGICA DE OTIMIZAÇÃO/COMPACTAÇÃO DE ACORDES ATUALIZADA ---
-function findSubPattern(arr) {
-  const n = arr.length;
-  if(n === 0) return { pattern: arr, count: 1 };
-  for(let len=1; len<=n/2; len++) {
-    if(n%len === 0) {
-      let match = true;
-      for(let i=len; i<n; i++) {
-        if(arr[i] !== arr[i%len]) { match = false; break; }
-      }
-      if(match) return { pattern: arr.slice(0, len), count: n/len };
-    }
+// Função para extrair um pedaço da letra para o subtítulo
+function getSectionSnippet(sec) {
+  const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
+  if (line) {
+    let text = line.lyric.trim();
+    let words = text.split(/\s+/);
+    let snippet = words.slice(0, 4).join(' ');
+    if (words.length > 4) snippet += '...';
+    return ` <span class="muted" style="font-size:13px; font-weight:normal; text-transform:none; margin-left:6px; letter-spacing: normal;">(${esc(snippet)})</span>`;
   }
-  return { pattern: arr, count: 1 };
+  return '';
 }
+
+// Lógica OTIMIZADA de progressões e repetições
 function compactProgression(sec, key) {
-  let allChords = [];
+  let allOrig = [];
+  let allDeg = [];
+  
+  // Extrai linearmente todos os acordes de todas as linhas daquela seção
   sec.lines.forEach(l => {
     if(l.chords) {
-      let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>/^[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?$/.test(c));
-      if(ch.length) allChords.push(ch);
+      let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>CHORD_REGEX.test(c));
+      ch.forEach(c => {
+         allOrig.push(c);
+         allDeg.push(chordDegree(c, key));
+      });
     }
   });
-  
-  if(!allChords.length) return [];
-  
-  // Tenta comprimir a seção inteira se for um loop simétrico
-  let flatOrig = allChords.flat();
-  let flatDeg = flatOrig.map(c => chordDegree(c, key));
-  let globalSub = findSubPattern(flatDeg);
-  
-  if(globalSub.count > 1) {
-    return [{ orig: flatOrig.slice(0, globalSub.pattern.length), deg: globalSub.pattern, count: globalSub.count }];
-  }
-  
-  // Se não for um loop perfeito completo, tenta comprimir blocos internos sucessivos
+
+  if (allDeg.length === 0) return [];
+
   let seqs = [];
-  allChords.forEach(ch => {
-    let deg = ch.map(c => chordDegree(c, key));
-    let sub = findSubPattern(deg);
-    if(sub.count > 1) seqs.push({ orig: ch.slice(0, sub.pattern.length), deg: sub.pattern, count: sub.count });
-    else seqs.push({ orig: ch, deg: deg, count: 1 });
-  });
-  
-  let out = [];
-  for(let s of seqs) {
-    if(out.length) {
-      let last = out[out.length-1];
-      if(last.deg.join(' ') === s.deg.join(' ')) {
-        last.count += s.count;
-        continue;
+  let i = 0;
+  let n = allDeg.length;
+
+  // Abordagem gulosa para detectar a maior repetição em bloco contíguo
+  while (i < n) {
+    let bestLen = 1;
+    let maxCount = 1;
+    let maxPossibleLen = Math.floor((n - i) / 2);
+    
+    for (let len = maxPossibleLen; len >= 1; len--) {
+      let count = 1;
+      while (i + count * len + len <= n) {
+        let chunk1 = allDeg.slice(i, i + len).join(' ');
+        let chunk2 = allDeg.slice(i + count * len, i + count * len + len).join(' ');
+        if (chunk1 === chunk2) count++;
+        else break;
+      }
+      if (count > 1 && count * len > maxCount * bestLen) {
+        bestLen = len;
+        maxCount = count;
       }
     }
-    out.push(s);
+
+    if (maxCount > 1) {
+      seqs.push({ orig: allOrig.slice(i, i + bestLen), deg: allDeg.slice(i, i + bestLen), count: maxCount });
+      i += bestLen * maxCount;
+    } else {
+      seqs.push({ orig: [allOrig[i]], deg: [allDeg[i]], count: 1 });
+      i++;
+    }
   }
-  return out;
+
+  // Agrupa blocos sequenciais sem repetição numa única linha para melhor layout visual
+  let finalSeqs = [];
+  for (let s of seqs) {
+    if (s.count === 1) {
+      if (finalSeqs.length > 0 && finalSeqs[finalSeqs.length - 1].count === 1) {
+        finalSeqs[finalSeqs.length - 1].orig.push(s.orig[0]);
+        finalSeqs[finalSeqs.length - 1].deg.push(s.deg[0]);
+      } else {
+        finalSeqs.push({ orig: [...s.orig], deg: [...s.deg], count: 1 });
+      }
+    } else {
+      finalSeqs.push(s);
+    }
+  }
+
+  return finalSeqs;
 }
+
 function renderOptimizedProgression(sec, key, emp) {
   const comp = compactProgression(sec, key);
   if(!comp.length) return '';
@@ -185,7 +217,6 @@ function renderOptimizedProgression(sec, key, emp) {
     </div>
   `).join('');
 }
-// ---------------------------------------------------------
 
 function renderSong(song) {
   currentSong=song;
@@ -205,23 +236,13 @@ function renderSections(sections,mode) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const key=currentSong.tomOriginal||'';
   
-  if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3>${esc(sec.name)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
+  if(mode==='rhythm') return `<div class="section"><h3>Batidas por seção · rascunho 4/4</h3><p class="muted">Ajuste mentalmente ou revise antes de tocar ao vivo.</p><div class="meter">${currentSong.bpm?esc(currentSong.bpm)+' BPM':'BPM não informado'}</div>${sections.map(sec=>{const chords=sectionProgression(sec);if(!chords.length)return '';let html=`<div class="section-summary"><h3 style="display:flex;align-items:center">${esc(sec.name)}${getSectionSnippet(sec)}</h3>`;for(let i=0;i<chords.length;i+=4){html+=`<div class="bar-label">Compasso ${Math.floor(i/4)+1} · sugestão</div><div class="beat-grid">${[0,1,2,3].map(j=>`<div class="beat-cell"><span class="count">Batida ${j+1}</span><strong>${esc(chords[i+j]||'—')}</strong></div>`).join('')}</div>`;}return html+'</div>';}).join('')}<p class="small muted">Acordes subdivididos não são inferidos automaticamente pela letra.</p></div>`;
   
-  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>{
-    const firstLyric = sec.lines.find(l => l.lyric && l.lyric.trim() && !l.lyric.match(/^\\[.*\\]$/))?.lyric.trim();
-    let snippetStr = '';
-    if (firstLyric) {
-      const words = firstLyric.split(/\\s+/);
-      const snippet = words.slice(0, 4).join(' ');
-      const ellipsis = words.length > 4 ? '...' : '';
-      snippetStr = \` <span style="text-transform:none; color:var(--muted); font-weight:normal; letter-spacing:normal; font-size:13px">(\${esc(snippet)}\${ellipsis})</span>\`;
-    }
-    return \`<div class="section-summary"><h3 style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px">\${esc(sec.name)}\${snippetStr}</h3>\${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>\`;
-  }).join('')}</div>`;
+  if(mode==='degrees') return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom de referência: <strong>${esc(key||'não informado')}</strong>. Repetições na mesma seção são agrupadas (2x, 3x...).</p>${sections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,key,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
   
   return sections.map(sec=>{
     const progHtml = renderOptimizedProgression(sec, key, 'chord');
-    return `<div class="section"><h3>${esc(sec.name)}</h3>${progHtml}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!progHtml&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
+    return `<div class="section"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${progHtml}${sec.lines.filter(l=>l.lyric).map(l=>`<div class="lyric-line"><div class="lyric">${esc(l.lyric)}</div></div>`).join('')}${!progHtml&&!sec.lines.some(l=>l.lyric)?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
   }).join('');
 }
 
