@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.3 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.4 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -113,6 +113,52 @@ function getWrittenKey(origKey, capoVal) {
   if (written === 'A#') written = 'Bb';
   if (written === 'D#') written = 'Eb';
   return written + (isMinor ? 'm' : '');
+}
+
+// NOVO: Calcula Capotraste necessário para tocar em G nos graus I, IV e V
+function renderCapoVariations(originalKey) {
+  if(!originalKey) return '';
+  let cleanKey = originalKey.replace(/m/i, '').trim();
+  let isMinor = originalKey.toLowerCase().endsWith('m');
+  if (isMinor) return ''; // Foco em tons maiores para o shape de G no momento.
+
+  if (cleanKey.length > 1 && cleanKey[1] === 'b') cleanKey = flatToSharp[cleanKey.substring(0,2)] || cleanKey;
+  let idx = notesArr.indexOf(cleanKey);
+  if (idx === -1) return '';
+
+  let gIdx = notesArr.indexOf('G');
+
+  // Tom Original (1º grau)
+  let capoI = (idx - gIdx + 12) % 12;
+  let kI = notesArr[idx];
+  
+  // 4º grau (Subdominante)
+  let ivIdx = (idx + 5) % 12;
+  let capoIV = (ivIdx - gIdx + 12) % 12;
+  let kIV = notesArr[ivIdx];
+
+  // 5º grau (Dominante)
+  let vIdx = (idx + 7) % 12;
+  let capoV = (vIdx - gIdx + 12) % 12;
+  let kV = notesArr[vIdx];
+
+  const formatNote = n => {
+     if(n === 'A#') return 'Bb';
+     if(n === 'D#') return 'Eb';
+     return n;
+  };
+
+  return `
+    <div style="background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:12px;">
+      <div style="font-size:11px; color:var(--blue); font-weight:800; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em;">💡 Sugestões de Capotraste (Tocar no Shape de G)</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kI)} (1º) → Capo na ${capoI}ª</span>
+        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kIV)} (4º) → Capo na ${capoIV}ª</span>
+        <span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kV)} (5º) → Capo na ${capoV}ª</span>
+      </div>
+      <div class="muted" style="font-size:12px; margin-top:8px;">Variações ideais para medleys. O Shape de G possui transições mais abertas e harmônicas.</div>
+    </div>
+  `;
 }
 
 function chordDegree(chord, key) {
@@ -224,7 +270,6 @@ function compactProgression(sec, key) {
   return finalSeqs;
 }
 
-// Redução sutil do tamanho dos cards implementada no style e nas tags HTML abaixo
 function renderOptimizedProgression(sec, key, emp) {
   const comp = compactProgression(sec, key);
   if(!comp.length) return '';
@@ -251,6 +296,8 @@ function renderSong(song) {
   const capoText = song.capotrasteSugerido ? `Capo: ${esc(song.capotrasteSugerido)}` : '';
   const writtenText = (writtenKey && writtenKey !== song.tomOriginal) ? `Tom Tocado: ${esc(writtenKey)}` : '';
   
+  const capoVariationsHtml = renderCapoVariations(song.tomOriginal);
+  
   $('viewer').innerHTML=`
     <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div>
     <div class="chips">
@@ -259,7 +306,10 @@ function renderSong(song) {
       ${writtenText ? `<span class="chip" style="background:var(--purple);color:#08090d;font-weight:bold;">${writtenText}</span>` : ''}
     </div>
     </div><div class="toolbar"><button class="secondary" id="medleyBtn">Medleys</button><button class="danger" id="deleteBtn">Excluir</button></div></div>
+    
     <div class="notice">Cifra simplificada convertida para o sistema Nashville. O Tom Tocado foi calculado automaticamente usando o Capotraste.</div>
+    ${capoVariationsHtml}
+
     <div class="tabs" style="margin-top:16px">
       <button class="tab active" data-view="degrees">Graus (Otimizado)</button>
       <button class="tab" data-view="lyrics">Letra + acordes</button>
@@ -312,7 +362,6 @@ function renderList() {
   $('songCount').textContent=`(${songs.length})`;
   $('songList').innerHTML=songs.length?songs.map(s=>`<button class="song-item ${currentSong&&currentSong.id===s.id?'active':''}" data-id="${esc(s.id)}"><strong>${esc(s.titulo)}</strong><small>${esc(s.artista||'Artista não informado')} · ${esc(s.tomOriginal||'Tom —')}</small></button>`).join(''):'<div class="empty">Nenhuma música salva ainda.</div>';
   
-  // Ao clicar em uma música na lista, abre a música e FECHA o menu lateral automaticamente
   $('songList').querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{
     try{
       renderSong(await api('getSong',{id:b.dataset.id}));
