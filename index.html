@@ -39,30 +39,31 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
 
       <section class="panel hidden" id="editor">
-        <div class="hero"><div><div class="eyebrow" id="editorEyebrow">Adicionar ao songbook</div><h2 id="editorTitle">Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
+        <div class="hero"><div><div class="eyebrow">Adicionar ao songbook</div><h2>Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
         <div class="form-grid">
-          <div class="field"><label for="title">Título</label><input id="title" placeholder="Ex.: Toda Terra"></div>
-          <div class="field"><label for="artist">Artista</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
-          <div class="field"><label for="key">Tom original</label><input id="key" placeholder="Ex.: E, Bb, C#m"></div>
-          <div class="field"><label for="capo">Capotraste (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
-          <div class="field span2"><label for="raw">Cifra completa</label><textarea id="raw" placeholder="Cole aqui a cifra com títulos das seções, acordes e letra…"></textarea></div>
+          <div class="field span2"><label for="raw">Cifra completa (Cole a cifra primeiro!)</label><textarea id="raw" placeholder="Cole aqui a cifra. O Tom e Capotraste serão detectados automaticamente..."></textarea></div>
+          <div class="field"><label for="title">Título (opcional)</label><input id="title" placeholder="Ex.: Toda Terra"></div>
+          <div class="field"><label for="artist">Artista (opcional)</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
+          <div class="field"><label for="key">Tom original (Som da música)</label><input id="key" placeholder="Ex.: Bb, E, C#m"></div>
+          <div class="field"><label for="capo">Capotraste sugerido (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
           <div class="field span2"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: versão ao vivo, dedilhado no início..."></div>
         </div>
-        <div class="notice">Dica: Se a música for em Bb, mas você usa Capo na 3ª casa (tocando em G), insira Tom = Bb e Capo = 3. O sistema fará a conversão automática dos graus.</div>
+        <div class="notice">Exemplo: Se a música soa em Bb, mas você usa Capo na 3ª casa (tocando acordes de G), insira Tom = Bb e Capo = 3. O sistema calculará os graus corretamente.</div>
         <div class="row" style="margin-top:14px"><button id="saveBtn">Salvar música</button><button class="secondary" id="previewBtn">Pré-visualizar</button></div>
         <div class="status" id="editorStatus"></div>
         <pre id="preview" class="hidden" style="white-space:pre-wrap;color:var(--muted)"></pre>
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.3 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.3.1 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
  * CONFIGURE API_URL com a URL /exec do Web App do Apps Script.
  */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzcvekR4cwaP3FsqkTA3RGguWlZ_Ks8fECJZfT7-XNgDv-kCW4Hallb9IuJiAwZOSgx/exec';
-let songs = [], currentSong = null, beatTimer = null, beat = 0;
+
+let songs = [], currentSong = null;
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const configured = () => API_URL.startsWith('https://script.google.com/') && !API_URL.includes('COLE_AQUI');
@@ -75,33 +76,70 @@ async function api(action, data={}) {
   return json.data;
 }
 function notify(el, msg, error=false) { el.textContent=msg; el.style.color=error?'var(--danger)':'var(--green)'; }
-function openEditor(isEdit=false) { 
-  $('editor').classList.remove('hidden');$('viewer').classList.add('hidden'); $('editorStatus').textContent='';$('editorEyebrow').textContent = isEdit ? 'Edição' : 'Adicionar ao songbook';
-  $('editorTitle').textContent = isEdit ? 'Editar cifra' : 'Importar cifra';
-  window.scrollTo({top:0,behavior:'smooth'}); 
-}
+function openEditor() { $('editor').classList.remove('hidden'); $('viewer').classList.add('hidden');$('editorStatus').textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }
 function closeEditor() { $('editor').classList.add('hidden');$('viewer').classList.remove('hidden'); }
-function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value=''); delete $('editor').dataset.editId; $('preview').classList.add('hidden'); }
+function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(id=>$(id).value='');$('preview').classList.add('hidden'); }
+
+// DEDUZ TOM E CAPO AO COLAR O TEXTO
+$('raw').addEventListener('input', function() {
+  const val = this.value;
+  const tomM = val.match(/Tom:\s*([A-G](?:#|b)?m?)/i);
+  if (tomM && !$('key').value)$('key').value = tomM[1];
+  
+  const capoM = val.match(/Capotraste:\s*(\d+)/i) || val.match(/Capo:\s*(\d+)/i);
+  if (capoM && !$('capo').value)$('capo').value = capoM[1];
+});
 
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
-const NOTE_INDEX={'C':0,'B#':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,'FB':4,'E#':5,'F':5,'F#':6,'GB':6,'G':7,'G#':8,'AB':8,'A':9,'A#':10,'BB':10,'B':11,'CB':11};
+const flatToSharp = {'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#'};
+const notesArr = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 
-// Calcula automaticamente qual tom está sendo lido na cifra escrita, baseado no Tom Original e no Capo
+// Calcula Tom Tocado com base no Original e Capo
 function getWrittenKey(origKey, capoVal) {
   const c = parseInt(capoVal);
-  if(isNaN(c) || c === 0 || !origKey) return origKey;
+  if(isNaN(c) || !origKey) return origKey;
   
-  let root = origKey.replace(/b/g, 'B').toUpperCase().replace(/M$/, '');
-  let idxVal = NOTE_INDEX[root];
-  if(idxVal === undefined) return origKey;
+  let cleanKey = origKey.replace(/m/i, '').trim();
+  let isMinor = origKey.toLowerCase().endsWith('m');
   
-  let n = (idxVal - c) % 12;
-  if(n < 0) n += 12;
+  let standardKey = cleanKey;
+  if (cleanKey.length > 1 && cleanKey[1] === 'b') {
+      standardKey = flatToSharp[cleanKey.substring(0,2)] || cleanKey;
+  }
   
-  const names = ['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
-  let result = names[n];
-  if(origKey.toLowerCase().endsWith('m')) result += 'm';
-  return result;
+  let idx = notesArr.indexOf(standardKey);
+  if (idx === -1) return origKey; 
+  
+  let newIdx = (idx - c) % 12;
+  if (newIdx < 0) newIdx += 12;
+  
+  let written = notesArr[newIdx];
+  if (written === 'A#') written = 'Bb';
+  if (written === 'D#') written = 'Eb';
+  
+  return written + (isMinor ? 'm' : '');
+}
+
+function chordDegree(chord, key) {
+  const m = chord.match(/^([A-G](?:#|b)?)(.*)$/);
+  if(!m || !key) return '?';
+  
+  let cRoot = m[1];
+  if (cRoot.length > 1 && cRoot[1] === 'b') cRoot = flatToSharp[cRoot] || cRoot;
+  
+  let kRoot = key.replace(/m/i, '').trim();
+  if (kRoot.length > 1 && kRoot[1] === 'b') kRoot = flatToSharp[kRoot] || kRoot;
+  
+  let cIdx = notesArr.indexOf(cRoot);
+  let kIdx = notesArr.indexOf(kRoot);
+  
+  if (cIdx === -1 || kIdx === -1) return '?';
+  
+  let sem = (cIdx - kIdx + 12) % 12;
+  const map = {0:'1', 1:'b2', 2:'2', 3:'b3', 4:'3', 5:'4', 6:'b5', 7:'5', 8:'b6', 9:'6', 10:'b7', 11:'7'};
+  
+  const isMinor = m[2].startsWith('m') && !m[2].startsWith('maj') && !m[2].startsWith('m(maj');
+  return map[sem] + (isMinor ? 'm' : '');
 }
 
 function chordLine(line) {
@@ -137,16 +175,6 @@ function localParse(raw) {
 function normalizeSection(name){const n=name.toLowerCase();if(n.includes('intro'))return 'Introdução';if(n.includes('refr'))return 'Refrão';if(n.includes('primeira parte')||n.includes('vers'))return 'Primeira Parte';if(n.includes('segunda parte'))return 'Segunda Parte';if(n.includes('ponte')||n.includes('terceira parte'))return 'Ponte';if(n.includes('solo'))return 'Solo';if(n.includes('final'))return 'Final';return name;}
 
 function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>CHORD_REGEX.test(c));}
-
-function chordDegree(chord,key){
-  const m=chord.match(/^([A-G](?:#|b)?)(.*)$/);if(!m||!key)return '?';
-  const root=m[1].replace(/b/g,'B').toUpperCase(), k=key.replace(/b/g,'B').toUpperCase();
-  if(NOTE_INDEX[root]===undefined||NOTE_INDEX[k]===undefined)return '?';
-  const sem=(NOTE_INDEX[root]-NOTE_INDEX[k]+12)%12;const map={0:'1',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
-  const isMinor = m[2].startsWith('m') && !m[2].startsWith('maj') && !m[2].startsWith('m(maj');
-  return map[sem]+(isMinor?'m':'');
-}
-
 function sectionProgression(sec){return chordTokens(sec);}
 
 function getSectionSnippet(sec) {
@@ -176,7 +204,6 @@ function compactProgression(sec, key) {
   });
 
   if (allDeg.length === 0) return [];
-
   let seqs = [];
   let i = 0;
   let n = allDeg.length;
@@ -230,7 +257,6 @@ function compactProgression(sec, key) {
       finalSeqs.push(s);
     }
   }
-
   return finalSeqs;
 }
 
@@ -241,7 +267,8 @@ function renderOptimizedProgression(sec, key, emp) {
     <div class="progression-row">
       ${s.deg.map((d, i) => {
         if (emp === 'degree') {
-          return `<div class="degree-card" style="flex:0 1 auto;min-width:64px;padding:16px 10px"><b style="font-size:26px">${esc(d)}</b></div>`;
+          // EXIBE APENAS O GRAU COMO VOCÊ PEDIU
+          return `<div class="degree-card" style="flex:0 1 auto;min-width:64px;padding:16px 10px"><b style="font-size:26px;color:var(--blue);">${esc(d)}</b></div>`;
         } else {
           return `<div class="degree-card" style="flex:0 1 auto;min-width:64px"><small>Grau ${esc(d)}</small><b style="font-size:22px">${esc(s.orig[i])}</b></div>`;
         }
@@ -256,25 +283,25 @@ function renderSong(song) {
   const sections=localParse(song.cifraOriginal||'');
   
   const writtenKey = getWrittenKey(song.tomOriginal, song.capotrasteSugerido);
-  const tomText = song.tomOriginal ? `Tom ${esc(song.tomOriginal)}${writtenKey && writtenKey !== song.tomOriginal ? ` (Tocado em ${writtenKey})` : ''}` : 'Tom —';
-  const capoText = song.capotrasteSugerido ? `Capo ${esc(song.capotrasteSugerido)}` : '<span class="muted">Sem Capo</span>';
+  const tomText = song.tomOriginal ? `Tom: ${esc(song.tomOriginal)}` : 'Tom —';
+  const capoText = song.capotrasteSugerido ? `Capo: ${esc(song.capotrasteSugerido)}` : '';
+  const writtenText = (writtenKey && writtenKey !== song.tomOriginal) ? `Tom Tocado: ${esc(writtenKey)}` : '';
   
   $('viewer').innerHTML=`
-    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div><div class="chips"><span class="chip">${tomText}</span><span class="chip">${capoText}</span></div></div><div class="toolbar"><button class="secondary" id="editSongBtn">✎ Editar</button><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
-    <div class="notice">Cifra simplificada: os acordes são convertidos para o sistema Nashville automaticamente usando o Tom e Capotraste inseridos.</div>
+    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div>
+    <div class="chips">
+      <span class="chip">${tomText}</span>
+      ${capoText ? `<span class="chip">${capoText}</span>` : ''}
+      ${writtenText ? `<span class="chip" style="background:var(--purple);color:#08090d;font-weight:bold;">${writtenText}</span>` : ''}
+    </div>
+    </div><div class="toolbar"><button class="secondary" id="medleyBtn">Medleys</button><button class="secondary" id="editRawBtn">Ver original</button></div></div>
+    <div class="notice">Cifra simplificada convertida para o sistema Nashville. O Tom Tocado foi calculado automaticamente usando o Capotraste.</div>
     <div class="tabs" style="margin-top:16px"><button class="tab active" data-view="lyrics">Letra + acordes</button><button class="tab" data-view="degrees">Graus (Otimizado)</button><button class="tab" data-view="rhythm">Ritmo</button></div>
     <div id="songContent">${renderSections(sections,'lyrics')}</div>
     <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>
     <div id="rawPanel" class="hidden"><h3>Cifra original</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted)">${esc(song.cifraOriginal||'')}</pre></div>`;
   $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });$('medleyBtn').onclick=loadMedleys;
   $('editRawBtn').onclick=()=>$('rawPanel').classList.toggle('hidden');
-  
-  $('editSongBtn').onclick=()=>{$('title').value = currentSong.titulo || '';
-    $('artist').value = currentSong.artista \vert{}\vert{} '';$('key').value = currentSong.tomOriginal || '';
-    $('capo').value = currentSong.capotrasteSugerido \vert{}\vert{} '';$('raw').value = currentSong.cifraOriginal || '';
-    $('notes').value = currentSong.observacoes \vert{}\vert{} '';$('editor').dataset.editId = currentSong.id;
-    openEditor(true);
-  };
 }
 
 function renderSections(sections,mode) {
@@ -282,6 +309,7 @@ function renderSections(sections,mode) {
   const origKey = currentSong.tomOriginal || '';
   const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido);
   
+  // FILTRO: EXIBE CADA SEÇÃO APENAS UMA VEZ
   if(mode==='rhythm' || mode==='degrees') {
     const seen = new Set();
     const uniqueSections = sections.filter(sec => {
@@ -296,7 +324,7 @@ function renderSections(sections,mode) {
     }
 
     if(mode==='degrees') {
-      return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (base para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos repetidos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+      return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
     }
   }
   
@@ -321,31 +349,14 @@ async function loadMedleys() {
   try {const results=await api('suggestMedleys',{id:currentSong.id});$('medleyResults').innerHTML=results.length?results.map(m=>`<div class="medley"><div><strong>${esc(m.titulo)}</strong><div class="small muted">${esc(m.artista||'')} · Tom ${esc(m.tomOriginal||'—')}</div><div class="small muted">${esc(m.motivo)}</div></div><div class="score">${m.score}%</div></div>`).join(''):'Cadastre mais músicas para receber sugestões.';}
   catch(e){$('medleyResults').textContent=e.message;}
 }
-$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor(); openEditor(false);};$('closeEditor').onclick=closeEditor;
+$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};$('closeEditor').onclick=closeEditor;
 $('refreshBtn').onclick=loadSongs;
-$('search').oninput=()=>loadSongs();
-$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};
-
-$('saveBtn').onclick=async()=>{
+$('search').oninput=()=>loadSongs();$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};$('saveBtn').onclick=async()=>{
   const status=$('editorStatus');
-  const editId = $('editor').dataset.editId;
-  const song={
-    titulo:$('title').value,
-    artista:$('artist').value,
-    tomOriginal:$('key').value,
-    bpm:'',
-    compasso:'',
-    capotrasteSugerido:$('capo').value,
-    cifraOriginal:$('raw').value,
-    observacoes:$('notes').value
-  };
-  
-  if(editId) song.id = editId;
-
+  const song={titulo:$('title').value,artista:$('artist').value,tomOriginal:$('key').value,bpm:'',compasso:'',capotrasteSugerido:$('capo').value,cifraOriginal:$('raw').value,observacoes:$('notes').value};
   try {
-    notify(status, editId ? 'Atualizando música...' : 'Salvando música...');
-    const action = editId ? 'updateSong' : 'importSong';
-    const result=await api(action,{song});
+    notify(status,'Salvando música... (Isso pode levar alguns segundos)');
+    const result=await api('importSong',{song});
     notify(status,`Salvo: ${result.titulo}. Carregando...`);
     await loadSongs();
     renderSong(await api('getSong',{id:result.id}));
