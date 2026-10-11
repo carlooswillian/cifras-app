@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.6 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.7 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -338,14 +338,41 @@ function getSectionSnippet(sec) {
 }
 
 function compactProgression(sec, key) {
-  let allOrig = []; let allDeg = [];
+  let allOrig = []; 
   sec.lines.forEach(l => {
     if(l.chords) {
       let ch = extractChordsFromLine(l.chords);
-      ch.forEach(c => { allOrig.push(c); allDeg.push(chordDegree(c, key)); });
+      ch.forEach(c => { allOrig.push(c); });
     }
   });
-  if (allDeg.length === 0) return [];
+  if (allOrig.length === 0) return [];
+  
+  let allDeg = [];
+  const getRoot = c => { const m = c.match(/^([A-G](?:#|b)?)/); return m ? m[1] : ''; };
+
+  for (let i = 0; i < allOrig.length; i++) {
+    let c = allOrig[i];
+    let parts = c.split('/');
+    let rootChord = parts[0];
+    let bassNote = parts[1];
+
+    let rootDeg = chordDegree(rootChord, key);
+
+    if (bassNote) {
+        let currentRoot = getRoot(rootChord);
+        let prevRoot = i > 0 ? getRoot(allOrig[i-1].split('/')[0]) : null;
+        let nextRoot = i < allOrig.length - 1 ? getRoot(allOrig[i+1].split('/')[0]) : null;
+
+        // Regra de Ouro: Exibir o baixo apenas se a raiz se repetir imediatamente antes ou depois.
+        if (currentRoot === prevRoot || currentRoot === nextRoot) {
+            let bassDeg = chordDegree(bassNote, key).replace(/m$/, '');
+            allDeg.push(rootDeg + '/' + bassDeg);
+            continue;
+        }
+    }
+    allDeg.push(rootDeg);
+  }
+
   let seqs = []; let i = 0; let n = allDeg.length;
   while (i < n) {
     let bestLen = 1; let maxCount = 1; let maxCoverage = 1;
@@ -423,7 +450,7 @@ function renderSong(song) {
           </div>
         </div>
 
-        <!-- Formulário de Edição Rápida (Oculto por padrão) -->
+        <!-- Formulário de Edição Rápida -->
         <div id="editModeHero" class="hidden" style="width: 100%; display:flex; flex-direction:column; gap:10px;">
            <div class="field"><label>Título</label><input id="editTitle" value="${esc(song.titulo)}" placeholder="Ex: Toda Terra"></div>
            <div class="field"><label>Artista</label><input id="editArtist" value="${esc(song.artista)}" placeholder="Ex: Gabriela Rocha"></div>
@@ -459,10 +486,7 @@ function renderSong(song) {
     <div id="songContent">${renderSections(sections,'degrees', currentSong)}</div>
   `;
     
-  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b));$('songContent').innerHTML=renderSections(sections,b.dataset.view, currentSong); });
-  
-  // Ações de abertura/fechamento dos modais e edição
-  $('medleyBtn').onclick = loadMedleys;
+  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b));$('songContent').innerHTML=renderSections(sections,b.dataset.view, currentSong); });$('medleyBtn').onclick = loadMedleys;
   
   $('editBtn').onclick = () => {
       $('viewModeHero').classList.add('hidden');$('viewToolbar').classList.add('hidden');
@@ -531,7 +555,6 @@ function renderSections(sections, mode, songObj, isMedley = false) {
       const n = sec.name.toLowerCase();
       if(seen.has(n)) return false; seen.add(n); return true;
     });
-    // Textos informativos de leitura (como preamble) removidos para otimização visual
     return `<div class="section">${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
   }
   
@@ -599,7 +622,7 @@ async function openMedley(event, targetId) {
     const sec2 = localParse(targetSong.cifraOriginal || '');
 
     document.querySelector('.tabs').classList.add('hidden');
-    closeModal('medleyModal'); // Fecha o modal antes de carregar lado a lado
+    closeModal('medleyModal'); 
     
     document.querySelectorAll('.chips, [style*="💡"]').forEach(el => {
       if(el) el.classList.add('hidden');
