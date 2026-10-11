@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.9 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.0 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -278,7 +278,11 @@ function normalizeSection(name){
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
-  function flush(){if(section.lines.length)out.push(section);}
+  
+  // FIX: Somente armazena seções que possuam linhas de fato (evita sumir com a intro)
+  function flush(){
+    if(section.lines.some(l => l.chords.trim() || l.lyric.trim())) out.push(section);
+  }
   
   lines.forEach(line=>{
     const t=line.trim();
@@ -296,8 +300,6 @@ function localParse(raw) {
     if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
     if(!t) { section.lines.push({chords: '', lyric: ''}); return; }
     
-    // Removida a lógica de forçar a criação de seção "Interlúdio" aqui
-    // para evitar "vazamento" em medleys extensos.
     if (t.startsWith('(') && t.endsWith(')')) {
        let inner = t.slice(1, -1).trim();
        if (chordLine(inner)) {
@@ -336,7 +338,7 @@ function getSectionSnippet(sec) {
   return '';
 }
 
-// NOVO COMPRESSOR v0.4.9: Suporta Snippets Integrados e Agrupamento Flexível
+// FIX: Compressor v0.5.0 - Corrige falha de agrupamento em sequências muito longas
 function compactProgression(sec, key) {
   let chordsData = []; 
   sec.lines.forEach((l, idx) => {
@@ -371,7 +373,7 @@ function compactProgression(sec, key) {
 
   let seqs = []; let i = 0; let n = allDeg.length;
   while (i < n) {
-    let bestLen = 1; let maxCount = 1; let maxCoverage = 1;
+    let bestLen = 1; let maxCount = 1; let maxCoverage = 0;
     for (let len = 1; len <= Math.floor((n - i) / 2); len++) {
       let count = 1;
       while (i + count * len + len <= n) {
@@ -379,10 +381,18 @@ function compactProgression(sec, key) {
         let chunk2 = allDeg.slice(i + count * len, i + count * len + len).join(' ');
         if (chunk1 === chunk2) count++; else break;
       }
-      let coverage = count * len;
-      if (coverage > maxCoverage) { maxCoverage = coverage; maxCount = count; bestLen = len; } 
-      else if (coverage === maxCoverage && maxCoverage > 1) { if (len < bestLen) { bestLen = len; maxCount = count; } }
+      
+      // O Segredo da versão 0.5.0: Somente atualiza Max Coverage se count > 1
+      if (count > 1) {
+          let coverage = count * len;
+          if (coverage > maxCoverage) { 
+              maxCoverage = coverage; maxCount = count; bestLen = len; 
+          } else if (coverage === maxCoverage) { 
+              if (len < bestLen) { bestLen = len; maxCount = count; } 
+          }
+      }
     }
+    
     if (maxCount > 1) {
       seqs.push({ 
           orig: chordsData.slice(i, i + bestLen).map(x => x.chord), 
@@ -415,7 +425,6 @@ function compactProgression(sec, key) {
     } else { finalSeqs.push(s); }
   }
 
-  // Atribui as letras (snippets) a cada bloco compactado
   finalSeqs.forEach(seq => {
      let snippet = '';
      let isInterlude = true;
@@ -593,7 +602,6 @@ function renderSections(sections, mode, songObj, isMedley = false) {
     return `<div class="section">${uniqueSections.map(sec=>{
       
       if (isExtensiveMedley) {
-        // Nova renderização inteligente para Medleys (usando o compactador V2)
         const seqs = compactProgression(sec, tk);
         let html = seqs.map(seq => {
             let degHtml = seq.deg.map((d, i) => `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px"><b style="font-size:16px;color:var(--blue);">${esc(d)}</b></div>`).join('');
@@ -624,7 +632,6 @@ function renderSections(sections, mode, songObj, isMedley = false) {
           </div>
         `;
       } else {
-        // Comportamento normal compactado para cifras simples e medleys curtos
         return `
           <div class="section-summary">
             <h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec, tk, 'degree') || '<p class="muted">Nenhum acorde isolado identificado.</p>'}
