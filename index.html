@@ -8,12 +8,42 @@
 <style>
 :root{color-scheme:dark;--bg:#08090d;--panel:#12141b;--panel2:#191c25;--line:#292d39;--text:#f5f6fb;--muted:#9ba2b3;--blue:#78a7ff;--purple:#b6a0ff;--green:#80dfb0;--danger:#ff8e9a;--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
-button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:0.2s}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0;border:1px solid #5a2531}button.danger:hover{background:#5a2531}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:22px;cursor:pointer;transition:0.2s;margin-right:4px}.menu-toggle:hover{background:var(--panel2)}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:block;max-width:100%}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.sidebar{position:fixed;top:0;left:0;height:100vh;width:320px;max-width:85vw;z-index:1000;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);border-radius:0;border-right:1px solid var(--line);border-top:0;border-bottom:0;border-left:0;background:rgba(14,16,22,0.98);backdrop-filter:blur(10px);margin:0;overflow-y:auto;padding:22px 18px}.sidebar.open{transform:translateX(0)}.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:36px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:0.2s}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0;border:1px solid #5a2531}button.danger:hover{background:#5a2531}
+input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:22px;cursor:pointer;transition:0.2s;margin-right:4px}.menu-toggle:hover{background:var(--panel2)}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:block;max-width:100%}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.sidebar{position:fixed;top:0;left:0;height:100vh;width:320px;max-width:85vw;z-index:1000;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);border-radius:0;border-right:1px solid var(--line);border-top:0;border-bottom:0;border-left:0;background:rgba(14,16,22,0.98);backdrop-filter:blur(10px);margin:0;overflow-y:auto;padding:22px 18px}.sidebar.open{transform:translateX(0)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:36px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+/* Estilos para os Modais Modernos */
+.modal {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);z-index:1001;width:90%;max-width:450px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,0.6);max-height:85vh;display:flex;flex-direction:column}
+.modal-header {display:flex;justify-content:space-between;align-items:center}
+.modal-body {overflow-y:auto;padding-right:5px;margin-top:16px}
+.modal-body::-webkit-scrollbar {width:6px}
+.modal-body::-webkit-scrollbar-thumb {background:var(--line);border-radius:6px}
 @media(max-width:800px){.top-actions button{padding:9px 11px}.app{padding:16px 12px 60px}.hero h2{font-size:22px}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
 </style>
 </head>
 <body>
 <div id="backdrop" class="backdrop"></div>
+
+<!-- Modal: Medleys -->
+<div id="medleyModal" class="modal hidden">
+    <div class="modal-header">
+        <h3 style="margin:0;">Sugestões de medley</h3>
+        <button class="menu-toggle" onclick="closeModal('medleyModal')" style="width:32px;height:32px;font-size:16px;margin:0;">✕</button>
+    </div>
+    <div class="modal-body" id="medleyResults"></div>
+</div>
+
+<!-- Modal: Confirmação de Exclusão -->
+<div id="confirmModal" class="modal hidden">
+    <div class="modal-header">
+        <h3 style="margin:0; color:var(--danger)">Excluir Cifra</h3>
+    </div>
+    <div class="modal-body" id="confirmMessage" style="margin-bottom:24px;margin-top:12px;"></div>
+    <div class="toolbar" style="justify-content:flex-end;">
+        <button class="secondary" onclick="closeModal('confirmModal')">Cancelar</button>
+        <button class="danger" id="confirmActionBtn">Sim, Excluir</button>
+    </div>
+</div>
+
 <div class="app">
   <header class="top">
     <div class="brand">
@@ -56,7 +86,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.5 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.6 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -69,9 +99,23 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const configured = () => API_URL.startsWith('https://script.google.com/') && !API_URL.includes('COLE_AQUI');
 
-// Lógica do Menu Hambúrguer
-const toggleMenu = () => { $('sidebar').classList.toggle('open'); $('backdrop').classList.toggle('open'); };$('menuBtn').onclick = toggleMenu;
-$('backdrop').onclick = toggleMenu;
+// Lógica de Modais e Backdrop Centralizada
+const updateBackdrop = () => {
+    const hasModal = document.querySelectorAll('.modal:not(.hidden)').length > 0;
+    const hasSidebar = $('sidebar').classList.contains('open');
+    $('backdrop').classList.toggle('open', hasModal || hasSidebar);
+};
+const toggleMenu = () => { $('sidebar').classList.toggle('open'); updateBackdrop(); };
+$('menuBtn').onclick = toggleMenu;
+
+function openModal(id) { $(id).classList.remove('hidden'); updateBackdrop(); }
+function closeModal(id) { $(id).classList.add('hidden'); updateBackdrop(); }
+
+$('backdrop').onclick = () => { 
+    $('sidebar').classList.remove('open'); 
+    document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden')); 
+    updateBackdrop(); 
+};
 
 async function api(action, data={}) {
   if (!configured()) throw new Error('Configure API_URL no index.html com a URL /exec do Apps Script.');
@@ -87,10 +131,8 @@ function resetEditor() { ['title','artist','key','capo','raw','notes'].forEach(i
 
 $('raw').addEventListener('input', function() {
   const val = this.value;
-  
   const tomM = val.match(/Tom:\s*([A-G](?:#|b)?m?)/i);
   if (tomM && !$('key').value)$('key').value = tomM[1];
-  
   const capoM = val.match(/Capotraste:\s*(\d+)/i) || val.match(/Capo:\s*(\d+)/i);
   if (capoM && !$('capo').value)$('capo').value = capoM[1];
 
@@ -149,7 +191,6 @@ function renderCapoVariations(originalKey) {
   if (idx === -1) return '';
 
   let gIdx = notesArr.indexOf('G');
-
   let capoI = (idx - gIdx + 12) % 12;
   let kI = notesArr[idx];
   
@@ -229,9 +270,7 @@ function normalizeSection(name){
   
   if (name.includes('-')) {
     const parts = name.split('-');
-    if (parts.length > 1) {
-       return base + ' - ' + parts.slice(1).join('-').trim();
-    }
+    if (parts.length > 1) { return base + ' - ' + parts.slice(1).join('-').trim(); }
   }
   return base;
 }
@@ -243,7 +282,6 @@ function localParse(raw) {
   
   lines.forEach(line=>{
     const t=line.trim();
-    
     const m=t.match(/^\[(.*?)\](.*)$/);
     if(m){
       flush();
@@ -255,27 +293,20 @@ function localParse(raw) {
       }
       return;
     }
-    
     if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
-    
-    if(!t) {
-        section.lines.push({chords: '', lyric: ''});
-        return;
-    }
+    if(!t) { section.lines.push({chords: '', lyric: ''}); return; }
     
     if (t.startsWith('(') && t.endsWith(')')) {
        let inner = t.slice(1, -1).trim();
        if (chordLine(inner)) {
            const hasContent = section.lines.some(l => l.lyric || l.chords);
            if (section.name !== 'Interlúdio' && hasContent) {
-               flush();
-               section = { name: 'Interlúdio', lines: [] };
+               flush(); section = { name: 'Interlúdio', lines: [] };
            }
            section.lines.push({ chords: line.trimEnd(), lyric: '' });
            return; 
        }
     }
-    
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?line.trimEnd():'', lyric:isChord?'':line.trimEnd()});
   });
@@ -294,10 +325,6 @@ function extractChordsFromLine(lineStr) {
    return ch;
 }
 
-function chordTokens(sec){
-   return sec.lines.filter(l=>l.chords).flatMap(l => extractChordsFromLine(l.chords));
-}
-
 function getSectionSnippet(sec) {
   const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
   if (line) {
@@ -311,8 +338,7 @@ function getSectionSnippet(sec) {
 }
 
 function compactProgression(sec, key) {
-  let allOrig = [];
-  let allDeg = [];
+  let allOrig = []; let allDeg = [];
   sec.lines.forEach(l => {
     if(l.chords) {
       let ch = extractChordsFromLine(l.chords);
@@ -320,9 +346,7 @@ function compactProgression(sec, key) {
     }
   });
   if (allDeg.length === 0) return [];
-  let seqs = [];
-  let i = 0;
-  let n = allDeg.length;
+  let seqs = []; let i = 0; let n = allDeg.length;
   while (i < n) {
     let bestLen = 1; let maxCount = 1; let maxCoverage = 1;
     for (let len = 1; len <= Math.floor((n - i) / 2); len++) {
@@ -374,26 +398,58 @@ function renderOptimizedProgression(sec, key, emp) {
 }
 
 function renderSong(song) {
-  currentSong=song;
-  const sections=localParse(song.cifraOriginal||'');
+  currentSong = song;
+  const sections = localParse(song.cifraOriginal||'');
   
   const writtenKey = getWrittenKey(song.tomOriginal, song.capotrasteSugerido);
   const tomText = song.tomOriginal ? `Tom: ${esc(song.tomOriginal)}` : 'Tom —';
   const capoText = song.capotrasteSugerido ? `Capo: ${esc(song.capotrasteSugerido)}` : '';
   const writtenText = (writtenKey && writtenKey !== song.tomOriginal) ? `Tom Tocado: ${esc(writtenKey)}` : '';
-  
   const capoVariationsHtml = renderCapoVariations(song.tomOriginal);
   
-  $('viewer').innerHTML=`
-    <div class="hero"><div><div class="eyebrow">Modo palco · cifra salva</div><h2>${esc(song.titulo)}</h2><div class="muted">${esc(song.artista||'Artista não informado')}</div>
-    <div class="chips">
-      <span class="chip">${tomText}</span>
-      ${capoText ? `<span class="chip">${capoText}</span>` : ''}
-      ${writtenText ? `<span class="chip" style="background:var(--purple);color:#08090d;font-weight:bold;">${writtenText}</span>` : ''}
+  $('viewer').innerHTML = `
+    <div class="hero" style="flex-direction: column; width: 100%;">
+      <div style="display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+        
+        <!-- Visão Principal -->
+        <div id="viewModeHero" style="flex: 1 1 min-content; min-width: 150px;">
+          <div class="eyebrow">Modo palco · cifra salva</div>
+          <h2>${esc(song.titulo)}</h2>
+          <div class="muted">${esc(song.artista||'Artista não informado')}</div>
+          <div class="chips">
+            <span class="chip">${tomText}</span>
+            ${capoText ? `<span class="chip">${capoText}</span>` : ''}
+            ${writtenText ? `<span class="chip" style="background:var(--purple);color:#08090d;font-weight:bold;">${writtenText}</span>` : ''}
+          </div>
+        </div>
+
+        <!-- Formulário de Edição Rápida (Oculto por padrão) -->
+        <div id="editModeHero" class="hidden" style="width: 100%; display:flex; flex-direction:column; gap:10px;">
+           <div class="field"><label>Título</label><input id="editTitle" value="${esc(song.titulo)}" placeholder="Ex: Toda Terra"></div>
+           <div class="field"><label>Artista</label><input id="editArtist" value="${esc(song.artista)}" placeholder="Ex: Gabriela Rocha"></div>
+           <div class="row">
+             <div class="field" style="flex:1"><label>Tom Original</label><input id="editKey" value="${esc(song.tomOriginal)}" placeholder="Ex: E"></div>
+             <div class="field" style="flex:1"><label>Capo</label><input id="editCapo" type="number" min="0" max="12" value="${esc(song.capotrasteSugerido)}" placeholder="Ex: 2"></div>
+           </div>
+        </div>
+
+        <!-- Botões do Header -->
+        <div class="toolbar" id="viewToolbar" style="flex: 0 0 auto;">
+          <button class="secondary" id="editBtn" style="padding: 10px; display: grid; place-items: center; border-radius: 12px;" title="Editar informações básicas">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          </button>
+          <button class="secondary" id="medleyBtn">Medleys</button>
+        </div>
+      </div>
+      
+      <!-- Botões de Ação da Edição -->
+      <div class="toolbar hidden" id="editToolbar" style="margin-top: 16px; width: 100%; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--line);">
+         <button class="danger" id="deleteBtn" style="margin-right: auto;">Excluir Cifra</button>
+         <button class="secondary" id="cancelEditBtn">Cancelar</button>
+         <button id="saveEditBtn">Salvar Alterações</button>
+      </div>
     </div>
-    </div><div class="toolbar"><button class="secondary" id="medleyBtn">Medleys</button><button class="danger" id="deleteBtn">Excluir</button></div></div>
     
-    <div class="notice">Cifra simplificada convertida para o sistema Nashville. O Tom Tocado foi calculado automaticamente usando o Capotraste.</div>
     ${capoVariationsHtml}
 
     <div class="tabs" style="margin-top:16px">
@@ -401,21 +457,66 @@ function renderSong(song) {
       <button class="tab" data-view="lyrics">Letra + acordes</button>
     </div>
     <div id="songContent">${renderSections(sections,'degrees', currentSong)}</div>
-    <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>`;
+  `;
     
-  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view, currentSong); });$('medleyBtn').onclick=loadMedleys;
+  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b));$('songContent').innerHTML=renderSections(sections,b.dataset.view, currentSong); });
   
-  $('deleteBtn').onclick = async () => {
-    if(confirm(`Tem certeza que deseja excluir a cifra "${song.titulo}" da sua biblioteca?`)) {
-      const btn = $('deleteBtn'); btn.textContent = 'Excluindo...'; btn.disabled = true;
+  // Ações de abertura/fechamento dos modais e edição
+  $('medleyBtn').onclick = loadMedleys;
+  
+  $('editBtn').onclick = () => {
+      $('viewModeHero').classList.add('hidden');$('viewToolbar').classList.add('hidden');
+      $('editModeHero').classList.remove('hidden');$('editToolbar').classList.remove('hidden');
+  };
+  
+  $('cancelEditBtn').onclick = () => {$('viewModeHero').classList.remove('hidden');
+      $('viewToolbar').classList.remove('hidden');$('editModeHero').classList.add('hidden');
+      $('editToolbar').classList.add('hidden');$('editTitle').value = song.titulo;
+      $('editArtist').value = song.artista;
+      $('editKey').value = song.tomOriginal;
+      $('editCapo').value = song.capotrasteSugerido;
+  };
+
+  $('saveEditBtn').onclick = async () => {
+      const btn = $('saveEditBtn');
+      btn.textContent = 'Salvando...'; btn.disabled = true;
       try {
-        await api('deleteSong', { id: song.id });
-        currentSong = null;
-        $('viewer').innerHTML = '<div class="empty"><div style="font-size:34px">♫</div><strong>Música excluída.</strong><p>Abra o menu para selecionar outra música ou importe uma nova.</p><button id="emptyNewBtn">Importar cifra</button></div>';
-        $('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};
-        await loadSongs();
-      } catch(e) { alert('Erro ao excluir: ' + e.message); btn.textContent = 'Excluir'; btn.disabled = false; }
-    }
+          const updated = await api('updateSong', {
+              song: {
+                  id: song.id,
+                  titulo: $('editTitle').value,
+                  artista: $('editArtist').value,
+                  tomOriginal: $('editKey').value,
+                  capotrasteSugerido: $('editCapo').value
+              }
+          });
+          const idx = songs.findIndex(s => s.id === updated.id);
+          if(idx > -1) songs[idx] = updated;
+          renderList();
+          renderSong(await api('getSong', {id: updated.id})); 
+      } catch(e) {
+          alert('Erro ao salvar: ' + e.message);
+          btn.textContent = 'Salvar Alterações'; btn.disabled = false;
+      }
+  };
+  
+  $('deleteBtn').onclick = () => {$('confirmMessage').innerHTML = `Tem certeza que deseja excluir a cifra <strong>${esc(song.titulo)}</strong> da sua biblioteca?<br>Essa ação não pode ser desfeita.`;
+      
+      $('confirmActionBtn').onclick = async () => {
+          const btn = $('confirmActionBtn');
+          btn.textContent = 'Excluindo...'; btn.disabled = true;
+          try {
+              await api('deleteSong', { id: song.id });
+              currentSong = null;
+              $('viewer').innerHTML = '<div class="empty"><div style="font-size:34px">♫</div><strong>Música excluída.</strong><p>Abra o menu para selecionar outra música ou importe uma nova.</p><button id="emptyNewBtn">Importar cifra</button></div>';
+              $('emptyNewBtn').onclick=()=>{resetEditor();openEditor()};
+              closeModal('confirmModal');
+              await loadSongs();
+          } catch(e) { alert('Erro ao excluir: ' + e.message); } 
+          finally { btn.textContent = 'Sim, Excluir'; btn.disabled = false; }
+      };
+      
+      openModal('confirmModal');
   };
 }
 
@@ -430,8 +531,8 @@ function renderSections(sections, mode, songObj, isMedley = false) {
       const n = sec.name.toLowerCase();
       if(seen.has(n)) return false; seen.add(n); return true;
     });
-    const preamble = isMedley ? '' : `<h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos exibidos uma única vez na música.</p>`;
-    return `<div class="section">${preamble}${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+    // Textos informativos de leitura (como preamble) removidos para otimização visual
+    return `<div class="section">${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
   }
   
   return sections.map(sec=>{
@@ -462,16 +563,18 @@ function renderList() {
     try{
       renderSong(await api('getSong',{id:b.dataset.id}));
       renderList();
-      $('sidebar').classList.remove('open');$('backdrop').classList.remove('open');
+      $('sidebar').classList.remove('open'); updateBackdrop();
     }catch(e){alert(e.message)}
   });
 }
 
 async function loadMedleys() {
-  $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
+  $('medleyResults').innerHTML = '<div class="muted">Calculando compatibilidade…</div>';
+  openModal('medleyModal');
+  
   try {
-    const results=await api('suggestMedleys',{id:currentSong.id});
-    $('medleyResults').innerHTML=results.length ? results.map(m=>`
+    const results = await api('suggestMedleys',{id:currentSong.id});
+    $('medleyResults').innerHTML = results.length ? results.map(m=>`
       <div class="medley" style="align-items:center;">
         <div>
           <strong>${esc(m.titulo)}</strong>
@@ -480,7 +583,7 @@ async function loadMedleys() {
         </div>
         <button class="secondary small" onclick="openMedley(event, '${m.id}')" style="white-space:nowrap; padding:6px 10px;">Tocar Medley</button>
       </div>
-    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade harmônica (mesmo tom, 4º ou 5º grau) encontrada na biblioteca.</div>';
+    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade harmônica encontrada na biblioteca.</div>';
   } catch(e) { $('medleyResults').textContent=e.message; }
 }
 
@@ -496,9 +599,9 @@ async function openMedley(event, targetId) {
     const sec2 = localParse(targetSong.cifraOriginal || '');
 
     document.querySelector('.tabs').classList.add('hidden');
-    $('medleyPanel').classList.add('hidden');
+    closeModal('medleyModal'); // Fecha o modal antes de carregar lado a lado
     
-    document.querySelectorAll('.notice, .chips, [style*="💡"]').forEach(el => {
+    document.querySelectorAll('.chips, [style*="💡"]').forEach(el => {
       if(el) el.classList.add('hidden');
     });
 
@@ -532,7 +635,7 @@ async function openMedley(event, targetId) {
   }
 }
 
-$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor();$('sidebar').classList.remove('open');$('backdrop').classList.remove('open');};$('closeEditor').onclick=closeEditor;
+$('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor();$('sidebar').classList.remove('open');updateBackdrop();};$('closeEditor').onclick=closeEditor;
 $('refreshBtn').onclick=loadSongs;
 $('search').oninput=()=>loadSongs();$('previewBtn').onclick=()=>{const sections=localParse($('raw').value);$('preview').textContent=sections.map(s=>s.name+'\n'+s.lines.map(l=>[l.chords,l.lyric].filter(Boolean).join('\n')).join('\n')).join('\n\n');$('preview').classList.remove('hidden')};$('saveBtn').onclick=async()=>{
   const status=$('editorStatus');
