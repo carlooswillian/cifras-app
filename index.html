@@ -8,7 +8,7 @@
 <style>
 :root{color-scheme:dark;--bg:#08090d;--panel:#12141b;--panel2:#191c25;--line:#292d39;--text:#f5f6fb;--muted:#9ba2b3;--blue:#78a7ff;--purple:#b6a0ff;--green:#80dfb0;--danger:#ff8e9a;--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
-button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:0.2s}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0;border:1px solid #5a2531}button.danger:hover{background:#5a2531}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:22px;cursor:pointer;transition:0.2s;margin-right:4px}.menu-toggle:hover{background:var(--panel2)}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:block;max-width:100%}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.sidebar{position:fixed;top:0;left:0;height:100vh;width:320px;max-width:85vw;z-index:1000;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);border-radius:0;border-right:1px solid var(--line);border-top:0;border-bottom:0;border-left:0;background:rgba(14,16,22,0.98);backdrop-filter:blur(10px);margin:0;overflow-y:auto;padding:22px 18px}.sidebar.open{transform:translateX(0)}.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:48px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:0.2s}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0;border:1px solid #5a2531}button.danger:hover{background:#5a2531}input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:22px;cursor:pointer;transition:0.2s;margin-right:4px}.menu-toggle:hover{background:var(--panel2)}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:block;max-width:100%}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.sidebar{position:fixed;top:0;left:0;height:100vh;width:320px;max-width:85vw;z-index:1000;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);border-radius:0;border-right:1px solid var(--line);border-top:0;border-bottom:0;border-left:0;background:rgba(14,16,22,0.98);backdrop-filter:blur(10px);margin:0;overflow-y:auto;padding:22px 18px}.sidebar.open{transform:translateX(0)}.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:36px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
 @media(max-width:800px){.top-actions button{padding:9px 11px}.app{padding:16px 12px 60px}.hero h2{font-size:22px}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
 </style>
 </head>
@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.0 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.1 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -230,7 +230,6 @@ function normalizeSection(name){
   return base;
 }
 
-// ATUALIZADO 0.4.0: Parse agora preserva as quebras de linha em branco e os espaços à esquerda para alinhamento!
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -253,7 +252,6 @@ function localParse(raw) {
     
     if(/(Tom:|Afinação:|Composição de:|Capotraste:|Capo:)/i.test(t)) return;
     
-    // Se a linha for vazia, adicionamos uma linha em branco para manter a formatação visual
     if(!t) {
         section.lines.push({chords: '', lyric: ''});
         return;
@@ -264,14 +262,12 @@ function localParse(raw) {
        if (chordLine(inner)) {
            flush(); 
            section = { name: 'Interlúdio', lines: [] };
-           // Usa trimEnd apenas, preservando os espaços à esquerda
            section.lines.push({ chords: line.trimEnd(), lyric: '' });
            return; 
        }
     }
     
     const isChord=chordLine(t);
-    // Usa trimEnd (remover espaços do final) em ambos os casos, PRESERVANDO a indentação da esquerda
     section.lines.push({chords:isChord?line.trimEnd():'', lyric:isChord?'':line.trimEnd()});
   });
   flush();
@@ -339,6 +335,7 @@ function compactProgression(sec, key) {
   return finalSeqs;
 }
 
+// ATUALIZADO 0.4.1: Fonte menor (16px) e paddings ajustados para otimizar espaço
 function renderOptimizedProgression(sec, key, emp) {
   const comp = compactProgression(sec, key);
   if(!comp.length) return '';
@@ -346,7 +343,7 @@ function renderOptimizedProgression(sec, key, emp) {
     <div class="progression-row">
       ${s.deg.map((d, i) => {
         if (emp === 'degree') {
-          return `<div class="degree-card" style="flex:0 1 auto;padding:12px 6px"><b style="font-size:22px;color:var(--blue);">${esc(d)}</b></div>`;
+          return `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px"><b style="font-size:16px;color:var(--blue);">${esc(d)}</b></div>`;
         } else {
           return `<div class="degree-card" style="flex:0 1 auto;padding:6px"><small>Grau ${esc(d)}</small><b style="font-size:18px">${esc(s.orig[i])}</b></div>`;
         }
@@ -383,10 +380,10 @@ function renderSong(song) {
       <button class="tab active" data-view="degrees">Graus (Otimizado)</button>
       <button class="tab" data-view="lyrics">Letra + acordes</button>
     </div>
-    <div id="songContent">${renderSections(sections,'degrees')}</div>
+    <div id="songContent">${renderSections(sections,'degrees', currentSong)}</div>
     <div id="medleyPanel" class="hidden"><h3>Sugestões de medley</h3><div id="medleyResults" class="muted">Calculando compatibilidade…</div></div>`;
     
-  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view); });$('medleyBtn').onclick=loadMedleys;
+  $('viewer').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{$('viewer').querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b)); $('songContent').innerHTML=renderSections(sections,b.dataset.view, currentSong); });$('medleyBtn').onclick=loadMedleys;
   
   $('deleteBtn').onclick = async () => {
     if(confirm(`Tem certeza que deseja excluir a cifra "${song.titulo}" da sua biblioteca?`)) {
@@ -402,23 +399,22 @@ function renderSong(song) {
   };
 }
 
-// ATUALIZADO 0.4.0: Divisão estrita da visualização das abas.
-function renderSections(sections,mode) {
+// ATUALIZADO 0.4.1: Recebe o songObj para permitir renderizar músicas diferentes no modo Medley
+function renderSections(sections, mode, songObj, isMedley = false) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
-  const origKey = currentSong.tomOriginal || '';
-  const tk = getWrittenKey(origKey, currentSong.capotrasteSugerido);
+  const origKey = songObj.tomOriginal || '';
+  const tk = getWrittenKey(origKey, songObj.capotrasteSugerido);
   
-  // ABA DE GRAUS (Apenas os blocos, única vez por nome de seção)
   if(mode==='degrees') {
     const seen = new Set();
     const uniqueSections = sections.filter(sec => {
       const n = sec.name.toLowerCase();
       if(seen.has(n)) return false; seen.add(n); return true;
     });
-    return `<div class="section"><h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos exibidos uma única vez na música.</p>${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+    const preamble = isMedley ? '' : `<h3>Guia simplificado · Nashville Otimizado</h3><p class="muted">Tom da cifra (calculado para os graus): <strong>${esc(tk||'não informado')}</strong>. Blocos exibidos uma única vez na música.</p>`;
+    return `<div class="section">${preamble}${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
   }
   
-  // ABA LETRA + ACORDES (Idêntico à cifra original. Sem cards de graus. Fonte Monoespaciada)
   return sections.map(sec=>{
     return `<div class="section">
       <h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:8px;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>
@@ -426,7 +422,7 @@ function renderSections(sections,mode) {
         ${sec.lines.map(l=>{
           if (l.chords) return `<div style="color:var(--blue); font-weight:800; white-space:pre-wrap;">${esc(l.chords)}</div>`;
           if (l.lyric) return `<div style="color:var(--text); white-space:pre-wrap;">${esc(l.lyric)}</div>`;
-          return `<div style="height:15px"></div>`; // Linha vazia original respeitada
+          return `<div style="height:15px"></div>`; 
         }).join('')}
       </div>
       ${sec.lines.length===0?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}
@@ -452,6 +448,7 @@ function renderList() {
   });
 }
 
+// ATUALIZADO 0.4.1: Adicionado botão "Tocar Medley" na listagem
 async function loadMedleys() {
   $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
   try {
@@ -463,9 +460,63 @@ async function loadMedleys() {
           <div class="small muted">${esc(m.artista||'')} · Tom original: ${esc(m.tomOriginal||'—')}</div>
           <div class="small" style="color:var(--green); margin-top:3px; font-weight: 500;">✓ ${esc(m.motivo)}</div>
         </div>
+        <button class="secondary small" onclick="openMedley(event, '${m.id}')" style="white-space:nowrap; padding:6px 10px;">Tocar Medley</button>
       </div>
     `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade estrita (mesmo capo) encontrada na biblioteca.</div>';
   } catch(e) { $('medleyResults').textContent=e.message; }
+}
+
+// ATUALIZADO 0.4.1: Função que prepara e exibe as duas músicas lado a lado
+async function openMedley(event, targetId) {
+  const btn = event.currentTarget;
+  const origText = btn.textContent;
+  btn.textContent = 'Carregando...'; 
+  btn.disabled = true;
+  
+  try {
+    const targetSong = await api('getSong', {id: targetId});
+    const sec1 = localParse(currentSong.cifraOriginal || '');
+    const sec2 = localParse(targetSong.cifraOriginal || '');
+
+    // Esconde as tabs e o painel de sugestões
+    document.querySelector('.tabs').classList.add('hidden');
+    $('medleyPanel').classList.add('hidden');
+    
+    // Esconde avisos para limpar a tela
+    document.querySelectorAll('.notice, .chips, [style*="💡"]').forEach(el => {
+      if(el) el.classList.add('hidden');
+    });
+
+    // Atualiza o cabeçalho para Modo Medley
+    const hero = document.querySelector('.hero');
+    hero.innerHTML = `
+      <div>
+        <div class="eyebrow" style="color:var(--green)">Modo Medley (Lado a Lado)</div>
+        <h2 style="font-size:20px">${esc(currentSong.titulo)} + ${esc(targetSong.titulo)}</h2>
+      </div>
+      <div class="toolbar">
+        <button class="danger" onclick="renderSong(currentSong)">Sair do Medley</button>
+      </div>
+    `;
+
+    // Renderiza o grid responsivo (Lado a lado no Desktop, Empilhado no Mobile)
+    $('songContent').innerHTML = `
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: start;">
+        <div style="background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+          <h3 style="margin-top:0; color:var(--blue); border-bottom:1px solid var(--line); padding-bottom:8px;">1. ${esc(currentSong.titulo)}</h3>
+          ${renderSections(sec1, 'degrees', currentSong, true)}
+        </div>
+        <div style="background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
+          <h3 style="margin-top:0; color:var(--purple); border-bottom:1px solid var(--line); padding-bottom:8px;">2. ${esc(targetSong.titulo)}</h3>
+          ${renderSections(sec2, 'degrees', targetSong, true)}
+        </div>
+      </div>
+    `;
+  } catch(e) {
+    alert(e.message);
+    btn.textContent = origText; 
+    btn.disabled = false;
+  }
 }
 
 $('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor();$('sidebar').classList.remove('open');$('backdrop').classList.remove('open');};$('closeEditor').onclick=closeEditor;
