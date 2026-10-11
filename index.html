@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.1 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.2 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -117,7 +117,8 @@ $('raw').addEventListener('input', function() {
   }
 });
 
-const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\/[A-G](?:#|b)?)?$/;
+// ATUALIZADO 0.4.2: Regex aprimorado para aceitar acordes com parênteses, ex: D9(11), F#m7(b5)
+const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?$/;
 const flatToSharp = {'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#'};
 const notesArr = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 
@@ -201,11 +202,18 @@ function chordDegree(chord, key) {
   return map[sem] + (isMinor ? 'm' : '');
 }
 
+// ATUALIZADO 0.4.2: Lógica refinada para lidar com parênteses e espaços isolados
 function chordLine(line) {
-  const trimmed=line.trim();
-  const tokens=trimmed.split(/\s+/);
-  if (tokens.length && tokens.every(t=>CHORD_REGEX.test(t) || /^[()[\]-]+$/.test(t))) return true;
-  return false;
+   const trimmed = line.trim();
+   if (!trimmed) return false;
+   const tokens = trimmed.split(/\s+/);
+   return tokens.every(t => {
+       return CHORD_REGEX.test(t) ||
+              /^[()[\]-]+$/.test(t) ||
+              (t.startsWith('(') && t.endsWith(')') && CHORD_REGEX.test(t.slice(1,-1))) ||
+              (t.startsWith('(') && CHORD_REGEX.test(t.slice(1))) ||
+              (t.endsWith(')') && CHORD_REGEX.test(t.slice(0,-1)));
+   });
 }
 
 function normalizeSection(name){
@@ -230,6 +238,7 @@ function normalizeSection(name){
   return base;
 }
 
+// ATUALIZADO 0.4.2: Removido o bloco agressivo que quebrava o [Interlúdio]
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -257,16 +266,6 @@ function localParse(raw) {
         return;
     }
     
-    if (t.startsWith('(') && t.endsWith(')')) {
-       let inner = t.slice(1, -1).trim();
-       if (chordLine(inner)) {
-           flush(); 
-           section = { name: 'Interlúdio', lines: [] };
-           section.lines.push({ chords: line.trimEnd(), lyric: '' });
-           return; 
-       }
-    }
-    
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?line.trimEnd():'', lyric:isChord?'':line.trimEnd()});
   });
@@ -274,8 +273,21 @@ function localParse(raw) {
   return out;
 }
 
-function chordTokens(sec){return sec.lines.filter(l=>l.chords).flatMap(l=>l.chords.replace(/[()]/g,' ').split(/\s+/)).filter(c=>CHORD_REGEX.test(c));}
-function sectionProgression(sec){return chordTokens(sec);}
+// ATUALIZADO 0.4.2: Extrai os acordes isolando perfeitamente os parênteses
+function extractChordsFromLine(lineStr) {
+   let ch = [];
+   lineStr.split(/\s+/).forEach(t => {
+      if(CHORD_REGEX.test(t)) { ch.push(t); return; }
+      if(t.startsWith('(') && t.endsWith(')') && CHORD_REGEX.test(t.slice(1,-1))) { ch.push(t.slice(1,-1)); return; }
+      if(t.startsWith('(') && CHORD_REGEX.test(t.slice(1))) { ch.push(t.slice(1)); return; }
+      if(t.endsWith(')') && CHORD_REGEX.test(t.slice(0,-1))) { ch.push(t.slice(0,-1)); return; }
+   });
+   return ch;
+}
+
+function chordTokens(sec){
+   return sec.lines.filter(l=>l.chords).flatMap(l => extractChordsFromLine(l.chords));
+}
 
 function getSectionSnippet(sec) {
   const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
@@ -294,7 +306,7 @@ function compactProgression(sec, key) {
   let allDeg = [];
   sec.lines.forEach(l => {
     if(l.chords) {
-      let ch = l.chords.replace(/[()]/g,' ').split(/\s+/).filter(c=>CHORD_REGEX.test(c));
+      let ch = extractChordsFromLine(l.chords);
       ch.forEach(c => { allOrig.push(c); allDeg.push(chordDegree(c, key)); });
     }
   });
@@ -335,7 +347,6 @@ function compactProgression(sec, key) {
   return finalSeqs;
 }
 
-// ATUALIZADO 0.4.1: Fonte menor (16px) e paddings ajustados para otimizar espaço
 function renderOptimizedProgression(sec, key, emp) {
   const comp = compactProgression(sec, key);
   if(!comp.length) return '';
@@ -399,7 +410,6 @@ function renderSong(song) {
   };
 }
 
-// ATUALIZADO 0.4.1: Recebe o songObj para permitir renderizar músicas diferentes no modo Medley
 function renderSections(sections, mode, songObj, isMedley = false) {
   if(!sections.length)return '<div class="empty">Não foi possível montar a prévia.</div>';
   const origKey = songObj.tomOriginal || '';
@@ -448,7 +458,6 @@ function renderList() {
   });
 }
 
-// ATUALIZADO 0.4.1: Adicionado botão "Tocar Medley" na listagem
 async function loadMedleys() {
   $('medleyPanel').classList.remove('hidden');$('medleyResults').textContent='Calculando…';
   try {
@@ -466,7 +475,6 @@ async function loadMedleys() {
   } catch(e) { $('medleyResults').textContent=e.message; }
 }
 
-// ATUALIZADO 0.4.1: Função que prepara e exibe as duas músicas lado a lado
 async function openMedley(event, targetId) {
   const btn = event.currentTarget;
   const origText = btn.textContent;
@@ -478,16 +486,13 @@ async function openMedley(event, targetId) {
     const sec1 = localParse(currentSong.cifraOriginal || '');
     const sec2 = localParse(targetSong.cifraOriginal || '');
 
-    // Esconde as tabs e o painel de sugestões
     document.querySelector('.tabs').classList.add('hidden');
     $('medleyPanel').classList.add('hidden');
     
-    // Esconde avisos para limpar a tela
     document.querySelectorAll('.notice, .chips, [style*="💡"]').forEach(el => {
       if(el) el.classList.add('hidden');
     });
 
-    // Atualiza o cabeçalho para Modo Medley
     const hero = document.querySelector('.hero');
     hero.innerHTML = `
       <div>
@@ -499,7 +504,6 @@ async function openMedley(event, targetId) {
       </div>
     `;
 
-    // Renderiza o grid responsivo (Lado a lado no Desktop, Empilhado no Mobile)
     $('songContent').innerHTML = `
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: start;">
         <div style="background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
