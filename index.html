@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.3 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.4 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -236,7 +236,6 @@ function normalizeSection(name){
   return base;
 }
 
-// ATUALIZADO 0.4.3: Restaura a quebra inteligente para Interlúdios se isolados por parênteses no final da seção.
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -264,11 +263,9 @@ function localParse(raw) {
         return;
     }
     
-    // NOVO: Quebra automática de Interlúdio para dedilhados/acordes entre parênteses
     if (t.startsWith('(') && t.endsWith(')')) {
        let inner = t.slice(1, -1).trim();
        if (chordLine(inner)) {
-           // Verifica se já não estamos em um interlúdio e se a seção atual já tem letras (conteúdo)
            const hasContent = section.lines.some(l => l.lyric || l.chords);
            if (section.name !== 'Interlúdio' && hasContent) {
                flush();
@@ -483,7 +480,7 @@ async function loadMedleys() {
         </div>
         <button class="secondary small" onclick="openMedley(event, '${m.id}')" style="white-space:nowrap; padding:6px 10px;">Tocar Medley</button>
       </div>
-    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade estrita (mesmo capo) encontrada na biblioteca.</div>';
+    `).join('') : '<div class="muted small" style="padding:10px 0;">Nenhuma música com compatibilidade harmônica (mesmo tom, 4º ou 5º grau) encontrada na biblioteca.</div>';
   } catch(e) { $('medleyResults').textContent=e.message; }
 }
 
