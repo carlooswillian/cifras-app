@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.2 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.3 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -117,7 +117,6 @@ $('raw').addEventListener('input', function() {
   }
 });
 
-// ATUALIZADO 0.4.2: Regex aprimorado para aceitar acordes com parênteses, ex: D9(11), F#m7(b5)
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?$/;
 const flatToSharp = {'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#'};
 const notesArr = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -202,7 +201,6 @@ function chordDegree(chord, key) {
   return map[sem] + (isMinor ? 'm' : '');
 }
 
-// ATUALIZADO 0.4.2: Lógica refinada para lidar com parênteses e espaços isolados
 function chordLine(line) {
    const trimmed = line.trim();
    if (!trimmed) return false;
@@ -238,7 +236,7 @@ function normalizeSection(name){
   return base;
 }
 
-// ATUALIZADO 0.4.2: Removido o bloco agressivo que quebrava o [Interlúdio]
+// ATUALIZADO 0.4.3: Restaura a quebra inteligente para Interlúdios se isolados por parênteses no final da seção.
 function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
@@ -266,6 +264,21 @@ function localParse(raw) {
         return;
     }
     
+    // NOVO: Quebra automática de Interlúdio para dedilhados/acordes entre parênteses
+    if (t.startsWith('(') && t.endsWith(')')) {
+       let inner = t.slice(1, -1).trim();
+       if (chordLine(inner)) {
+           // Verifica se já não estamos em um interlúdio e se a seção atual já tem letras (conteúdo)
+           const hasContent = section.lines.some(l => l.lyric || l.chords);
+           if (section.name !== 'Interlúdio' && hasContent) {
+               flush();
+               section = { name: 'Interlúdio', lines: [] };
+           }
+           section.lines.push({ chords: line.trimEnd(), lyric: '' });
+           return; 
+       }
+    }
+    
     const isChord=chordLine(t);
     section.lines.push({chords:isChord?line.trimEnd():'', lyric:isChord?'':line.trimEnd()});
   });
@@ -273,7 +286,6 @@ function localParse(raw) {
   return out;
 }
 
-// ATUALIZADO 0.4.2: Extrai os acordes isolando perfeitamente os parênteses
 function extractChordsFromLine(lineStr) {
    let ch = [];
    lineStr.split(/\s+/).forEach(t => {
