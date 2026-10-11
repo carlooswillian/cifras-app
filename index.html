@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.7 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.4.8 · Guia simplificado Nashville</div>
 </div>
 <script>
 /*
@@ -549,13 +549,70 @@ function renderSections(sections, mode, songObj, isMedley = false) {
   const origKey = songObj.tomOriginal || '';
   const tk = getWrittenKey(origKey, songObj.capotrasteSugerido);
   
+  // Lógica de Detecção Inteligente de Medley Extenso
+  const titleParts = songObj.titulo.split(/[/+]/).map(p => p.trim()).filter(p => p.length > 0);
+  const isExtensiveMedley = titleParts.length >= 3;
+  
   if(mode==='degrees') {
     const seen = new Set();
     const uniqueSections = sections.filter(sec => {
       const n = sec.name.toLowerCase();
       if(seen.has(n)) return false; seen.add(n); return true;
     });
-    return `<div class="section">${uniqueSections.map(sec=>`<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec,tk,'degree')||'<p class="muted">Nenhum acorde isolado identificado.</p>'}</div>`).join('')}</div>`;
+
+    return `<div class="section">${uniqueSections.map(sec=>{
+      
+      if (isExtensiveMedley) {
+        // Divide as linhas da seção em estrofes menores baseando-se nas quebras de linha em branco
+        const stanzas = [];
+        let currentStanza = [];
+        sec.lines.forEach(l => {
+          if (!l.chords && !l.lyric) {
+            if (currentStanza.length > 0) { stanzas.push(currentStanza); currentStanza = []; }
+          } else {
+            currentStanza.push(l);
+          }
+        });
+        if (currentStanza.length > 0) stanzas.push(currentStanza);
+        
+        let stanzasHtml = stanzas.map(stz => {
+          const progHtml = renderOptimizedProgression({lines: stz}, tk, 'degree');
+          if (!progHtml) return '';
+          
+          // Pega o snippet específico desta pequena estrofe
+          const snipLine = stz.find(l => l.lyric && l.lyric.trim());
+          let snipText = '';
+          if (snipLine) {
+            let words = snipLine.lyric.trim().split(/\s+/);
+            snipText = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
+          }
+          
+          return `
+            <div style="margin-bottom: 14px;">
+              ${snipText ? `<div style="font-size:12px; color:var(--muted); margin-bottom:5px; font-style:italic;">"${esc(snipText)}"</div>` : ''}
+              ${progHtml}
+            </div>
+          `;
+        }).join('');
+        
+        return `
+          <div class="section-summary">
+            <h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+              ${esc(sec.name)} 
+              <span class="muted" style="font-size:11px; margin-left:8px; font-weight:normal; text-transform:none;">(Medley Fracionado)</span>
+            </h3>
+            ${stanzasHtml || '<p class="muted">Nenhum acorde isolado identificado.</p>'}
+          </div>
+        `;
+      } else {
+        // Comportamento normal compactado para cifras simples e medleys curtos
+        return `
+          <div class="section-summary">
+            <h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec, tk, 'degree') || '<p class="muted">Nenhum acorde isolado identificado.</p>'}
+          </div>
+        `;
+      }
+    }).join('')}</div>`;
   }
   
   return sections.map(sec=>{
