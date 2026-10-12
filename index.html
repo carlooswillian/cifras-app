@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.0 · Guia simplificado Nashville</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.1 · Edição Dinâmica</div>
 </div>
 <script>
 /*
@@ -102,17 +102,14 @@ const configured = () => API_URL.startsWith('https://script.google.com/') && !AP
 // Lógica de Modais e Backdrop Centralizada
 const updateBackdrop = () => {
     const hasModal = document.querySelectorAll('.modal:not(.hidden)').length > 0;
-    const hasSidebar = $('sidebar').classList.contains('open');
-    $('backdrop').classList.toggle('open', hasModal || hasSidebar);
+    const hasSidebar = $('sidebar').classList.contains('open');$('backdrop').classList.toggle('open', hasModal || hasSidebar);
 };
-const toggleMenu = () => { $('sidebar').classList.toggle('open'); updateBackdrop(); };
-$('menuBtn').onclick = toggleMenu;
+const toggleMenu = () => { $('sidebar').classList.toggle('open'); updateBackdrop(); };$('menuBtn').onclick = toggleMenu;
 
 function openModal(id) { $(id).classList.remove('hidden'); updateBackdrop(); }
 function closeModal(id) { $(id).classList.add('hidden'); updateBackdrop(); }
 
-$('backdrop').onclick = () => { 
-    $('sidebar').classList.remove('open'); 
+$('backdrop').onclick = () => {$('sidebar').classList.remove('open'); 
     document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden')); 
     updateBackdrop(); 
 };
@@ -279,7 +276,6 @@ function localParse(raw) {
   const lines=raw.replace(/\r/g,'').split('\n');
   const out=[]; let section={name:'Introdução',lines:[]};
   
-  // FIX: Somente armazena seções que possuam linhas de fato (evita sumir com a intro)
   function flush(){
     if(section.lines.some(l => l.chords.trim() || l.lyric.trim())) out.push(section);
   }
@@ -338,7 +334,6 @@ function getSectionSnippet(sec) {
   return '';
 }
 
-// FIX: Compressor v0.5.0 - Corrige falha de agrupamento em sequências muito longas
 function compactProgression(sec, key) {
   let chordsData = []; 
   sec.lines.forEach((l, idx) => {
@@ -382,7 +377,6 @@ function compactProgression(sec, key) {
         if (chunk1 === chunk2) count++; else break;
       }
       
-      // O Segredo da versão 0.5.0: Somente atualiza Max Coverage se count > 1
       if (count > 1) {
           let coverage = count * len;
           if (coverage > maxCoverage) { 
@@ -490,7 +484,7 @@ function renderSong(song) {
           </div>
         </div>
 
-        <!-- Formulário de Edição Rápida -->
+        <!-- Formulário de Edição Rápida (AGORA COM CIFRA) -->
         <div id="editModeHero" class="hidden" style="width: 100%; display:flex; flex-direction:column; gap:10px;">
            <div class="field"><label>Título</label><input id="editTitle" value="${esc(song.titulo)}" placeholder="Ex: Toda Terra"></div>
            <div class="field"><label>Artista</label><input id="editArtist" value="${esc(song.artista)}" placeholder="Ex: Gabriela Rocha"></div>
@@ -498,11 +492,15 @@ function renderSong(song) {
              <div class="field" style="flex:1"><label>Tom Original</label><input id="editKey" value="${esc(song.tomOriginal)}" placeholder="Ex: E"></div>
              <div class="field" style="flex:1"><label>Capo</label><input id="editCapo" type="number" min="0" max="12" value="${esc(song.capotrasteSugerido)}" placeholder="Ex: 2"></div>
            </div>
+           <div class="field">
+             <label>Conteúdo da Cifra (Letra e Acordes)</label>
+             <textarea id="editRaw" style="min-height: 250px; font-family: monospace; white-space: pre-wrap;">${esc(song.cifraOriginal)}</textarea>
+           </div>
         </div>
 
         <!-- Botões do Header -->
         <div class="toolbar" id="viewToolbar" style="flex: 0 0 auto;">
-          <button class="secondary" id="editBtn" style="padding: 10px; display: grid; place-items: center; border-radius: 12px;" title="Editar informações básicas">
+          <button class="secondary" id="editBtn" style="padding: 10px; display: grid; place-items: center; border-radius: 12px;" title="Editar informações básicas e cifra">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
           </button>
           <button class="secondary" id="medleyBtn">Medleys</button>
@@ -533,12 +531,16 @@ function renderSong(song) {
       $('editModeHero').classList.remove('hidden');$('editToolbar').classList.remove('hidden');
   };
   
-  $('cancelEditBtn').onclick = () => {$('viewModeHero').classList.remove('hidden');
-      $('viewToolbar').classList.remove('hidden');$('editModeHero').classList.add('hidden');
-      $('editToolbar').classList.add('hidden');$('editTitle').value = song.titulo;
+  $('cancelEditBtn').onclick = () => {
+      $('viewModeHero').classList.remove('hidden');$('viewToolbar').classList.remove('hidden');
+      $('editModeHero').classList.add('hidden');$('editToolbar').classList.add('hidden');
+      
+      // Reseta os campos para o original se o usuário cancelar
+      $('editTitle').value = song.titulo;
       $('editArtist').value = song.artista;
       $('editKey').value = song.tomOriginal;
       $('editCapo').value = song.capotrasteSugerido;
+      $('editRaw').value = song.cifraOriginal;
   };
 
   $('saveEditBtn').onclick = async () => {
@@ -551,7 +553,8 @@ function renderSong(song) {
                   titulo: $('editTitle').value,
                   artista: $('editArtist').value,
                   tomOriginal: $('editKey').value,
-                  capotrasteSugerido: $('editCapo').value
+                  capotrasteSugerido: $('editCapo').value,
+                  cifraOriginal: $('editRaw').value // Envia a cifra editada!
               }
           });
           const idx = songs.findIndex(s => s.id === updated.id);
