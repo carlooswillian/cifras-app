@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.1 · Edição Dinâmica</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.2 · Medleys Relativos (Maior/Menor)</div>
 </div>
 <script>
 /*
@@ -531,12 +531,7 @@ function renderSong(song) {
       $('editModeHero').classList.remove('hidden');$('editToolbar').classList.remove('hidden');
   };
   
-  $('cancelEditBtn').onclick = () => {
-      $('viewModeHero').classList.remove('hidden');$('viewToolbar').classList.remove('hidden');
-      $('editModeHero').classList.add('hidden');$('editToolbar').classList.add('hidden');
-      
-      // Reseta os campos para o original se o usuário cancelar
-      $('editTitle').value = song.titulo;
+  $('cancelEditBtn').onclick = () => {$('viewModeHero').classList.remove('hidden');$('viewToolbar').classList.remove('hidden');$('editModeHero').classList.add('hidden');$('editToolbar').classList.add('hidden');$('editTitle').value = song.titulo;
       $('editArtist').value = song.artista;
       $('editKey').value = song.tomOriginal;
       $('editCapo').value = song.capotrasteSugerido;
@@ -554,7 +549,7 @@ function renderSong(song) {
                   artista: $('editArtist').value,
                   tomOriginal: $('editKey').value,
                   capotrasteSugerido: $('editCapo').value,
-                  cifraOriginal: $('editRaw').value // Envia a cifra editada!
+                  cifraOriginal: $('editRaw').value
               }
           });
           const idx = songs.findIndex(s => s.id === updated.id);
