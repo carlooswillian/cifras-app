@@ -86,7 +86,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.2 · Medleys Relativos (Maior/Menor)</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.3 · Graus em Relativo Maior</div>
 </div>
 <script>
 /*
@@ -175,6 +175,26 @@ function getWrittenKey(origKey, capoVal) {
   if (written === 'A#') written = 'Bb';
   if (written === 'D#') written = 'Eb';
   return written + (isMinor ? 'm' : '');
+}
+
+// NOVO: Calcula o Relativo Maior (+3 semitons)
+function getRelativeMajor(key) {
+   if(!key) return key;
+   let clean = key.trim();
+   if(!clean.toLowerCase().endsWith('m')) return clean;
+
+   let root = clean.replace(/m$/i, '');
+   if (root.length > 1 && root[1] === 'b') root = flatToSharp[root.substring(0,2)] || root;
+   let idx = notesArr.indexOf(root);
+   if (idx === -1) return clean;
+
+   let relIdx = (idx + 3) % 12;
+   let relMajor = notesArr[relIdx];
+
+   if(relMajor === 'A#') relMajor = 'Bb';
+   if(relMajor === 'D#') relMajor = 'Eb';
+
+   return relMajor;
 }
 
 function renderCapoVariations(originalKey) {
@@ -484,7 +504,7 @@ function renderSong(song) {
           </div>
         </div>
 
-        <!-- Formulário de Edição Rápida (AGORA COM CIFRA) -->
+        <!-- Formulário de Edição Rápida -->
         <div id="editModeHero" class="hidden" style="width: 100%; display:flex; flex-direction:column; gap:10px;">
            <div class="field"><label>Título</label><input id="editTitle" value="${esc(song.titulo)}" placeholder="Ex: Toda Terra"></div>
            <div class="field"><label>Artista</label><input id="editArtist" value="${esc(song.artista)}" placeholder="Ex: Gabriela Rocha"></div>
@@ -587,6 +607,20 @@ function renderSections(sections, mode, songObj, isMedley = false) {
   const origKey = songObj.tomOriginal || '';
   const tk = getWrittenKey(origKey, songObj.capotrasteSugerido);
   
+  // FIX: LÓGICA DO RELATIVO MAIOR NA HORA DE MOSTRAR OS GRAUS
+  let isMinorKey = String(tk || '').toLowerCase().endsWith('m');
+  let conversionKey = tk;
+  let relativeWarning = '';
+
+  if (isMinorKey) {
+     conversionKey = getRelativeMajor(tk);
+     if (!isMedley) {
+        relativeWarning = `<div class="notice" style="margin-bottom: 16px; border-left: 4px solid var(--purple); background: #13111c;">💡 <strong>Tom Menor Detectado:</strong> A música está em <strong>${esc(tk)}</strong>. Exibindo os graus baseados no seu relativo Maior (<strong>${esc(conversionKey)}</strong>).</div>`;
+     } else {
+         relativeWarning = `<div style="font-size:11px; color:var(--purple); margin-bottom:10px;">Graus convertidos para Relativo Maior: ${esc(conversionKey)}</div>`;
+     }
+  }
+
   const titleParts = songObj.titulo.split(/[/+]/).map(p => p.trim()).filter(p => p.length > 0);
   const isExtensiveMedley = titleParts.length >= 3;
   
@@ -597,10 +631,11 @@ function renderSections(sections, mode, songObj, isMedley = false) {
       if(seen.has(n)) return false; seen.add(n); return true;
     });
 
-    return `<div class="section">${uniqueSections.map(sec=>{
+    return `${relativeWarning}<div class="section">${uniqueSections.map(sec=>{
       
       if (isExtensiveMedley) {
-        const seqs = compactProgression(sec, tk);
+        // Envia a conversionKey (Maior) ao invés do tk (Menor)
+        const seqs = compactProgression(sec, conversionKey);
         let html = seqs.map(seq => {
             let degHtml = seq.deg.map((d, i) => `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px"><b style="font-size:16px;color:var(--blue);">${esc(d)}</b></div>`).join('');
             let rowHtml = `<div class="progression-row">${degHtml}${seq.count > 1 ? `<div class="repeat-badge">${seq.count}x</div>` : ''}</div>`;
@@ -632,7 +667,7 @@ function renderSections(sections, mode, songObj, isMedley = false) {
       } else {
         return `
           <div class="section-summary">
-            <h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec, tk, 'degree') || '<p class="muted">Nenhum acorde isolado identificado.</p>'}
+            <h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec, conversionKey, 'degree') || '<p class="muted">Nenhum acorde isolado identificado.</p>'}
           </div>
         `;
       }
