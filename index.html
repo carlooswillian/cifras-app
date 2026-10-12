@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#171b2a 0,var(--bg) 50%);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
 button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;background:var(--blue);color:#09101f;font-weight:700;transition:0.2s}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:#401b25;color:#ffdce0;border:1px solid #5a2531}button.danger:hover{background:#5a2531}
 input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--blue)}textarea{min-height:190px;resize:vertical}.app{max-width:1200px;margin:auto;padding:22px 18px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:22px;cursor:pointer;transition:0.2s;margin-right:4px}.menu-toggle:hover{background:var(--panel2)}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#8db4ff,#b8a5ff);color:#101425;font-size:22px;font-weight:900}.eyebrow{color:var(--blue);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.brand h1{font-size:19px;margin:0;letter-spacing:-.04em}.brand p{margin:0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.layout{display:block;max-width:100%}.panel{background:rgba(18,20,27,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 18px 55px #0002}.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.02em}.sidebar{position:fixed;top:0;left:0;height:100vh;width:320px;max-width:85vw;z-index:1000;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);border-radius:0;border-right:1px solid var(--line);border-top:0;border-bottom:0;border-left:0;background:rgba(14,16,22,0.98);backdrop-filter:blur(10px);margin:0;overflow-y:auto;padding:22px 18px}.sidebar.open{transform:translateX(0)}
-.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:40px;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;opacity:0;pointer-events:none;transition:0.3s ease;backdrop-filter:blur(2px)}.backdrop.open{opacity:1;pointer-events:auto}.muted{color:var(--muted)}.search{margin-bottom:12px}.song-list{display:flex;flex-direction:column;gap:7px;overflow:auto}.song-item{text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:12px;border-radius:13px;cursor:pointer}.song-item:hover,.song-item.active{background:var(--panel2);border-color:var(--line)}.song-item strong{display:block;font-size:14px}.song-item small{color:var(--muted)}.maincol{display:flex;flex-direction:column;gap:18px;min-width:0;width:100%}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:25px;letter-spacing:-.045em;margin:3px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:12px;padding:5px 9px;background:#202536;border:1px solid #30384d;border-radius:100px;color:#d6def5}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;transition:0.2s}.tab.active{background:#202a42;border-color:#3e5e99;color:#e5edff}.section{margin:17px 0 22px}.section h3{margin:0 0 12px;color:var(--purple);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.progression-row{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin-bottom:8px}.degree-card{min-width:36px;flex:1;background:#191c25;border:1px solid #30384d;border-radius:10px;text-align:center;display:flex;flex-direction:column;justify-content:center;position:relative}.degree-card b{display:block;color:var(--blue)}.degree-card small{color:var(--muted);font-size:10px}.repeat-badge{background:#202536;border:1px solid #3e5e99;color:var(--blue);display:grid;place-items:center;padding:0 8px;border-radius:10px;font-weight:800;font-size:12px}.section-summary{padding:12px 0;border-bottom:1px solid var(--line)}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:700}.span2{grid-column:1/-1}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.notice{font-size:12px;color:#c3c9d8;background:#171a23;border:1px solid var(--line);padding:11px 13px;border-radius:12px;margin-top:12px}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:8px}.hidden{display:none!important}.medley{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.medley:last-child{border:0}.small{font-size:12px}.footer{text-align:center;color:#626a7b;font-size:11px;margin-top:24px}
 .modal {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);z-index:1001;width:90%;max-width:450px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,0.6);max-height:85vh;display:flex;flex-direction:column}
 .modal-header {display:flex;justify-content:space-between;align-items:center}
 .modal-body {overflow-y:auto;padding-right:5px;margin-top:16px}
@@ -67,22 +67,23 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
 
       <section class="panel hidden" id="editor">
-        <div class="hero"><div><div class="eyebrow">Adicionar ao songbook</div><h2>Importar cifra</h2><p class="muted small">Cole o conteúdo gerado pela IA ou direto do Cifra Club.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
+        <div class="hero"><div><div class="eyebrow">Adicionar ao songbook</div><h2>Importar cifra</h2><p class="muted small">Cole o conteúdo copiado do Cifra Club ou formatado pela IA.</p></div><button class="secondary" id="closeEditor">Fechar</button></div>
         <div class="form-grid">
-          <div class="field span2"><label for="raw">Cifra completa</label><textarea id="raw" placeholder="Cole aqui a cifra. Se quiser as caixas proporcionais, cole o formato Acorde(Batidas) gerado pela IA..."></textarea></div>
-          <div class="field"><label for="title">Título</label><input id="title" placeholder="Ex.: Toda Terra"></div>
-          <div class="field"><label for="artist">Artista</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
-          <div class="field"><label for="key">Tom original</label><input id="key" placeholder="Ex.: Bb, E, C#m"></div>
-          <div class="field"><label for="capo">Capotraste</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
-          <div class="field span2"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: versão ao vivo..."></div>
+          <div class="field span2"><label for="raw">Cifra completa (Cole a cifra primeiro!)</label><textarea id="raw" placeholder="Cole aqui a cifra. O Tom e Capotraste serão detectados automaticamente..."></textarea></div>
+          <div class="field"><label for="title">Título (opcional)</label><input id="title" placeholder="Ex.: Toda Terra"></div>
+          <div class="field"><label for="artist">Artista (opcional)</label><input id="artist" placeholder="Ex.: Gabriela Rocha"></div>
+          <div class="field"><label for="key">Tom original (Som da música)</label><input id="key" placeholder="Ex.: Bb, E, C#m"></div>
+          <div class="field"><label for="capo">Capotraste sugerido (opcional)</label><input id="capo" type="number" min="0" max="12" placeholder="Ex.: 3"></div>
+          <div class="field span2"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: versão ao vivo, dedilhado no início..."></div>
         </div>
+        <div class="notice">Dica: Se você usar os números de tempo gerados pela IA (ex: Bm(4) G(2)), o sistema mostrará o tempo no canto de cada acorde! Músicas antigas continuarão funcionando normalmente.</div>
         <div class="row" style="margin-top:14px"><button id="saveBtn">Salvar música</button><button class="secondary" id="previewBtn">Pré-visualizar</button></div>
         <div class="status" id="editorStatus"></div>
         <pre id="preview" class="hidden" style="white-space:pre-wrap;color:var(--muted)"></pre>
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.5 · Motor Elástico de Batidas</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.5 · Indicadores de Tempo</div>
 </div>
 <script>
 /*
@@ -103,6 +104,7 @@ const updateBackdrop = () => {
     const hasSidebar = $('sidebar').classList.contains('open');$('backdrop').classList.toggle('open', hasModal || hasSidebar);
 };
 const toggleMenu = () => { $('sidebar').classList.toggle('open'); updateBackdrop(); };$('menuBtn').onclick = toggleMenu;
+
 function openModal(id) { $(id).classList.remove('hidden'); updateBackdrop(); }
 function closeModal(id) { $(id).classList.add('hidden'); updateBackdrop(); }
 
@@ -134,7 +136,8 @@ $('raw').addEventListener('input', function() {
   if (lines.length > 0) {
     let headerText = lines[0].split(/Composição de:/i)[0].trim();
     let splitMatch = headerText.match(/([a-z0-9áéíóúâêôãõç!?"'\)])([A-Z])/);
-    let possibleTitle = headerText; let possibleArtist = "";
+    let possibleTitle = headerText;
+    let possibleArtist = "";
     
     if (splitMatch) {
         let splitIdx = splitMatch.index + 1;
@@ -142,62 +145,23 @@ $('raw').addEventListener('input', function() {
         possibleArtist = headerText.substring(splitIdx).trim();
     } else if (lines.length > 1) {
         let nextLine = lines[1].split(/Composição de:/i)[0].trim();
-        if (!nextLine.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(nextLine)) { possibleArtist = nextLine; }
+        if (!nextLine.match(/^(Tom:|Composição|\[|Capo|Afinação)/i) && !chordLine(nextLine)) {
+            possibleArtist = nextLine;
+        }
     }
+    
     if (!possibleTitle.match(/^(Tom:|\[|Capo|Afinação)/i) && !$('title').value) {$('title').value = possibleTitle;}
     if (possibleArtist && !$('artist').value) {$('artist').value = possibleArtist;}
   }
 });
 
-const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?$/;
+// Atualizado para reconhecer durações anexadas ex: Bm(4), D/A(2.5)
+const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?(?:\(\d+(?:\.\d+)?\))?$/;
+// Expressão restrita para capturar apenas números que representam BEATS lógicos de bússola para que um C(9) não vire 9 batidas.
+const BEAT_REGEX = /\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)$/;
+
 const flatToSharp = {'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#'};
 const notesArr = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-
-// ==========================================
-// NOVO: PARSER DE TOKENS (COM OU SEM TEMPO)
-// ==========================================
-function parseChordToken(t) {
-    let m = t.match(/^(.*?)\((\d+(?:\.\d+)?)\)$/);
-    if (m && CHORD_REGEX.test(m[1])) return { chord: m[1], duration: parseFloat(m[2]) };
-    if (CHORD_REGEX.test(t)) return { chord: t, duration: null };
-    
-    if (t.startsWith('(') && t.endsWith(')')) {
-        let inner = t.slice(1, -1);
-        m = inner.match(/^(.*?)\((\d+(?:\.\d+)?)\)$/);
-        if (m && CHORD_REGEX.test(m[1])) return { chord: m[1], duration: parseFloat(m[2]) };
-        if (CHORD_REGEX.test(inner)) return { chord: inner, duration: null };
-    }
-    if (t.startsWith('(')) {
-        let inner = t.slice(1);
-        m = inner.match(/^(.*?)\((\d+(?:\.\d+)?)\)$/);
-        if (m && CHORD_REGEX.test(m[1])) return { chord: m[1], duration: parseFloat(m[2]) };
-        if (CHORD_REGEX.test(inner)) return { chord: inner, duration: null };
-    }
-    if (t.endsWith(')')) {
-        let inner = t.slice(0, -1);
-        if (CHORD_REGEX.test(inner)) return { chord: inner, duration: null };
-    }
-    return null;
-}
-
-function chordLine(line) {
-   const trimmed = line.trim();
-   if (!trimmed) return false;
-   const tokens = trimmed.split(/\s+/);
-   return tokens.every(t => {
-       if (/^[()[\]-]+$/.test(t)) return true;
-       return parseChordToken(t) !== null;
-   });
-}
-
-function extractChordsFromLine(lineStr) {
-   let ch = [];
-   lineStr.split(/\s+/).forEach(t => {
-      const parsed = parseChordToken(t);
-      if (parsed) ch.push(parsed);
-   });
-   return ch;
-}
 
 function getWrittenKey(origKey, capoVal) {
   const c = parseInt(capoVal);
@@ -236,14 +200,22 @@ function renderCapoVariations(originalKey) {
   let cleanKey = originalKey.replace(/m/i, '').trim();
   let isMinor = originalKey.toLowerCase().endsWith('m');
   if (isMinor) return ''; 
+
   if (cleanKey.length > 1 && cleanKey[1] === 'b') cleanKey = flatToSharp[cleanKey.substring(0,2)] || cleanKey;
   let idx = notesArr.indexOf(cleanKey);
   if (idx === -1) return '';
 
   let gIdx = notesArr.indexOf('G');
-  let capoI = (idx - gIdx + 12) % 12; let kI = notesArr[idx];
-  let ivIdx = (idx + 5) % 12; let capoIV = (ivIdx - gIdx + 12) % 12; let kIV = notesArr[ivIdx];
-  let vIdx = (idx + 7) % 12; let capoV = (vIdx - gIdx + 12) % 12; let kV = notesArr[vIdx];
+  let capoI = (idx - gIdx + 12) % 12;
+  let kI = notesArr[idx];
+  
+  let ivIdx = (idx + 5) % 12;
+  let capoIV = (ivIdx - gIdx + 12) % 12;
+  let kIV = notesArr[ivIdx];
+
+  let vIdx = (idx + 7) % 12;
+  let capoV = (vIdx - gIdx + 12) % 12;
+  let kV = notesArr[vIdx];
 
   const formatNote = n => { if(n === 'A#') return 'Bb'; if(n === 'D#') return 'Eb'; return n; };
 
@@ -253,11 +225,21 @@ function renderCapoVariations(originalKey) {
   if (capoV <= 5) chipsHtml.push(`<span class="chip" style="background:#202536; border-color:#3e5e99;">Tom ${formatNote(kV)} (5º) → Capo na ${capoV}ª</span>`);
 
   if (chipsHtml.length === 0) return '';
-  return `<div style="background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:12px;"><div style="font-size:11px; color:var(--blue); font-weight:800; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em;">💡 Sugestões de Capotraste (Shape de G)</div><div style="display:flex; gap:8px; flex-wrap:wrap;">${chipsHtml.join('')}</div><div class="muted" style="font-size:12px; margin-top:8px;">Variações ideais para medleys (Até 5ª casa).</div></div>`;
+
+  return `
+    <div style="background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:12px;">
+      <div style="font-size:11px; color:var(--blue); font-weight:800; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em;">💡 Sugestões de Capotraste (Tocar no Shape de G)</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        ${chipsHtml.join('')}
+      </div>
+      <div class="muted" style="font-size:12px; margin-top:8px;">Variações ideais para medleys (Até 5ª casa). O Shape de G possui transições mais abertas e harmônicas.</div>
+    </div>
+  `;
 }
 
 function chordDegree(chord, key) {
-  const m = chord.match(/^([A-G](?:#|b)?)(.*)$/);
+  let cleanChord = chord.replace(BEAT_REGEX, '');
+  const m = cleanChord.match(/^([A-G](?:#|b)?)(.*)$/);
   if(!m || !key) return '?';
   let cRoot = m[1];
   if (cRoot.length > 1 && cRoot[1] === 'b') cRoot = flatToSharp[cRoot] || cRoot;
@@ -270,6 +252,19 @@ function chordDegree(chord, key) {
   const map = {0:'1', 1:'b2', 2:'2', 3:'b3', 4:'3', 5:'4', 6:'b5', 7:'5', 8:'b6', 9:'6', 10:'b7', 11:'7'};
   const isMinor = m[2].startsWith('m') && !m[2].startsWith('maj') && !m[2].startsWith('m(maj');
   return map[sem] + (isMinor ? 'm' : '');
+}
+
+function chordLine(line) {
+   const trimmed = line.trim();
+   if (!trimmed) return false;
+   const tokens = trimmed.split(/\s+/);
+   return tokens.every(t => {
+       return CHORD_REGEX.test(t) ||
+              /^[()[\]-]+$/.test(t) ||
+              (t.startsWith('(') && t.endsWith(')') && CHORD_REGEX.test(t.slice(1,-1))) ||
+              (t.startsWith('(') && CHORD_REGEX.test(t.slice(1))) ||
+              (t.endsWith(')') && CHORD_REGEX.test(t.slice(0,-1)));
+   });
 }
 
 function normalizeSection(name){
@@ -325,6 +320,17 @@ function localParse(raw) {
   return out;
 }
 
+function extractChordsFromLine(lineStr) {
+   let ch = [];
+   lineStr.split(/\s+/).forEach(t => {
+      if(CHORD_REGEX.test(t)) { ch.push(t); return; }
+      if(t.startsWith('(') && t.endsWith(')') && CHORD_REGEX.test(t.slice(1,-1))) { ch.push(t.slice(1,-1)); return; }
+      if(t.startsWith('(') && CHORD_REGEX.test(t.slice(1))) { ch.push(t.slice(1)); return; }
+      if(t.endsWith(')') && CHORD_REGEX.test(t.slice(0,-1))) { ch.push(t.slice(0,-1)); return; }
+   });
+   return ch;
+}
+
 function getSectionSnippet(sec) {
   const line = sec.lines.find(l => l.lyric && l.lyric.trim().length > 0);
   if (line) {
@@ -337,16 +343,11 @@ function getSectionSnippet(sec) {
   return '';
 }
 
-// ==========================================
-// COMPACT PROGRESSION ATUALIZADO (OBJETOS)
-// ==========================================
 function compactProgression(sec, key) {
   let chordsData = []; 
   sec.lines.forEach((l, idx) => {
     if(l.chords) {
-      extractChordsFromLine(l.chords).forEach(c => { 
-          chordsData.push({ chord: c.chord, duration: c.duration, lineIdx: idx }); 
-      });
+      extractChordsFromLine(l.chords).forEach(c => { chordsData.push({ chord: c, lineIdx: idx }); });
     }
   });
   if (chordsData.length === 0) return [];
@@ -356,21 +357,28 @@ function compactProgression(sec, key) {
 
   for (let i = 0; i < chordsData.length; i++) {
     let c = chordsData[i].chord;
-    let parts = c.split('/');
-    let rootChord = parts[0]; let bassNote = parts[1];
+    
+    // Extrai o tempo anexado usando nossa regex estrita (ex: (4), (2.5))
+    let durMatch = c.match(BEAT_REGEX);
+    let durStr = durMatch ? durMatch[0] : '';
+    let cleanC = durMatch ? c.replace(BEAT_REGEX, '') : c;
+
+    let parts = cleanC.split('/');
+    let rootChord = parts[0];
+    let bassNote = parts[1];
     let rootDeg = chordDegree(rootChord, key);
 
     if (bassNote) {
         let currentRoot = getRoot(rootChord);
-        let prevRoot = i > 0 ? getRoot(chordsData[i-1].chord.split('/')[0]) : null;
-        let nextRoot = i < chordsData.length - 1 ? getRoot(chordsData[i+1].chord.split('/')[0]) : null;
+        let prevRoot = i > 0 ? getRoot(chordsData[i-1].chord.replace(BEAT_REGEX, '').split('/')[0]) : null;
+        let nextRoot = i < chordsData.length - 1 ? getRoot(chordsData[i+1].chord.replace(BEAT_REGEX, '').split('/')[0]) : null;
         if (currentRoot === prevRoot || currentRoot === nextRoot) {
             let bassDeg = chordDegree(bassNote, key).replace(/m$/, '');
-            allDeg.push({ deg: rootDeg + '/' + bassDeg, duration: chordsData[i].duration });
+            allDeg.push(rootDeg + '/' + bassDeg + durStr);
             continue;
         }
     }
-    allDeg.push({ deg: rootDeg, duration: chordsData[i].duration });
+    allDeg.push(rootDeg + durStr);
   }
 
   let seqs = []; let i = 0; let n = allDeg.length;
@@ -379,8 +387,8 @@ function compactProgression(sec, key) {
     for (let len = 1; len <= Math.floor((n - i) / 2); len++) {
       let count = 1;
       while (i + count * len + len <= n) {
-        let chunk1 = allDeg.slice(i, i + len).map(x => x.deg + '|' + x.duration).join(' ');
-        let chunk2 = allDeg.slice(i + count * len, i + count * len + len).map(x => x.deg + '|' + x.duration).join(' ');
+        let chunk1 = allDeg.slice(i, i + len).join(' ');
+        let chunk2 = allDeg.slice(i + count * len, i + count * len + len).join(' ');
         if (chunk1 === chunk2) count++; else break;
       }
       if (count > 1) {
@@ -394,7 +402,7 @@ function compactProgression(sec, key) {
     }
     if (maxCount > 1) {
       seqs.push({ 
-          orig: chordsData.slice(i, i + bestLen).map(x => ({ chord: x.chord, duration: x.duration })), 
+          orig: chordsData.slice(i, i + bestLen).map(x => x.chord), 
           deg: allDeg.slice(i, i + bestLen), 
           count: maxCount,
           startIdx: chordsData[i].lineIdx,
@@ -403,7 +411,7 @@ function compactProgression(sec, key) {
       i += bestLen * maxCount;
     } else {
       seqs.push({ 
-          orig: [{ chord: chordsData[i].chord, duration: chordsData[i].duration }], 
+          orig: [chordsData[i].chord], 
           deg: [allDeg[i]], 
           count: 1,
           startIdx: chordsData[i].lineIdx,
@@ -443,22 +451,27 @@ function compactProgression(sec, key) {
   return finalSeqs;
 }
 
-// ==========================================
-// RENDERIZAÇÃO ELÁSTICA (FLEXBOX)
-// ==========================================
 function renderOptimizedProgression(sec, key, emp) {
   const comp = compactProgression(sec, key);
   if(!comp.length) return '';
   return comp.map(s => `
     <div class="progression-row">
       ${s.deg.map((d, i) => {
-        let flexVal = d.duration ? d.duration : 1;
-        let durHtml = d.duration ? `<small style="font-size:10px;color:var(--muted);display:block;margin-top:2px;font-weight:normal;opacity:0.6;">${d.duration}t</small>` : '';
-
+        
+        let match = d.match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
+        let degText = match[1];
+        let durText = match[3] || '';
+        
+        // Renderiza o número pequeno da batida no cantinho (se existir)
+        let pb = durText ? '14px' : '8px';
+        let durHtml = durText ? `<span style="position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--muted); font-weight:800; opacity:0.8;">${durText}</span>` : '';
+        
         if (emp === 'degree') {
-          return `<div class="degree-card" style="flex: ${flexVal} 1 0%; padding:8px 4px;"><b style="font-size:16px;color:var(--blue);">${esc(d.deg)}</b>${durHtml}</div>`;
+          return `<div class="degree-card" style="flex:0 1 auto; padding:8px 4px ${pb} 4px;"><b style="font-size:16px;color:var(--blue);">${esc(degText)}</b>${durHtml}</div>`;
         } else {
-          return `<div class="degree-card" style="flex: ${flexVal} 1 0\%; padding:6px;"><small>Grau ${esc(d.deg)}</small><b style="font-size:18px">${esc(s.orig[i].chord)}</b>${durHtml}</div>`;
+          let origMatch = s.orig[i].match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
+          let origText = origMatch[1];
+          return `<div class="degree-card" style="flex:0 1 auto; padding:6px; padding-bottom:${durText ? '18px' : '6px'};"><small>Grau ${esc(degText)}</small><b style="font-size:18px">${esc(origText)}</b>${durHtml}</div>`;
         }
       }).join('')}
       ${s.count > 1 ? `<div class="repeat-badge">${s.count}x</div>` : ''}
@@ -608,9 +621,9 @@ function renderSections(sections, mode, songObj, isMedley = false) {
         const seqs = compactProgression(sec, conversionKey);
         let html = seqs.map(seq => {
             let degHtml = seq.deg.map((d) => {
-                let flexVal = d.duration ? d.duration : 1;
-                let durHtml = d.duration ? `<small style="font-size:10px;color:var(--muted);display:block;margin-top:2px;font-weight:normal;opacity:0.6;">${d.duration}t</small>` : '';
-                return `<div class="degree-card" style="flex: ${flexVal} 1 0%; padding:8px 4px;"><b style="font-size:16px;color:var(--blue);">${esc(d.deg)}</b>${durHtml}</div>`;
+               let m = d.match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
+               let dur = m[3] ? `<span style="position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--muted); font-weight:800; opacity:0.8;">${m[3]}</span>` : '';
+               return `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px ${m[3]?'14px':'8px'} 4px;"><b style="font-size:16px;color:var(--blue);">${esc(m[1])}</b>${dur}</div>`;
             }).join('');
             let rowHtml = `<div class="progression-row">${degHtml}${seq.count > 1 ? `<div class="repeat-badge">${seq.count}x</div>` : ''}</div>`;
             let isInst = seq.isInterlude; let color = isInst ? 'var(--purple)' : 'var(--muted)';
@@ -626,7 +639,11 @@ function renderSections(sections, mode, songObj, isMedley = false) {
   
   return sections.map(sec=>{
     return `<div class="section"><h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:8px;">${esc(sec.name)}${getSectionSnippet(sec)}</h3><div style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; line-height: 1.5;">${sec.lines.map(l=>{
-          if (l.chords) return `<div style="color:var(--blue); font-weight:800; white-space:pre-wrap;">${esc(l.chords)}</div>`;
+          if (l.chords) {
+              // Estiliza de forma sutil os marcadores de batida também na aba de Letra + Acordes
+              let styledChords = esc(l.chords).replace(/\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)/g, '<span style="font-size:11px; opacity:0.6;">($1)</span>');
+              return `<div style="color:var(--blue); font-weight:800; white-space:pre-wrap;">${styledChords}</div>`;
+          }
           if (l.lyric) return `<div style="color:var(--text); white-space:pre-wrap;">${esc(l.lyric)}</div>`;
           return `<div style="height:15px"></div>`; 
         }).join('')}</div>${sec.lines.length===0?'<p class="muted">Seção sem conteúdo reconhecido.</p>':''}</div>`;
@@ -652,7 +669,7 @@ function renderList() {
   });
 }
 
-// LÓGICA DE MEDLEY MULTIPLO
+// LÓGICA DE MEDLEY MULTIPLO E SELEÇÃO ABERTA
 async function loadMedleys() {
   $('medleyResults').innerHTML = '<div class="muted">Analisando sua biblioteca…</div>';
   openModal('medleyModal');
@@ -661,6 +678,7 @@ async function loadMedleys() {
     let baseSong = medleySongs.length > 0 ? medleySongs[0] : currentSong;
     const results = await api('suggestMedleys', {id: baseSong.id});
     
+    // Filtra as que já estão adicionadas
     const addedIds = medleySongs.map(s => s.id);
     if (addedIds.length === 0) addedIds.push(currentSong.id);
     const available = results.filter(m => !addedIds.includes(m.id));
@@ -681,14 +699,22 @@ async function loadMedleys() {
 }
 
 async function addToMedley(event, targetId) {
-  const btn = event.currentTarget; const origText = btn.textContent;
+  const btn = event.currentTarget;
+  const origText = btn.textContent;
   btn.textContent = 'Carregando...'; btn.disabled = true;
+  
   try {
     const targetSong = await api('getSong', {id: targetId});
-    if (!isMedleyMode) { isMedleyMode = true; medleySongs = [currentSong]; }
+    if (!isMedleyMode) {
+       isMedleyMode = true;
+       medleySongs = [currentSong];
+    }
     medleySongs.push(targetSong);
-    closeModal('medleyModal'); renderMedleyView();
-  } catch(e) { alert(e.message); btn.textContent = origText; btn.disabled = false; }
+    closeModal('medleyModal'); 
+    renderMedleyView();
+  } catch(e) {
+    alert(e.message); btn.textContent = origText; btn.disabled = false;
+  }
 }
 
 function renderMedleyView() {
@@ -719,11 +745,14 @@ function renderMedleyView() {
               </div>
               ${idx > 0 ? `<button onclick="removeFromMedley(${idx})" style="background:transparent; border:none; color:var(--muted); padding:4px; font-size:16px; cursor:pointer;" title="Remover Música do Medley">✕</button>` : ''}
           </div>
-          <div style="flex-grow:1;">${renderSections(sec, 'degrees', song, true)}</div>
+          <div style="flex-grow:1;">
+              ${renderSections(sec, 'degrees', song, true)}
+          </div>
         </div>
         `;
     }).join('');
 
+    // Grid Horizontal (Flex com nowrap e scroll X)
     $('songContent').innerHTML = `
       <div style="display:flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; align-items: stretch; margin-top:24px;">
         ${columnsHtml}
@@ -737,11 +766,13 @@ function renderMedleyView() {
 
 function removeFromMedley(index) {
    medleySongs.splice(index, 1);
-   if (medleySongs.length <= 1) exitMedley(); else renderMedleyView();
+   if (medleySongs.length <= 1) { exitMedley(); } else { renderMedleyView(); }
 }
 
 function exitMedley() {
-   isMedleyMode = false; medleySongs = []; renderSong(currentSong);
+   isMedleyMode = false;
+   medleySongs = [];
+   renderSong(currentSong);
 }
 
 $('newBtn').onclick=$('emptyNewBtn').onclick=()=>{resetEditor();openEditor();$('sidebar').classList.remove('open');updateBackdrop();};$('closeEditor').onclick=closeEditor;
@@ -750,11 +781,12 @@ $('search').oninput=()=>loadSongs();$('previewBtn').onclick=()=>{const sections=
   const status=$('editorStatus');
   const song={titulo:$('title').value,artista:$('artist').value,tomOriginal:$('key').value,bpm:'',compasso:'',capotrasteSugerido:$('capo').value,cifraOriginal:$('raw').value,observacoes:$('notes').value};
   try {
-    notify(status,'Salvando música...');
+    notify(status,'Salvando música... (Isso pode levar alguns segundos)');
     const result=await api('importSong',{song});
     notify(status,`Salvo: ${result.titulo}. Carregando...`);
     await loadSongs(); renderSong(await api('getSong',{id:result.id})); closeEditor();
-  } catch(e){notify(status,e.message,true);}
+  }
+  catch(e){notify(status,e.message,true);}
 };
 loadSongs();
 </script>
