@@ -83,7 +83,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.7 · Ocultação de Ritmo na Letra</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.9 · Motor de Quebra de Progressões Longas</div>
 </div>
 <script>
 /*
@@ -132,7 +132,7 @@ $('raw').addEventListener('input', function() {
   const capoM = val.match(/Capotraste:\s*(\d+)/i) || val.match(/Capo:\s*(\d+)/i);
   if (capoM && !$('capo').value)$('capo').value = capoM[1];
 
-  const lines = val.split('\n').map(l => l.trim()).filter(l => l !== '');
+  const lines = val.split('\n').map(l => l.trimEnd()).filter(l => l !== '');
   if (lines.length > 0) {
     let headerText = lines[0].replace(/[\u200B-\u200D\uFEFF]/g, '').split(/Composição de:/i)[0].trim();
     let splitMatch = headerText.match(/([a-z0-9áéíóúâêôãõç!?"'\)])([A-Z])/);
@@ -156,7 +156,7 @@ $('raw').addEventListener('input', function() {
 });
 
 const CHORD_REGEX = /^[A-G](?:#|b)?(?:M|m|maj|min|dim|aug|sus|add)?\d*(?:M|maj|m)?(?:\([^)]+\))?(?:\/[A-G](?:#|b)?)?(?:\(\d+(?:\.\d+)?\))?$/;
-const BEAT_REGEX = /\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)$/;
+const BEAT_REGEX = /\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)/;
 
 const flatToSharp = {'Db':'C#', 'Eb':'D#', 'Gb':'F#', 'Ab':'G#', 'Bb':'A#'};
 const notesArr = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -343,6 +343,7 @@ function getSectionSnippet(sec) {
   return '';
 }
 
+// NOVO MOTOR DE PROGRESSÃO COMPACTADA: Divide blocos longos
 function compactProgression(sec, key) {
   let chordsData = []; 
   sec.lines.forEach((l, idx) => {
@@ -357,7 +358,6 @@ function compactProgression(sec, key) {
 
   for (let i = 0; i < chordsData.length; i++) {
     let c = chordsData[i].chord;
-    
     let durMatch = c.match(BEAT_REGEX);
     let durStr = durMatch ? durMatch[0] : '';
     let cleanC = durMatch ? c.replace(BEAT_REGEX, '') : c;
@@ -373,11 +373,11 @@ function compactProgression(sec, key) {
         let nextRoot = i < chordsData.length - 1 ? getRoot(chordsData[i+1].chord.replace(BEAT_REGEX, '').split('/')[0]) : null;
         if (currentRoot === prevRoot || currentRoot === nextRoot) {
             let bassDeg = chordDegree(bassNote, key).replace(/m$/, '');
-            allDeg.push(rootDeg + '/' + bassDeg + durStr);
+            allDeg.push({ deg: rootDeg + '/' + bassDeg + durStr, orig: c, lineIdx: chordsData[i].lineIdx });
             continue;
         }
     }
-    allDeg.push(rootDeg + durStr);
+    allDeg.push({ deg: rootDeg + durStr, orig: c, lineIdx: chordsData[i].lineIdx });
   }
 
   let seqs = []; let i = 0; let n = allDeg.length;
@@ -386,8 +386,8 @@ function compactProgression(sec, key) {
     for (let len = 1; len <= Math.floor((n - i) / 2); len++) {
       let count = 1;
       while (i + count * len + len <= n) {
-        let chunk1 = allDeg.slice(i, i + len).join(' ');
-        let chunk2 = allDeg.slice(i + count * len, i + count * len + len).join(' ');
+        let chunk1 = allDeg.slice(i, i + len).map(x => x.deg).join(' ');
+        let chunk2 = allDeg.slice(i + count * len, i + count * len + len).map(x => x.deg).join(' ');
         if (chunk1 === chunk2) count++; else break;
       }
       if (count > 1) {
@@ -400,22 +400,10 @@ function compactProgression(sec, key) {
       }
     }
     if (maxCount > 1) {
-      seqs.push({ 
-          orig: chordsData.slice(i, i + bestLen).map(x => x.chord), 
-          deg: allDeg.slice(i, i + bestLen), 
-          count: maxCount,
-          startIdx: chordsData[i].lineIdx,
-          endIdx: chordsData[i + bestLen * maxCount - 1].lineIdx
-      });
+      seqs.push({ elements: allDeg.slice(i, i + bestLen), count: maxCount });
       i += bestLen * maxCount;
     } else {
-      seqs.push({ 
-          orig: [chordsData[i].chord], 
-          deg: [allDeg[i]], 
-          count: 1,
-          startIdx: chordsData[i].lineIdx,
-          endIdx: chordsData[i].lineIdx
-      });
+      seqs.push({ elements: [allDeg[i]], count: 1 });
       i++;
     }
   }
@@ -424,57 +412,41 @@ function compactProgression(sec, key) {
   for (let s of seqs) {
     if (s.count === 1) {
       if (finalSeqs.length > 0 && finalSeqs[finalSeqs.length - 1].count === 1) {
-        finalSeqs[finalSeqs.length - 1].orig.push(s.orig[0]);
-        finalSeqs[finalSeqs.length - 1].deg.push(s.deg[0]);
-        finalSeqs[finalSeqs.length - 1].endIdx = s.endIdx;
-      } else { finalSeqs.push({ ...s }); }
+        finalSeqs[finalSeqs.length - 1].elements.push(s.elements[0]);
+      } else { finalSeqs.push({ elements: [...s.elements], count: 1 }); }
     } else { finalSeqs.push(s); }
   }
 
   finalSeqs.forEach(seq => {
-     let snippet = ''; let isInterlude = true;
-     let searchEnd = Math.min(sec.lines.length - 1, seq.endIdx + 1);
-     for (let k = seq.startIdx; k <= searchEnd; k++) {
-        if (sec.lines[k] && sec.lines[k].lyric && sec.lines[k].lyric.trim() !== '') {
-           isInterlude = false;
-           let words = sec.lines[k].lyric.trim().split(/\s+/);
-           snippet = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
-           break;
-        }
+     seq.subChunks = [];
+     // O Limite Mágico de 8 Acordes por Linha (Quebra automática)
+     const MAX_CHORDS = 8;
+     for (let j = 0; j < seq.elements.length; j += MAX_CHORDS) {
+         let chunk = seq.elements.slice(j, j + MAX_CHORDS);
+         let startLine = chunk[0].lineIdx;
+         let endLine = chunk[chunk.length - 1].lineIdx;
+
+         let snippet = ''; let isInterlude = true;
+         let searchEnd = Math.min(sec.lines.length - 1, endLine + 1);
+         for (let k = startLine; k <= searchEnd; k++) {
+            if (sec.lines[k] && sec.lines[k].lyric && sec.lines[k].lyric.trim() !== '') {
+               isInterlude = false;
+               let words = sec.lines[k].lyric.trim().split(/\s+/);
+               snippet = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
+               break;
+            }
+         }
+         if (isInterlude) snippet = 'Instrumental';
+         seq.subChunks.push({
+             deg: chunk.map(x => x.deg),
+             orig: chunk.map(x => x.orig),
+             snippet: snippet,
+             isInterlude: isInterlude
+         });
      }
-     if (isInterlude) snippet = 'Instrumental';
-     seq.snippet = snippet;
-     seq.isInterlude = isInterlude;
   });
 
   return finalSeqs;
-}
-
-function renderOptimizedProgression(sec, key, emp) {
-  const comp = compactProgression(sec, key);
-  if(!comp.length) return '';
-  return comp.map(s => `
-    <div class="progression-row">
-      ${s.deg.map((d, i) => {
-        
-        let match = d.match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
-        let degText = match[1];
-        let durText = match[3] || '';
-        
-        let pb = durText ? '14px' : '8px';
-        let durHtml = durText ? `<span style="position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--muted); font-weight:800; opacity:0.8;">${durText}</span>` : '';
-        
-        if (emp === 'degree') {
-          return `<div class="degree-card" style="flex:0 1 auto; padding:8px 4px ${pb} 4px;"><b style="font-size:16px;color:var(--blue);">${esc(degText)}</b>${durHtml}</div>`;
-        } else {
-          let origMatch = s.orig[i].match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
-          let origText = origMatch[1];
-          return `<div class="degree-card" style="flex:0 1 auto; padding:6px; padding-bottom:${durText ? '18px' : '6px'};"><small>Grau ${esc(degText)}</small><b style="font-size:18px">${esc(origText)}</b>${durHtml}</div>`;
-        }
-      }).join('')}
-      ${s.count > 1 ? `<div class="repeat-badge">${s.count}x</div>` : ''}
-    </div>
-  `).join('');
 }
 
 function renderSong(song) {
@@ -615,31 +587,56 @@ function renderSections(sections, mode, songObj, isMedley = false) {
     });
 
     return `${relativeWarning}<div class="section">${uniqueSections.map(sec=>{
-      if (isExtensiveMedley) {
-        const seqs = compactProgression(sec, conversionKey);
-        let html = seqs.map(seq => {
-            let degHtml = seq.deg.map((d) => {
-               let m = d.match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
-               let dur = m[3] ? `<span style="position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--muted); font-weight:800; opacity:0.8;">${m[3]}</span>` : '';
-               return `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px ${m[3]?'14px':'8px'} 4px;"><b style="font-size:16px;color:var(--blue);">${esc(m[1])}</b>${dur}</div>`;
-            }).join('');
-            let rowHtml = `<div class="progression-row">${degHtml}${seq.count > 1 ? `<div class="repeat-badge">${seq.count}x</div>` : ''}</div>`;
-            let isInst = seq.isInterlude; let color = isInst ? 'var(--purple)' : 'var(--muted)';
-            let fontStyle = isInst ? 'normal' : 'italic'; let quote = isInst ? '' : '"';
-            return `<div style="margin-bottom: 14px;"><div style="font-size:12px; color:${color}; margin-bottom:5px; font-style:${fontStyle};">${quote}${esc(seq.snippet)}${quote}</div>${rowHtml}</div>`;
-        }).join('');
-        return `<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:12px;">${esc(sec.name)} <span class="muted" style="font-size:11px; margin-left:8px; font-weight:normal; text-transform:none;">(Medley Fracionado)</span></h3>${html || '<p class="muted">Nenhum acorde isolado.</p>'}</div>`;
-      } else {
-        return `<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;">${esc(sec.name)}${getSectionSnippet(sec)}</h3>${renderOptimizedProgression(sec, conversionKey, 'degree') || '<p class="muted">Nenhum acorde isolado.</p>'}</div>`;
-      }
+      const seqs = compactProgression(sec, conversionKey);
+
+      let html = seqs.map((seq, seqIdx) => {
+          let chunkHtml = seq.subChunks.map((chunk, chunkIdx) => {
+              
+              let snippetHtml = '';
+              // Mostra a frase em cima da linha quebrada (ou em medleys detalhados)
+              if (chunkIdx > 0 || (isExtensiveMedley && seqIdx === 0) || seqIdx > 0) {
+                  let color = chunk.isInterlude ? 'var(--purple)' : 'var(--muted)';
+                  let fontStyle = chunk.isInterlude ? 'normal' : 'italic';
+                  let quote = chunk.isInterlude ? '' : '"';
+                  snippetHtml = `<div style="font-size:12px; color:${color}; margin-bottom:5px; font-style:${fontStyle}; margin-top: 8px;">${quote}${esc(chunk.snippet)}${quote}</div>`;
+              }
+
+              let degHtml = chunk.deg.map((d, i) => {
+                  let m = d.match(/^(.*?)(\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\))?$/);
+                  let durText = m[3] || '';
+                  let pb = durText ? '14px' : '8px';
+                  let durHtml = durText ? `<span style="position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--muted); font-weight:800; opacity:0.8;">${durText}</span>` : '';
+                  return `<div class="degree-card" style="flex:0 1 auto;padding:8px 4px ${pb} 4px;"><b style="font-size:16px;color:var(--blue);">${esc(m[1])}</b>${durHtml}</div>`;
+              }).join('');
+
+              let isLastChunk = chunkIdx === seq.subChunks.length - 1;
+              let badge = (isLastChunk && seq.count > 1) ? `<div class="repeat-badge" title="Toda a sequência repete">${seq.count}x</div>` : '';
+
+              return `${snippetHtml}<div class="progression-row">${degHtml}${badge}</div>`;
+          }).join('');
+
+          // Borda lateral inteligente caso a linha tenha sido quebrada E se repita!
+          let containerStyle = (seq.subChunks.length > 1 && seq.count > 1) 
+              ? 'background: rgba(0,0,0,0.2); border-left: 2px solid #3e5e99; padding-left: 12px; margin: 12px 0; border-radius: 4px; padding-bottom: 4px;' 
+              : 'margin-bottom: 14px;';
+
+          return `<div style="${containerStyle}">${chunkHtml}</div>`;
+      }).join('');
+
+      let secHeaderSnippet = getSectionSnippet(sec); 
+      let extraText = isExtensiveMedley ? '<span class="muted" style="font-size:11px; margin-left:8px; font-weight:normal; text-transform:none;">(Medley Fracionado)</span>' : secHeaderSnippet;
+
+      return `<div class="section-summary"><h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:12px;">${esc(sec.name)} ${extraText}</h3>${html || '<p class="muted">Nenhum acorde isolado.</p>'}</div>`;
+
     }).join('')}</div>`;
   }
   
   return sections.map(sec=>{
     return `<div class="section"><h3 style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:8px;">${esc(sec.name)}${getSectionSnippet(sec)}</h3><div style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; line-height: 1.5;">${sec.lines.map(l=>{
           if (l.chords) {
-              // Limpa e oculta os tempos "(4)" na aba Letra + Acordes
-              let cleanChords = esc(l.chords).replace(/\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)/g, '');
+              let cleanChords = esc(l.chords).replace(/\((0\.5|1|1\.5|2|2\.5|3|4|5|6|7|8|12|16)\)/g, (match) => {
+                  return ' '.repeat(match.length);
+              });
               return `<div style="color:var(--blue); font-weight:800; white-space:pre-wrap;">${cleanChords}</div>`;
           }
           if (l.lyric) return `<div style="color:var(--text); white-space:pre-wrap;">${esc(l.lyric)}</div>`;
