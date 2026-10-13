@@ -83,7 +83,7 @@ input,textarea,select{width:100%;background:#0c0e14;color:var(--text);border:1px
       </section>
     </main>
   </div>
-  <div class="footer">CIFRA INTELIGENTE · MVP 0.5.9 · Motor de Quebra de Progressões Longas</div>
+  <div class="footer">CIFRA INTELIGENTE · MVP 0.6.0 · Correção de Baixos e Quebra Harmônica</div>
 </div>
 <script>
 /*
@@ -343,7 +343,7 @@ function getSectionSnippet(sec) {
   return '';
 }
 
-// NOVO MOTOR DE PROGRESSÃO COMPACTADA: Divide blocos longos
+// MOTOR DE PROGRESSÃO COMPACTADA (VERSÃO 0.6.0: Baixos Corrigidos e Quebra Harmônica)
 function compactProgression(sec, key) {
   let chordsData = []; 
   sec.lines.forEach((l, idx) => {
@@ -367,15 +367,11 @@ function compactProgression(sec, key) {
     let bassNote = parts[1];
     let rootDeg = chordDegree(rootChord, key);
 
+    // CORREÇÃO: O baixo invertido agora é SEMPRE respeitado para não quebrar a matemática!
     if (bassNote) {
-        let currentRoot = getRoot(rootChord);
-        let prevRoot = i > 0 ? getRoot(chordsData[i-1].chord.replace(BEAT_REGEX, '').split('/')[0]) : null;
-        let nextRoot = i < chordsData.length - 1 ? getRoot(chordsData[i+1].chord.replace(BEAT_REGEX, '').split('/')[0]) : null;
-        if (currentRoot === prevRoot || currentRoot === nextRoot) {
-            let bassDeg = chordDegree(bassNote, key).replace(/m$/, '');
-            allDeg.push({ deg: rootDeg + '/' + bassDeg + durStr, orig: c, lineIdx: chordsData[i].lineIdx });
-            continue;
-        }
+        let bassDeg = chordDegree(bassNote, key).replace(/m$/, '');
+        allDeg.push({ deg: rootDeg + '/' + bassDeg + durStr, orig: c, lineIdx: chordsData[i].lineIdx });
+        continue;
     }
     allDeg.push({ deg: rootDeg + durStr, orig: c, lineIdx: chordsData[i].lineIdx });
   }
@@ -419,30 +415,44 @@ function compactProgression(sec, key) {
 
   finalSeqs.forEach(seq => {
      seq.subChunks = [];
-     // O Limite Mágico de 8 Acordes por Linha (Quebra automática)
      const MAX_CHORDS = 8;
-     for (let j = 0; j < seq.elements.length; j += MAX_CHORDS) {
-         let chunk = seq.elements.slice(j, j + MAX_CHORDS);
-         let startLine = chunk[0].lineIdx;
-         let endLine = chunk[chunk.length - 1].lineIdx;
+     let chunk = [];
 
-         let snippet = ''; let isInterlude = true;
-         let searchEnd = Math.min(sec.lines.length - 1, endLine + 1);
-         for (let k = startLine; k <= searchEnd; k++) {
-            if (sec.lines[k] && sec.lines[k].lyric && sec.lines[k].lyric.trim() !== '') {
-               isInterlude = false;
-               let words = sec.lines[k].lyric.trim().split(/\s+/);
-               snippet = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
-               break;
-            }
+     for (let j = 0; j < seq.elements.length; j++) {
+         chunk.push(seq.elements[j]);
+         let isLast = (j === seq.elements.length - 1);
+
+         let forceBreak = false;
+         if (chunk.length >= MAX_CHORDS) {
+             forceBreak = true;
+         } else if (chunk.length === 4 && (seq.elements.length - j - 1) >= 4) {
+             // Quebra harmoniosa: blocos longos quebram em múltiplos de 4 (Padrão Musical)
+             forceBreak = true;
          }
-         if (isInterlude) snippet = 'Instrumental';
-         seq.subChunks.push({
-             deg: chunk.map(x => x.deg),
-             orig: chunk.map(x => x.orig),
-             snippet: snippet,
-             isInterlude: isInterlude
-         });
+
+         if (forceBreak || isLast) {
+             let startLine = chunk[0].lineIdx;
+             let endLine = chunk[chunk.length - 1].lineIdx;
+
+             let snippet = ''; let isInterlude = true;
+             let searchEnd = Math.min(sec.lines.length - 1, endLine + 1);
+             for (let k = startLine; k <= searchEnd; k++) {
+                if (sec.lines[k] && sec.lines[k].lyric && sec.lines[k].lyric.trim() !== '') {
+                   isInterlude = false;
+                   let words = sec.lines[k].lyric.trim().split(/\s+/);
+                   snippet = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
+                   break;
+                }
+             }
+             if (isInterlude) snippet = 'Instrumental';
+             seq.subChunks.push({
+                 deg: chunk.map(x => x.deg),
+                 orig: chunk.map(x => x.orig),
+                 snippet: snippet,
+                 isInterlude: isInterlude
+             });
+             chunk = [];
+         }
      }
   });
 
